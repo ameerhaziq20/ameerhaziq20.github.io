@@ -11,7 +11,7 @@ I knew a bit of Kotlin. Really enjoyed the journey in making this app.
 
 [QRCodeScanner + Bluetooth Temperature Scanner](https://github.com/ameerhaziq20/QRCodeScannerDB)
 
-## Data Analytics
+### Data Analytics
 
 The first time I was introduced to this subject, I was instantly hooked. legit hooked. Here is my .ipynb file for the common data analysis I did. Maybe useful to some people.
 
