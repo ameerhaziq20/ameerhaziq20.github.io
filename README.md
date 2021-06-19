@@ -10,15 +10,15 @@ I worked on various project's during my study and I found it rather interesting 
 
 I knew a bit of Kotlin. Really enjoyed the journey in making this app.
 
-[QRCodeScanner + Bluetooth Temperature Scanner](https://github.com/ameerhaziq20/QRCodeScannerDB)
-[Simple Android Room Database](https://github.com/ameerhaziq20/SimpleDatabase)
+* [QRCodeScanner + Bluetooth Temperature Scanner](https://github.com/ameerhaziq20/QRCodeScannerDB)
+* [Simple Android Room Database](https://github.com/ameerhaziq20/SimpleDatabase)
 
 
 ### Data Analytics
 
 The first time I was introduced to this subject, I was instantly hooked. legit hooked. Here is my .ipynb file for the common data analysis I did. Maybe useful to some people.
 
-[Ameer's Jupyter Notebook](https://github.com/ameerhaziq20/DataAnalyticsNotebook)
+* [Ameer's Jupyter Notebook](https://github.com/ameerhaziq20/DataAnalyticsNotebook)
 
 
 
