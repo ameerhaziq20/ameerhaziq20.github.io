@@ -16,9 +16,10 @@ I knew a bit of Kotlin. Really enjoyed the journey in making this app.
 
 ### Data Analytics
 
-The first time I was introduced to this subject, I was instantly hooked. legit hooked. Here is my .ipynb file for the common data analysis I did. Maybe useful to some people.
-
-* [Ameer's Jupyter Notebook](https://github.com/ameerhaziq20/DataAnalyticsNotebook)
+Some awesome .ipynb's I made that even myself use it from time to time.
+* [Malaysia COVID-19 Cases Analysis and Prediction](https://github.com/ameerhaziq20/DataAnalyticsNotebook/blob/main/Malaysia_COVID_19_Cases_Analysis.ipynb)
+* [Toyota(UK) Used Car Sales Analysis](https://github.com/ameerhaziq20/DataAnalyticsNotebook/blob/main/Used_Car_Analysis_for_Toyota(UK).ipynb)
+* [Heart Attack Possibility Analysis and Prediction](https://github.com/ameerhaziq20/DataAnalyticsNotebook/blob/main/Heart_Attack_Possibility.ipynb)
 
 
 
