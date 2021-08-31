@@ -1,0 +1,11 @@
+- name: Adobe Photoshop
+  percentage: 95
+  color: info
+
+- name: Adobe Illustrator
+  percentage: 80
+  color: success
+  
+- name: FL Studio
+  percentage: 95
+  color: blue

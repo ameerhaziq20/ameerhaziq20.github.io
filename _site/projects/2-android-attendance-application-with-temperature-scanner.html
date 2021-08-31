@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+
+<!--
+  portfolYOU Jekyll theme by Youssef Raafat
+  Free for personal and commercial use under the MIT license
+  https://github.com/YoussefRaafatNasry/portfolYOU
+-->
+
+<html lang="en" class="h-100">
+
+<head>
+
+  
+  
+
+  
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Android Attendance Application with Temperature Scanner">
+  <meta property="og:description" content="A Useful tool for attendace recording during COVID-19 pandemic.">
+
+  <title>Android Attendance Application with Temperature Scanner</title>
+  <meta name="description" content="A Useful tool for attendace recording during COVID-19 pandemic.">
+
+  <link rel="shortcut icon" type="image/x-icon" href="/main/assets/favicon.ico">
+
+  <!-- Theme style -->
+  <script src="/main/assets/js/theme.js"></script>
+
+  <!-- Font Awesome CDN -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.10.0/css/all.css">
+
+  <!-- Bootstrap CSS CDN -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
+
+  <!-- Animate CSS CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.css">
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="/main/assets/css/style.css">
+
+</head>
+
+<body class="h-100 d-flex flex-column">
+
+  <main class="flex-shrink-0 container mt-5">
+    <nav class="navbar navbar-expand-lg navbar-themed">
+
+  <a class="navbar-brand" href="/main/"><h5><b>Haziq's Page</b></h5></a>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+    <i class="fas fa-1x fa-bars text-themed"></i>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav ml-auto"><a class="nav-item nav-link active" href="/main/projects/">Projects</a>
+
+      <a class="nav-item nav-link " href="/main/blog/">Blog</a>
+
+      <a class="nav-item nav-link " href="/main/about/">About</a>
+
+      
+
+      <span id="theme-toggler" class="nav-item nav-link" role="button" onclick="toggleTheme()"></span>
+    </div>
+  </div>
+
+</nav>
+    <div class="col-lg-10 mx-auto mt-5 post">
+  <h1 id="android-attendance-application-with-temperature-scanner">Android Attendance Application with Temperature Scanner</h1>
+
+<p>From where I live which is In Malaysia, There’s this thing we do before entering premises as to follow the Standard Operational Procedure(SOP) for COVID-19 which is <strong>scanning the provided QR code with the MySejahtera Application</strong>. The aforementioned Android application is made by the government in order to track which premise there are in. There are also other features such as managing the users vaccine administration schedule, information on COVID-19, and other related functionality.</p>
+
+<figure class="figure w-100">
+  <img src="https://mysejahtera.malaysia.gov.my/img/gallery/gallery-en-11.png" class="figure-img img-fluid rounded" alt="My Sejahtera Application" /><figcaption class="figure-caption text-center">My Sejahtera Application</figcaption></figure>
+
+<p>But there’s one problem with the application: The SOP requires body temperature reading to be taken before entering premises. You may ask, <strong>“Why is it a problem? there’s a temperature scanner on every premise now even my house have one!”</strong>. Well, it just beeps and displays the temperature, but it doesn’t record the body temperature reading. Wouldn’t it be great if temperature readings can be taken? Surely we can get more insights from the data right?</p>
+
+<h2 id="the-solution">The Solution</h2>
+
+<p>I’ve design this prototype Android Application the can do the basics of recording the attendees information with an added feature: the ability to recieve temperature data from bluetooth enabled device. In this case, I’m using a NodeMCU ESP32 as a test device for temperature scanning.</p>
+
+<h3 id="the-hardware">The Hardware</h3>
+
+<figure class="figure w-100">
+  <img src="https://i1.wp.com/www.electroniclinic.com/wp-content/uploads/2021/04/ESP32.jpg" class="figure-img img-fluid rounded" alt="NodeMCU ESP32" /><figcaption class="figure-caption text-center">NodeMCU ESP32</figcaption></figure>
+
+<p>As for the temperature reading, we’ll be using the MLX90614 sensor since it’s fairly cheap for it’s capabiities. It offers a contactless temperature sensing using IR for both ambient and also object temperature, I’ve just checked on aliexpress.com and it’s around $7.30.</p>
+
+<figure class="figure w-100">
+  <img src="https://components101.com/sites/default/files/components/MLX90614.jpg" class="figure-img img-fluid rounded" alt="MLX90614 Contacless IR temperature sensor" /><figcaption class="figure-caption text-center">MLX90614 Contacless IR temperature sensor</figcaption></figure>
+
+<p>The components are soldered on a perfboard as shown in the figure below with an added buzzer to inform the user that the temperature scanning process is complete.</p>
+
+<figure class="figure w-100">
+  <img src="https://raw.githubusercontent.com/ameerhaziq20/QRcodeScannerWithBodyTemp/main/Application%20Screenshots/hw_top_view.jpeg" class="figure-img img-fluid rounded" alt="The temperature scanning device" /><figcaption class="figure-caption text-center">The temperature scanning device</figcaption></figure>
+
+<h3 id="the-android-application">The Android Application</h3>
+
+<p>For the Android Application, we will divide the functionality into three parts which are:</p>
+
+<ul>
+  <li>Firebase Database</li>
+  <li>QR scan/generate</li>
+  <li>Temperature Scanning</li>
+</ul>
+
+<h4 id="firebase-database">Firebase Database</h4>
+
+<p>The project will be using the Firebase Real-Time Database for storing the attendees information. The setup was very easy and it is well documented. If you’re using the database with Kotlin, the overall setup process for the database will be tremendously easy in contrast to Java.</p>
+
+<h4 id="qr-scanning">QR Scanning</h4>
+
+<p>The application will use a commonly used library for QR detection which is the Zxing library. The library can work as a QR code reader as well as a QR generator. In the development of this functionality of the app, There are 3 activities involved which are the ScanActivity, Capture Activity, and QRGenerateActivity.</p>
+
+<h5 id="scanactivity">ScanActivity</h5>
+
+<p>The ScanActivity is where the QR scanning funtionality happens. 
+<script src="https://gist.github.com/ameerhaziq20/3b547bd1728a97c1c6aecc9dd8146659.js"></script></p>
+
+<script src="https://gist.github.com/ameerhaziq20/12dd4dda762b9042153a1843894f203a.js"></script>
+
+<script src="https://gist.github.com/ameerhaziq20/84925ff54da7bc0f0204b96d5f1394f7.js"></script>
+
+
+</div>
+  </main>
+
+  <footer class="mt-auto py-3 text-center">
+
+  <small class="text-muted mb-2">
+    <i class="fas fa-code"></i> with <i class="fas fa-heart"></i>
+    by <strong>Ameer Haziq Basharuddin</strong>
+  </small>
+
+  <div class="container-fluid justify-content-center"><a class="social mx-1"  href="mailto:ameerhaziq.work@gmail.com"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#db4437'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fas fa-envelope fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.github.com/ameerhaziq20"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#333333'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-github fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.instagram.com/emyrbreezy"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#405de6'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-instagram fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.linkedin.com/in/ameer-haziq-basharuddin-89593520a/"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#007bb5'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-linkedin-in fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.twitter.com/frisk__y"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#1da1f2'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-twitter fa-1x"></i>
+    </a>
+
+</div><small id="attribution">
+    theme <a href="https://github.com/YoussefRaafatNasry/portfolYOU">portfolYOU</a>
+  </small>
+  
+</footer>
+
+  
+  <!-- GitHub Buttons -->
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+
+<!-- jQuery CDN -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<!-- Popper.js CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"></script>
+
+<!-- Bootstrap JS CDN -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<!-- wow.js CDN & Activation -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.js"></script>
+<script> new WOW().init(); </script>
+
+<!-- Initialize all tooltips -->
+<script>
+$(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+})
+</script>
+
+
+</body>
+
+</html>
