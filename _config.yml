@@ -55,6 +55,10 @@ collections:
     output: true
     permalink: /projects/:name
 
+  resume:
+    output: true
+    permalink: /resume
+
 ### Disqus ###
 disqus:
   shortname: your-short-name-disqus                     # Your website Shortname on disqus
