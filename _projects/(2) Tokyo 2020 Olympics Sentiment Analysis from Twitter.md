@@ -276,7 +276,7 @@ plt.show()
 
 
     
-![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(2)%20Tokyo%202020%20Olympics%20Sentiment%20Analysis%20from%20Twitter/output_29_1.jpg)
+![jpg](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(2)%20Tokyo%202020%20Olympics%20Sentiment%20Analysis%20from%20Twitter/output_29_1.jpg)
     
 
 
@@ -1186,7 +1186,7 @@ plt.show()
 
 
     
-![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(2)%20Tokyo%202020%20Olympics%20Sentiment%20Analysis%20from%20Twitter/output_82_0.jpg)
+![jpg](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(2)%20Tokyo%202020%20Olympics%20Sentiment%20Analysis%20from%20Twitter/output_82_0.jpg)
     
 
 
@@ -1223,7 +1223,7 @@ plt.show()
 
 
     
-![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(2)%20Tokyo%202020%20Olympics%20Sentiment%20Analysis%20from%20Twitter/output_84_1.jpg)
+![jpg](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(2)%20Tokyo%202020%20Olympics%20Sentiment%20Analysis%20from%20Twitter/output_84_1.jpg)
     
 
 
@@ -1262,7 +1262,7 @@ plt.show()
 
 
     
-![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(2)%20Tokyo%202020%20Olympics%20Sentiment%20Analysis%20from%20Twitter/output_86_1.jpg)
+![jpg](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(2)%20Tokyo%202020%20Olympics%20Sentiment%20Analysis%20from%20Twitter/output_86_1.jpg)
     
 
 
@@ -1301,7 +1301,7 @@ plt.show()
 
 
     
-![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(2)%20Tokyo%202020%20Olympics%20Sentiment%20Analysis%20from%20Twitter/output_88_1.jpg)
+![jpg](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(2)%20Tokyo%202020%20Olympics%20Sentiment%20Analysis%20from%20Twitter/output_88_1.jpg)
     
 
 
@@ -1340,7 +1340,7 @@ plt.show()
 
 
     
-![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(2)%20Tokyo%202020%20Olympics%20Sentiment%20Analysis%20from%20Twitter/output_90_1.jpg)
+![jpg](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(2)%20Tokyo%202020%20Olympics%20Sentiment%20Analysis%20from%20Twitter/output_90_1.jpg)
     
 
 
@@ -1379,7 +1379,7 @@ plt.show()
 
 
     
-![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(2)%20Tokyo%202020%20Olympics%20Sentiment%20Analysis%20from%20Twitter/output_92_1.jpg)
+![jpg](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(2)%20Tokyo%202020%20Olympics%20Sentiment%20Analysis%20from%20Twitter/output_92_1.jpg)
     
 
 
@@ -1410,7 +1410,7 @@ plt.show()
 
 
     
-![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(2)%20Tokyo%202020%20Olympics%20Sentiment%20Analysis%20from%20Twitter/output_94_0.jpg)
+![jpg](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(2)%20Tokyo%202020%20Olympics%20Sentiment%20Analysis%20from%20Twitter/output_94_0.jpg)
     
 
 
@@ -1468,7 +1468,7 @@ plt.show()
 
 
     
-![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(2)%20Tokyo%202020%20Olympics%20Sentiment%20Analysis%20from%20Twitter/output_96_1.jpg)
+![jpg](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(2)%20Tokyo%202020%20Olympics%20Sentiment%20Analysis%20from%20Twitter/output_96_1.jpg)
     
 
 
@@ -2176,7 +2176,7 @@ plt.show()
 
 
     
-![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(2)%20Tokyo%202020%20Olympics%20Sentiment%20Analysis%20from%20Twitter/output_115_0.jpg)
+![jpg](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(2)%20Tokyo%202020%20Olympics%20Sentiment%20Analysis%20from%20Twitter/output_115_0.jpg)
     
 
 
@@ -2248,7 +2248,7 @@ plt.show()
 
 
     
-![png](output_120_0.jpg)
+![jpg](output_120_0.jpg)
     
 
 
