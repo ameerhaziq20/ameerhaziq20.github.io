@@ -1,0 +1,2169 @@
+<!DOCTYPE html>
+
+<!--
+  portfolYOU Jekyll theme by Youssef Raafat
+  Free for personal and commercial use under the MIT license
+  https://github.com/YoussefRaafatNasry/portfolYOU
+-->
+
+<html lang="en" class="h-100">
+
+<head>
+
+  
+  
+
+  
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Tokyo 2020 Olympics Sentiment Analysis from Twitter">
+  <meta property="og:description" content="Find out the the worlds reaction on the 2020 Summer Olympics Tokyo.">
+
+  <title>Tokyo 2020 Olympics Sentiment Analysis from Twitter</title>
+  <meta name="description" content="Find out the the worlds reaction on the 2020 Summer Olympics Tokyo.">
+
+  <link rel="shortcut icon" type="image/x-icon" href="/assets/favicon.ico">
+
+  <!-- Theme style -->
+  <script src="/assets/js/theme.js"></script>
+
+  <!-- Font Awesome CDN -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.10.0/css/all.css">
+
+  <!-- Bootstrap CSS CDN -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
+
+  <!-- Animate CSS CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.css">
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="/assets/css/style.css">
+
+</head>
+
+<body class="h-100 d-flex flex-column">
+
+  <main class="flex-shrink-0 container mt-5">
+    <nav class="navbar navbar-expand-lg navbar-themed">
+
+  <a class="navbar-brand" href="/"><h5><b>Haziq's Page</b></h5></a>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+    <i class="fas fa-1x fa-bars text-themed"></i>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav ml-auto"><a class="nav-item nav-link active" href="/projects/">Projects</a>
+
+      <a class="nav-item nav-link " href="/blog/">Blog</a>
+
+      <a class="nav-item nav-link " href="/about/">About</a>
+
+      
+
+      <span id="theme-toggler" class="nav-item nav-link" role="button" onclick="toggleTheme()"></span>
+    </div>
+  </div>
+
+</nav>
+    <div class="col-lg-10 mx-auto mt-5 markdown-body">
+  <p><img src="https://4friendsnihongo.com/wp-content/uploads/2019/10/Tokyo-2020-Olympics-Banner.jpg" alt="jpg" /></p>
+
+<p>The extraordinary 2020 Summer Olympics will take place without fans or spectators and under a state of emergency due to the coronavirus pandemic, after a 12-month delay. But nevertheless, even without the any fans at the stadium, there are still words of support from all around the world at the palms of our hand. But are the Tweets truly supportive, or filled with hate comments? Let’s find out.</p>
+
+<h1 id="1-questions">1. Questions</h1>
+
+<p>This analysis will try to answer the following questions:</p>
+<ul>
+  <li>What are the people’s reactions on Twitter about the 2020 Summer Olympics Tokyo?</li>
+  <li>Are the Tweets posted are about their opinions or stating a fact?</li>
+  <li>What are the Tweets mostly talk about?</li>
+</ul>
+
+<h1 id="2-measurement-priorities">2. Measurement Priorities</h1>
+
+<ul>
+  <li>The polarity of the Tweets by analyzing the sentiment’s polarity score.</li>
+  <li>The subjectivity of the Tweets by analyzing the subjectivity score of the sentiments.</li>
+  <li>Creating a collection of words for each group of sentiments using word clouds.</li>
+</ul>
+
+<h1 id="3-data-collection">3. Data Collection</h1>
+
+<ul>
+  <li>Source
+    <ul>
+      <li>The Tweets collected will be from Twitter.com using their API.</li>
+      <li>The python library Tweepy will be used to gather the Tweets.</li>
+      <li>The Tweets collected will be the posts tagged with #Tokyo2020.</li>
+    </ul>
+  </li>
+  <li>Storage
+    <ul>
+      <li>The collected Tweets will be stored in a CSV and TXT file.</li>
+      <li>The cleaned Tweets will also be stored as both CSV and TXT file.</li>
+    </ul>
+  </li>
+</ul>
+
+<h1 id="4-cleaning-and-analyze-data">4. Cleaning and Analyze Data</h1>
+
+<h1 id="importing-main-libraries">Importing main libraries</h1>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="n">pd</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="n">sns</span>
+</code></pre></div></div>
+
+<p>#Setting Up Tweepy to use Twitter API</p>
+
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAagAAAB3CAMAAABhcyS8AAAAilBMVEUccqL///8YcKEAa52tydsWb6EAaZwAbZ/k7vQbdqb0+fo8hK1ypMMcc6Lo8PUoeqeMsstPkLZrnr8ygKx8qsajw9bc6vH3+/zQ4uwAZpuUutHE2OXv9flUj7Smxtlimry71OKbv9RZlbiFrsjU5OwAYZdMirLJ3em91uM2falBirJ4qMYzhK9fnb+0pJvOAAALyElEQVR4nO2dCYOiOBOGsQKJioLigSJy6Wgf8/3/v/cRIAcQBds+mN48u7OzHe56U0mlEmjD6Mu8+sOA+o+q3VtA9df89i7qg27tWm2DW5eH9oHNfeeqwm7EI0DXg7RPnt/W/KFL9jSVRqPRaDQajUaj0Wg0Go1Go9FoNBqNRqPRaDQajUaj0Wg0Go1Go9FoNBqNRqPRPAwAWPD4S1aabwUImr9ejkfbBaTFGiyASba5bp3QGZ+T9Wpf0wpr4b6avhYm7mI7EvhmRtihgObvs9+tlIXxHv9oMwJAeu22z3ajOmEwR3SLhVF28LNep/lHsazjKU2D2evPPSSQaNHj6paxGLXZvSFC5scg97TkN+sEkygsHvg8wz92D3Y4jfede+03Cp3yG18ugyt9ht/tUDjiT/xm/dA9oGA0msbo/k4AgVInweLHato3AIbDHzToMNXX3cQ1v/o429/tJvHMv69TMgfj946uwBZPevihlgNWU3r5qXevooAbdumEELksv+2uHyEP1yjPtFiyUFdxIkDlqdsVtNzwqTGitSyvH87u+BTqaPhMYz/Jkm32U833PVAWbXKi7AmrwVw0fanwKDTbFFxazx0U5YH78Uu2wB6/g8ktO1uXuw7lR156zf3yNMhuCh3Ku1w807dgEUqJYALgXBZ5jQcnx7LcWX2iS+F30X65NyyNVZG5JFRYdGDREP3JIFnVu/YZg9wEJmk7PMfxSCkUQFKWj91PFAoJoUbOjKiMDbg50lVhDjOWQMwXnhIqN/5xnaYLecALJFELZdnOFwglmr6cabRS9IxgdIR8lGQySJ2sFetdnhOqiknk8IAcWYfQEAqzHv2WUABWnwkIOk8hXX9Zs7dzmrRilcYuSiJrkA2fgU/sDk97RCE0WGOwXKWFBOz7fWIn+mPrEMMQKYC4PHVlATBYRnQ7wfVD6FaCrbn71165BkFWzdTy9fLrEzffSXxCz2pG3juvOYOBvFEHfvCBzwB+B3jF08i7yKScAGKTsS5dgXi8xEzLSA3cDSsJaN1O+Q7HSg9sc8Mdyi1lVhoIrxvT6hCbGwew60VXZ+rnHfs2CY6yqSfVFRf0AshYv4S+719f+aHk0DT77uRiWWu07tApjIc5xwEoOzfv9UCIqHe7MnXGOxta50oheAxSJjGJCM/fi+jRIjN5JqHApL5AJmmro1gyXyOT9VbeGr5kzA/zeKXaEroAeFmpshURPlKEdNvgzeJn6BZqSwapk8pmoxcCE+4KYXnjrmzz98LLhFX8da4MGfPtMyoUWkWjFhHKPaY1xTASQqFlq974fFAEk2lV5iEUs//fiQ+CwmrcPJqe4Lo4znHZiHY2feNvtX9fwG61FaPCP7Ao/0utBEe59d8UQgknC+nAqSGUdWm506gU6qQacVZC4Vhl6aTqhoRQyT7mDnyQW7YbaYfwbM4ubt6p7m31DpxhCoVS1b2+EHlYWLhPvcXY0W4DJqJvo6ZqCIVM1akjBK+OakMpFHqbqjbm45ridoVQ4zdRDUxpmA6uqnpUOLskCu6Pd/Omb5Atn1qo3KNIxi0WUTvgWjMW0nGGdeG7pHSX3kKpfKYUCtzrDfOV0b0QaiSpncr5FOSppe7NbpBTUWqhDkSumbs8WgVc6zl8alY84z9nnyQUlhuu8U4KKs5F4ycJJbEWQoEFHSmiTg6DXJFEAn8qPXv+Q46f5LdKuJ3HtpXrVg85Tkh2srFLrdwSSnXqjQWvW38qnW1abqBCyVNa4/Xr3I159fA9WtHVQolJDfAyA+fP9Jg0dcxBZmMNd7WyRase5D/m0HAXcX/xc0OgajzvVPvSKJtwKyZE0UeB+9ddShE7P/U8/6+o9eO3onxFPUaKyKZLTP1YDPHM20IteWOVNxDX04WsOyac7pIOU6i8sTCEUAsMBbR85YtSHkwdKj+70h24OcqkezM8B0C2KPKkU8NehCa5N/INwotHZjmhJJIm54nREio8RGlqXsVYuQh5puODsnHtyftAhcpruCSU1JGKXinZG1YVrUeVKzg2EI8pOa3Gvw2haPAvPKqW68OyUKJLkCI2708xrbi32UVCGxpC+YsV3uf/SANUlD2hUMXxp5YRdHJLqJTbEvMA4MQsESMRh2zLXPPTQsGF7+5HixLe35SdmCSUv2ineiQv/yiOPcRYouCWUNxjRhPMgvWMDRdPGPiQOKqygc8KJXINKmhkKQt1VeTWwVKN3x9i9zVG/gxuCAWig1nuq67Cd9l8u7kX7ZT3WUJJ035t4oZQJ1UThU53ztCLaLAt302hhMus/1SR+JigakR6RjazWVg1Fk8Lhe9auelRmcqidxMTvXj/54SSamf0p5LnZc+GsVOX99usDfpioZoetVRmEDqT4x2En7mE45O5JZT1xooPqDJ4gJl6/pKPs1gG53mh7hq5n1Bg3EpC9eM6zMmogltCCcuf/3JrWyyL/s7GrH5MGrt/uI+SVrA6Lehy8G6hDOvyzCBqoKvESm4KtWfjz+3/KutdwGAp84AlkBxm6aeFIhkPrscXt4kBvYQy8N3YsYPQHuZqiQJZqFpPys3ppOXfV0PkWhM2GZWwY54fR4lZPz+uEhkSRj+h8lHvx30qGbBOIAmV0sQNQNVOW2wAGr6Uf0dE9Pg7lrhYMwVUQomidTGjb5WpaWmhpFPUYSAE8jsR/YtZW5OMcRmw9BLKwJc+S/eUzIYb8+XmETMY4zeEsHtZs9F59cB+1STRNDULMcLKZD5fFasQSpoY37kEEff4XqxvkGZIRmkukvUae1AfBS1yTcvEIEJunJQdYT+hDGKcPuZU58d+J+j3UouTtuYm2YXTaoF8Y7bKp6EruM6NZ2sLVVtocTaj5ByWgy4Ui3L/sDEP29ELrQQrqThZAt7nruTG6c5vTxzeFQrv3dPhA9mkIYcStZx1RVgt9yL1xYrbcklLUisUI3mFR0ErVnZeqVCKhfoJPTmu3Yqzu+7OThkJPiRU7GXZcWY+HFScP3PV7ufTXmLFhGrMKphFN1NfPuLPuL0UHoVar2CWQikSCIVQ1kW5nmL0mFAkGk2nH5k8fOodia8H3prVmwll7F/k4jJsILFsA+llDIVQ7fXDpVAGaSmYlO4aN8srHhHKsj8WoA+6hzLkhfwMLlRtDUNVKlaqU67CXAqhDNKMvyqhrGWzxpdC3Xwp5hGhwFIu1+jk594R74m1ajREXChpCFrNsTaXDUuvJauEQsdGW1YJVa8ClEooA6tHQbNH+ihoPlAvzGH7E4U0Vj1Oj+wtALkvYd9eqMWC2X2PMkhj9RYTCuaNZbQmOxF6UyywvZaDAL6keXRXqFr435fwx17lfwDkBls2LnJ2gcijkI0zrnDYBADKeNn4KsVJsGOloceNCHi1GfNTXxe8SwMcHxy2knyceOINCguvFjuHKzId5ze0Z9HNll9jeceugE8PBxPDXSshA+Q1PgWbTbDwLhPpTRdwbY54uUuUyZMCsBK7Sqe2yIqeOg1O3mUu5aYBGZfZIs03rLMVqS2ms9Dc9k4B3bZ4j+25uCFLXHpu3AFI16ckmiQDfdemBRCM9/v2W+oWQ5r5Bl5YP4Vi16IcsVM3yvMNtBy335+A8hh6EKkdJa7R8Tw4fqifOg/zHcP/AujtgdgvzP6Jhu93Yu3tzbZfVzXVOv0kQLvHIDp0iuX/6m8f/RMA/rN66dTp3wj4fjOAyLpzwsNfDPNl0P8OgC2ve6lL2PymjOZ7AQRZ0p2dHd/9Epnma8lHYdZl0WdC/rrS/vTtzOkHSnD+L7jLRb8J3sAd5IugvxuwTyl9/yNKdj1n4a/x/U9lar4EMLKHVsmGuTtpnX4EhOJr36y5Y7oDXr386yHzuDsRQWWKbPgHpp9+M5gsNx158+lhMXnq87maT8EirheNb/lVuFsc9S+3GQiAsbE8mbuGWuH2kM5WRDH9pfkxwEJkbh+9U1B84W+TLmbZZWIg7UsDBOisNf39O+UfpH/3mkaj0Wg0Go1Go9FoNBqNRqPRaDQajUaj0Wg0Gs038X+debUtX58BfgAAAABJRU5ErkJggg==" alt="twitter j.png" /></p>
+
+<h2 id="twitter-authentication">Twitter Authentication</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">tweepy</span> <span class="k">as</span> <span class="n">tw</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#authentication information.
+</span><span class="n">consumer_key</span> <span class="o">=</span><span class="s">'anCVWho0e8QQe01EWZssqiaXR'</span>
+<span class="n">consumer_secret</span><span class="o">=</span><span class="s">'GPk8VccE9YlZPScpm0Mau5mpby1x1RtxhTpOhbDUV2oxjSMX9K'</span>
+<span class="n">access_token</span><span class="o">=</span><span class="s">'1023697939-UCOITQBDkUQTYLtc4TlDYvSwR7C5PGBohGI8zH4'</span>
+<span class="n">access_token_secret</span><span class="o">=</span><span class="n">pl</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#Authentication
+</span><span class="n">auth</span><span class="o">=</span><span class="n">tw</span><span class="p">.</span><span class="n">OAuthHandler</span><span class="p">(</span><span class="n">consumer_key</span><span class="p">,</span><span class="n">consumer_secret</span><span class="p">)</span>
+<span class="n">auth</span><span class="p">.</span><span class="n">set_access_token</span><span class="p">(</span><span class="n">access_token</span><span class="p">,</span><span class="n">access_token_secret</span><span class="p">)</span>
+<span class="n">api</span><span class="o">=</span><span class="n">tw</span><span class="p">.</span><span class="n">API</span><span class="p">(</span><span class="n">auth</span><span class="p">,</span><span class="n">wait_on_rate_limit</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h2 id="collect-tweets">Collect Tweets</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># #fetch tweets
+</span>
+<span class="c1"># hashtag = '#F9'
+# query = tw.Cursor(api.search,q=hashtag, lang='en').items(2000)
+# tweets = [{'Tweets':tweet.text,'Timestamp':tweet.created_at} for tweet in query]
+# print(tweets)
+</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#create a copy of the raw data
+</span><span class="n">tweet</span><span class="o">=</span><span class="n">tweets</span><span class="p">.</span><span class="n">copy</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#view data
+</span><span class="n">data</span><span class="o">=</span><span class="n">pd</span><span class="p">.</span><span class="n">DataFrame</span><span class="p">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">tweet</span><span class="p">)</span>
+<span class="n">data</span><span class="p">.</span><span class="n">head</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Tweets</th>
+      <th>Timestamp</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>#F9 is so disappointing .. lacked everything</td>
+      <td>2021-08-09 12:24:23</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>follow : @TweetsNMC \n\n#F9 #VinDiesel #Domini...</td>
+      <td>2021-08-09 12:22:46</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>RT @InnerCityGeeks: NEW EPISODE OF THE #PODCAS...</td>
+      <td>2021-08-09 12:21:31</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Nah, everybody will know your tremendous feat,...</td>
+      <td>2021-08-09 12:21:01</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>F9: The Fast Saga... The drama 🤦🏽‍♀️🙄😒\n#F9</td>
+      <td>2021-08-09 12:16:19</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<h2 id="export-collected-data">Export Collected Data</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">data</span><span class="p">.</span><span class="n">to_csv</span><span class="p">(</span><span class="sa">r</span><span class="s">'/original/tokyo2020all.csv'</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="bp">False</span><span class="p">)</span>
+<span class="n">data</span><span class="p">.</span><span class="n">to_csv</span><span class="p">(</span><span class="sa">r</span><span class="s">'/original/tokyo2020all.txt'</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="bp">False</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h1 id="load-exported-data-to-data-frame">Load Exported data to Data Frame</h1>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">text_data</span><span class="o">=</span><span class="s">'original/tokyo2020all.txt'</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">data_txt</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">text_data</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">data_txt</span><span class="p">.</span><span class="n">shape</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>(2000, 2)
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df</span><span class="o">=</span><span class="n">data_txt</span><span class="p">.</span><span class="n">copy</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df</span><span class="p">.</span><span class="n">head</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Tweets</th>
+      <th>Timestamp</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>RT @stadiumastro: NUR DHABITAH IS THROUGH TO T...</td>
+      <td>2021-07-31 07:26:36</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Limerick is incredibly proud of @sarahlavin_ 🏃...</td>
+      <td>2021-07-31 07:26:36</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>RT @stadiumastro: NUR DHABITAH IS THROUGH TO T...</td>
+      <td>2021-07-31 07:26:36</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>RT @Ra_THORe: Amazing performance! \n#Kamalpre...</td>
+      <td>2021-07-31 07:26:36</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>RT @BadmintonTalk: INDONESIA #INA Men's Single...</td>
+      <td>2021-07-31 07:26:36</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<h1 id="eda">EDA</h1>
+
+<h2 id="data-shape">Data Shape</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">eda</span> <span class="o">=</span> <span class="n">df</span><span class="p">.</span><span class="n">copy</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">eda</span><span class="p">.</span><span class="n">shape</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>(2000, 2)
+</code></pre></div></div>
+
+<h2 id="data-types-and-null-count">Data Types and Null count</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">eda</span><span class="p">.</span><span class="n">info</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;class 'pandas.core.frame.DataFrame'&gt;
+RangeIndex: 2000 entries, 0 to 1999
+Data columns (total 2 columns):
+ #   Column     Non-Null Count  Dtype 
+---  ------     --------------  ----- 
+ 0   Tweets     2000 non-null   object
+ 1   Timestamp  2000 non-null   object
+dtypes: object(2)
+memory usage: 31.4+ KB
+</code></pre></div></div>
+
+<h2 id="scraped-tweets-wordcloud">Scraped Tweets WordCloud</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">wordcloud</span> <span class="kn">import</span> <span class="n">WordCloud</span><span class="p">,</span> <span class="n">STOPWORDS</span><span class="p">,</span> <span class="n">ImageColorGenerator</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Text of all words in column Tweets
+</span>
+<span class="n">text</span> <span class="o">=</span> <span class="s">" "</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">review</span> <span class="k">for</span> <span class="n">review</span> <span class="ow">in</span> <span class="n">eda</span><span class="p">.</span><span class="n">Tweets</span><span class="p">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">))</span>
+<span class="k">print</span> <span class="p">(</span><span class="s">"There are {} words in the combination of all cells in column Tweets."</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">text</span><span class="p">)))</span>
+
+<span class="c1"># Create stopword list:
+# remove words that we want to exclude
+</span>
+<span class="n">stopwords</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">STOPWORDS</span><span class="p">)</span>
+<span class="n">stopwords</span><span class="p">.</span><span class="n">update</span><span class="p">([</span><span class="s">'RT'</span><span class="p">,</span><span class="s">'#F9'</span><span class="p">])</span>
+
+<span class="c1"># Generate a word cloud image
+</span>
+<span class="n">wordcloud</span> <span class="o">=</span> <span class="n">WordCloud</span><span class="p">(</span><span class="n">stopwords</span><span class="o">=</span><span class="n">stopwords</span><span class="p">,</span> <span class="n">background_color</span><span class="o">=</span><span class="s">"white"</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">800</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span><span class="n">colormap</span><span class="o">=</span><span class="s">'inferno'</span><span class="p">).</span><span class="n">generate</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+
+<span class="c1"># Display the generated image:
+# the matplotlib way:
+</span>
+<span class="n">fig</span><span class="o">=</span><span class="n">plt</span><span class="p">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">tight_layout</span><span class="p">(</span><span class="n">pad</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">axis</span><span class="p">(</span><span class="s">"off"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">wordcloud</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s">'bilinear'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>There are 270852 words in the combination of all cells in column Tweets.
+</code></pre></div></div>
+
+<p><img src="output_29_1.png" alt="png" /></p>
+
+<h2 id="language-detection">Language Detection</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">langdetect</span> <span class="kn">import</span> <span class="n">detect</span>
+
+<span class="n">lang</span> <span class="o">=</span> <span class="n">detect</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+
+<span class="k">print</span><span class="p">(</span><span class="n">lang</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>en
+</code></pre></div></div>
+
+<h1 id="data-preprocessing">Data Preprocessing</h1>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_cleaning</span><span class="o">=</span><span class="n">df</span><span class="p">.</span><span class="n">copy</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_cleaning</span><span class="p">.</span><span class="n">head</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Tweets</th>
+      <th>Timestamp</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>RT @stadiumastro: NUR DHABITAH IS THROUGH TO T...</td>
+      <td>2021-07-31 07:26:36</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Limerick is incredibly proud of @sarahlavin_ 🏃...</td>
+      <td>2021-07-31 07:26:36</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>RT @stadiumastro: NUR DHABITAH IS THROUGH TO T...</td>
+      <td>2021-07-31 07:26:36</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>RT @Ra_THORe: Amazing performance! \n#Kamalpre...</td>
+      <td>2021-07-31 07:26:36</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>RT @BadmintonTalk: INDONESIA #INA Men's Single...</td>
+      <td>2021-07-31 07:26:36</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<h2 id="removing-hashtags-and-mentions">Removing Hashtags and Mentions</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">re</span>
+<span class="k">def</span> <span class="nf">cleaning_hash_mentions</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">re</span><span class="p">.</span><span class="n">sub</span><span class="p">(</span><span class="s">"((#[A-Za-z0-9]+)|(@[A-Za-z0-9]+))"</span><span class="p">,</span><span class="s">' '</span><span class="p">,</span><span class="n">data</span><span class="p">)</span>
+
+<span class="n">df_cleaning</span><span class="p">[</span><span class="s">'tweets_no_tags'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_cleaning</span><span class="p">[</span><span class="s">'Tweets'</span><span class="p">].</span><span class="nb">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">cleaning_hash_mentions</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+</code></pre></div></div>
+
+<h2 id="removing-urls">Removing URLs</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#remove URLs
+</span><span class="kn">import</span> <span class="nn">re</span>
+<span class="k">def</span> <span class="nf">cleaning_URLs</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">re</span><span class="p">.</span><span class="n">sub</span><span class="p">(</span><span class="s">'((www.[^s]+)|(https?://[^s]+))'</span><span class="p">,</span><span class="s">' '</span><span class="p">,</span><span class="n">data</span><span class="p">)</span>
+
+<span class="n">df_cleaning</span><span class="p">[</span><span class="s">'tweets_no_url'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_cleaning</span><span class="p">[</span><span class="s">'tweets_no_tags'</span><span class="p">].</span><span class="nb">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">cleaning_URLs</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+</code></pre></div></div>
+
+<h2 id="removing-numbers">Removing Numbers</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#remove numbers
+</span><span class="k">def</span> <span class="nf">cleaning_numbers</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">re</span><span class="p">.</span><span class="n">sub</span><span class="p">(</span><span class="s">'[0-9]+'</span><span class="p">,</span> <span class="s">''</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+<span class="n">df_cleaning</span><span class="p">[</span><span class="s">'tweets_no_num'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_cleaning</span><span class="p">[</span><span class="s">'tweets_no_url'</span><span class="p">].</span><span class="nb">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">cleaning_numbers</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+</code></pre></div></div>
+
+<h2 id="set-to-lower-case">Set to Lower Case</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Lower case all words
+</span><span class="n">df_cleaning</span><span class="p">[</span><span class="s">'tweets_lower'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_cleaning</span><span class="p">[</span><span class="s">'tweets_no_num'</span><span class="p">].</span><span class="nb">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="s">" "</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">x</span><span class="p">.</span><span class="n">split</span><span class="p">()))</span>
+</code></pre></div></div>
+
+<h2 id="removing-punctuations">Removing Punctuations</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Remove Punctuation
+</span><span class="n">df_cleaning</span><span class="p">[</span><span class="s">'tweets_nopunc'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_cleaning</span><span class="p">[</span><span class="s">'tweets_lower'</span><span class="p">].</span><span class="nb">str</span><span class="p">.</span><span class="n">replace</span><span class="p">(</span><span class="s">'[^\w\s]'</span><span class="p">,</span> <span class="s">''</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;ipython-input-19-92b1699700d6&gt;:2: FutureWarning: The default value of regex will change from True to False in a future version.
+  df_cleaning['tweets_nopunc'] = df_cleaning['tweets_lower'].str.replace('[^\w\s]', '')
+</code></pre></div></div>
+
+<h2 id="removing-stopwords">Removing Stopwords</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Import stopwords
+</span><span class="kn">import</span> <span class="nn">nltk</span>
+<span class="kn">from</span> <span class="nn">nltk.corpus</span> <span class="kn">import</span> <span class="n">stopwords</span>
+<span class="n">nltk</span><span class="p">.</span><span class="n">download</span><span class="p">(</span><span class="s">'stopwords'</span><span class="p">)</span>
+<span class="n">stop_words</span> <span class="o">=</span> <span class="n">stopwords</span><span class="p">.</span><span class="n">words</span><span class="p">(</span><span class="s">'english'</span><span class="p">)</span>
+
+<span class="c1"># Remove Stopwords
+</span><span class="n">df_cleaning</span><span class="p">[</span><span class="s">'tweets_nopunc_nostop'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_cleaning</span><span class="p">[</span><span class="s">'tweets_nopunc'</span><span class="p">].</span><span class="nb">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="s">" "</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">x</span><span class="p">.</span><span class="n">split</span><span class="p">()</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">stop_words</span><span class="p">))</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[nltk_data] Downloading package stopwords to
+[nltk_data]     C:\Users\Haziq\AppData\Roaming\nltk_data...
+[nltk_data]   Package stopwords is already up-to-date!
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Return frequency of values
+</span><span class="n">freq</span><span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">Series</span><span class="p">(</span><span class="s">" "</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">df_cleaning</span><span class="p">[</span><span class="s">'tweets_nopunc_nostop'</span><span class="p">]).</span><span class="n">split</span><span class="p">()).</span><span class="n">value_counts</span><span class="p">()[:</span><span class="mi">30</span><span class="p">]</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">freq</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rt             1821
+anthony         376
+ginting         362
+first           321
+womens          265
+win             242
+ms              231
+gold            223
+sinisuka        218
+finals          200
+final           199
+nesthy          196
+become          195
+indonesia       193
+indonesian      185
+petecio         185
+medal           184
+mens            181
+player          180
+dhabitah        139
+olympic         137
+singles         133
+reach           131
+game            130
+another         129
+rises           128
+nur             127
+springboard     117
+last            116
+vs              113
+dtype: int64
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">other_stopwords</span> <span class="o">=</span> <span class="p">[</span><span class="s">'rt'</span><span class="p">,</span> <span class="s">'tokyo2020'</span><span class="p">,</span> <span class="s">'reach'</span><span class="p">,</span><span class="s">'ganbattemalaysia'</span><span class="p">,</span><span class="s">'badmintontalk'</span><span class="p">,</span><span class="s">'sokongmalaysia'</span><span class="p">]</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_cleaning</span><span class="p">[</span><span class="s">'tweets_nopunc_nostop_nocommon'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_cleaning</span><span class="p">[</span><span class="s">'tweets_nopunc_nostop'</span><span class="p">].</span><span class="nb">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="s">""</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="s">" "</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">x</span><span class="p">.</span><span class="n">split</span><span class="p">()</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">other_stopwords</span><span class="p">)))</span>
+</code></pre></div></div>
+
+<h2 id="lemmatization">Lemmatization</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Import textblob
+</span><span class="kn">from</span> <span class="nn">textblob</span> <span class="kn">import</span> <span class="n">Word</span>
+<span class="n">nltk</span><span class="p">.</span><span class="n">download</span><span class="p">(</span><span class="s">'wordnet'</span><span class="p">)</span>
+
+<span class="c1"># Lemmatize final review format
+</span><span class="n">df_cleaning</span><span class="p">[</span><span class="s">'cleaned_tweets'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_cleaning</span><span class="p">[</span><span class="s">'tweets_nopunc_nostop_nocommon'</span><span class="p">]</span>\
+<span class="p">.</span><span class="nb">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="s">" "</span><span class="p">.</span><span class="n">join</span><span class="p">([</span><span class="n">Word</span><span class="p">(</span><span class="n">word</span><span class="p">).</span><span class="n">lemmatize</span><span class="p">()</span> <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">x</span><span class="p">.</span><span class="n">split</span><span class="p">()]))</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[nltk_data] Downloading package wordnet to
+[nltk_data]     C:\Users\Haziq\AppData\Roaming\nltk_data...
+[nltk_data]   Package wordnet is already up-to-date!
+</code></pre></div></div>
+
+<h2 id="output-from-preprocessing">Output from Preprocessing</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_cleaning</span><span class="p">.</span><span class="n">head</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Tweets</th>
+      <th>Timestamp</th>
+      <th>tweets_no_tags</th>
+      <th>tweets_no_url</th>
+      <th>tweets_no_num</th>
+      <th>tweets_lower</th>
+      <th>tweets_nopunc</th>
+      <th>tweets_nopunc_nostop</th>
+      <th>tweets_nopunc_nostop_nocommon</th>
+      <th>cleaned_tweets</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>RT @stadiumastro: NUR DHABITAH IS THROUGH TO T...</td>
+      <td>2021-07-31 07:26:36</td>
+      <td>RT  : NUR DHABITAH IS THROUGH TO THE FINAL!\n\...</td>
+      <td>RT  : NUR DHABITAH IS THROUGH TO THE FINAL!\n\...</td>
+      <td>RT  : NUR DHABITAH IS THROUGH TO THE FINAL!\n\...</td>
+      <td>rt : nur dhabitah is through to the final!</td>
+      <td>rt  nur dhabitah is through to the final</td>
+      <td>rt nur dhabitah final</td>
+      <td>nur dhabitah final</td>
+      <td>nur dhabitah final</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Limerick is incredibly proud of @sarahlavin_ 🏃...</td>
+      <td>2021-07-31 07:26:36</td>
+      <td>Limerick is incredibly proud of  _ 🏃‍♀️ She is...</td>
+      <td>Limerick is incredibly proud of  _ 🏃‍♀️ She is...</td>
+      <td>Limerick is incredibly proud of  _ 🏃‍♀️ She is...</td>
+      <td>limerick is incredibly proud of _ 🏃‍♀️ she is ...</td>
+      <td>limerick is incredibly proud of _  she is a ph...</td>
+      <td>limerick incredibly proud _ phenomenal athlete...</td>
+      <td>limerick incredibly proud _ phenomenal athlete...</td>
+      <td>limerick incredibly proud _ phenomenal athlete...</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>RT @stadiumastro: NUR DHABITAH IS THROUGH TO T...</td>
+      <td>2021-07-31 07:26:36</td>
+      <td>RT  : NUR DHABITAH IS THROUGH TO THE FINAL!\n\...</td>
+      <td>RT  : NUR DHABITAH IS THROUGH TO THE FINAL!\n\...</td>
+      <td>RT  : NUR DHABITAH IS THROUGH TO THE FINAL!\n\...</td>
+      <td>rt : nur dhabitah is through to the final!</td>
+      <td>rt  nur dhabitah is through to the final</td>
+      <td>rt nur dhabitah final</td>
+      <td>nur dhabitah final</td>
+      <td>nur dhabitah final</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>RT @Ra_THORe: Amazing performance! \n#Kamalpre...</td>
+      <td>2021-07-31 07:26:36</td>
+      <td>RT  _THORe: Amazing performance! \n  advances ...</td>
+      <td>RT  _THORe: Amazing performance! \n  advances ...</td>
+      <td>RT  _THORe: Amazing performance! \n  advances ...</td>
+      <td>rt _thore: amazing performance! advances to wo...</td>
+      <td>rt _thore amazing performance advances to wome...</td>
+      <td>rt _thore amazing performance advances womens ...</td>
+      <td>_thore amazing performance advances womens dis...</td>
+      <td>_thore amazing performance advance woman discu...</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>RT @BadmintonTalk: INDONESIA #INA Men's Single...</td>
+      <td>2021-07-31 07:26:36</td>
+      <td>RT  : INDONESIA   Men's Singles Rises Again!\n...</td>
+      <td>RT  : INDONESIA   Men's Singles Rises Again!\n...</td>
+      <td>RT  : INDONESIA   Men's Singles Rises Again!\n...</td>
+      <td>rt : indonesia men's singles rises again! anth...</td>
+      <td>rt  indonesia mens singles rises again anthony...</td>
+      <td>rt indonesia mens singles rises anthony sinisu...</td>
+      <td>indonesia mens singles rises anthony sinisuka ...</td>
+      <td>indonesia men single rise anthony sinisuka gin...</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<h2 id="convert-tweet-time-object-to-timestamp">Convert Tweet Time Object to Timestamp</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_cleaning</span><span class="p">[</span><span class="s">'Timestamp'</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df_cleaning</span><span class="p">[</span><span class="s">'Timestamp'</span><span class="p">])</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_cleaning</span><span class="p">.</span><span class="n">dtypes</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Tweets                                   object
+Timestamp                        datetime64[ns]
+tweets_no_tags                           object
+tweets_no_url                            object
+tweets_no_num                            object
+tweets_lower                             object
+tweets_nopunc                            object
+tweets_nopunc_nostop                     object
+tweets_nopunc_nostop_nocommon            object
+cleaned_tweets                           object
+dtype: object
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_cleaned</span><span class="o">=</span> <span class="n">df_cleaning</span><span class="p">[[</span><span class="s">"cleaned_tweets"</span><span class="p">,</span><span class="s">"Timestamp"</span><span class="p">]]</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_cleaned</span><span class="p">.</span><span class="n">head</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>cleaned_tweets</th>
+      <th>Timestamp</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>nur dhabitah final</td>
+      <td>2021-07-31 07:26:36</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>limerick incredibly proud _ phenomenal athlete...</td>
+      <td>2021-07-31 07:26:36</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>nur dhabitah final</td>
+      <td>2021-07-31 07:26:36</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>_thore amazing performance advance woman discu...</td>
+      <td>2021-07-31 07:26:36</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>indonesia men single rise anthony sinisuka gin...</td>
+      <td>2021-07-31 07:26:36</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<h2 id="export-cleaned-data">Export Cleaned Data</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_cleaned</span><span class="p">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s">'cleaned/tokyo2020_cleaned.csv'</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="bp">False</span><span class="p">)</span>
+<span class="n">df_cleaned</span><span class="p">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s">'cleaned/tokyo2020_cleaned.txt'</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="bp">False</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h1 id="sentiment-analysis">Sentiment Analysis</h1>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_sa</span><span class="o">=</span><span class="n">df_cleaned</span><span class="p">.</span><span class="n">copy</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Calculate polarity and subjectivity
+</span><span class="kn">from</span> <span class="nn">textblob</span> <span class="kn">import</span> <span class="n">TextBlob</span>
+<span class="n">df_sa</span><span class="p">[</span><span class="s">'polarity'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_sa</span><span class="p">[</span><span class="s">'cleaned_tweets'</span><span class="p">].</span><span class="nb">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">TextBlob</span><span class="p">(</span><span class="n">x</span><span class="p">).</span><span class="n">sentiment</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">df_sa</span><span class="p">[</span><span class="s">'subjectivity'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_sa</span><span class="p">[</span><span class="s">'cleaned_tweets'</span><span class="p">].</span><span class="nb">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">TextBlob</span><span class="p">(</span><span class="n">x</span><span class="p">).</span><span class="n">sentiment</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_sa</span><span class="p">.</span><span class="n">head</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>cleaned_tweets</th>
+      <th>Timestamp</th>
+      <th>polarity</th>
+      <th>subjectivity</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>nur dhabitah final</td>
+      <td>2021-07-31 07:26:36</td>
+      <td>0.000000</td>
+      <td>1.00000</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>limerick incredibly proud _ phenomenal athlete...</td>
+      <td>2021-07-31 07:26:36</td>
+      <td>0.650000</td>
+      <td>0.75000</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>nur dhabitah final</td>
+      <td>2021-07-31 07:26:36</td>
+      <td>0.000000</td>
+      <td>1.00000</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>_thore amazing performance advance woman discu...</td>
+      <td>2021-07-31 07:26:36</td>
+      <td>0.300000</td>
+      <td>0.95000</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>indonesia men single rise anthony sinisuka gin...</td>
+      <td>2021-07-31 07:26:36</td>
+      <td>0.089286</td>
+      <td>0.27381</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<h2 id="polarity-label">Polarity Label</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_label</span> <span class="o">=</span> <span class="n">df_sa</span><span class="p">.</span><span class="n">copy</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">polar_label</span><span class="p">(</span><span class="n">polar</span><span class="p">):</span>
+  <span class="k">if</span> <span class="n">polar</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">:</span>
+    <span class="k">return</span> <span class="s">"negative"</span>
+  <span class="k">elif</span> <span class="n">polar</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+    <span class="k">return</span> <span class="s">"neutral"</span>
+  <span class="k">else</span><span class="p">:</span>
+    <span class="k">return</span> <span class="s">"positive"</span>
+
+<span class="n">df_label</span><span class="p">[</span><span class="s">'polar_label'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_label</span><span class="p">[</span><span class="s">'polarity'</span><span class="p">].</span><span class="nb">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">polar_label</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">subj_label</span><span class="p">(</span><span class="n">subj</span><span class="p">):</span>
+  <span class="k">if</span> <span class="n">subj</span><span class="o">&lt;</span><span class="mf">0.5</span><span class="p">:</span>
+    <span class="k">return</span> <span class="s">"objective"</span>
+  <span class="k">elif</span> <span class="n">subj</span><span class="o">==</span><span class="mf">0.5</span><span class="p">:</span>
+    <span class="k">return</span> <span class="s">"neutral"</span>
+  <span class="k">else</span><span class="p">:</span>
+    <span class="k">return</span> <span class="s">"subjective"</span>
+
+<span class="n">df_label</span><span class="p">[</span><span class="s">'subj_label'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_label</span><span class="p">[</span><span class="s">'subjectivity'</span><span class="p">].</span><span class="nb">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">subj_label</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_label</span><span class="p">[[</span><span class="s">'cleaned_tweets'</span><span class="p">,</span><span class="s">'polarity'</span><span class="p">,</span> <span class="s">'subjectivity'</span><span class="p">,</span><span class="s">'polar_label'</span><span class="p">,</span><span class="s">'subj_label'</span><span class="p">]].</span><span class="n">head</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>cleaned_tweets</th>
+      <th>polarity</th>
+      <th>subjectivity</th>
+      <th>polar_label</th>
+      <th>subj_label</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>nur dhabitah final</td>
+      <td>0.000000</td>
+      <td>1.00000</td>
+      <td>neutral</td>
+      <td>subjective</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>limerick incredibly proud _ phenomenal athlete...</td>
+      <td>0.650000</td>
+      <td>0.75000</td>
+      <td>positive</td>
+      <td>subjective</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>nur dhabitah final</td>
+      <td>0.000000</td>
+      <td>1.00000</td>
+      <td>neutral</td>
+      <td>subjective</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>_thore amazing performance advance woman discu...</td>
+      <td>0.300000</td>
+      <td>0.95000</td>
+      <td>positive</td>
+      <td>subjective</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>indonesia men single rise anthony sinisuka gin...</td>
+      <td>0.089286</td>
+      <td>0.27381</td>
+      <td>positive</td>
+      <td>objective</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_label</span><span class="p">[</span><span class="s">'polar_label'</span><span class="p">].</span><span class="n">value_counts</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>positive    989
+neutral     842
+negative    169
+Name: polar_label, dtype: int64
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_label</span><span class="p">[</span><span class="s">'subj_label'</span><span class="p">].</span><span class="n">value_counts</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>objective     1226
+subjective     719
+neutral         55
+Name: subj_label, dtype: int64
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_label</span><span class="p">.</span><span class="n">isna</span><span class="p">().</span><span class="nb">sum</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cleaned_tweets    0
+Timestamp         0
+polarity          0
+subjectivity      0
+polar_label       0
+subj_label        0
+dtype: int64
+</code></pre></div></div>
+
+<h2 id="polarity--subjectivity-score">Polarity &amp; Subjectivity Score</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_label</span><span class="p">[[</span><span class="s">'polarity'</span><span class="p">,</span><span class="s">'subjectivity'</span><span class="p">]].</span><span class="n">describe</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>polarity</th>
+      <th>subjectivity</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>count</th>
+      <td>2000.000000</td>
+      <td>2000.000000</td>
+    </tr>
+    <tr>
+      <th>mean</th>
+      <td>0.134933</td>
+      <td>0.413012</td>
+    </tr>
+    <tr>
+      <th>std</th>
+      <td>0.250944</td>
+      <td>0.354464</td>
+    </tr>
+    <tr>
+      <th>min</th>
+      <td>-1.000000</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>25%</th>
+      <td>0.000000</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>50%</th>
+      <td>0.000000</td>
+      <td>0.333333</td>
+    </tr>
+    <tr>
+      <th>75%</th>
+      <td>0.250000</td>
+      <td>0.650000</td>
+    </tr>
+    <tr>
+      <th>max</th>
+      <td>1.000000</td>
+      <td>1.000000</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<h2 id="visualization">Visualization</h2>
+
+<h3 id="moving-averages">Moving Averages</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_vis</span> <span class="o">=</span> <span class="n">df_label</span><span class="p">.</span><span class="n">copy</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_mov_avg</span> <span class="o">=</span> <span class="n">df_vis</span><span class="p">[[</span><span class="s">'Timestamp'</span><span class="p">,</span> <span class="s">'polarity'</span><span class="p">,</span><span class="s">'subjectivity'</span><span class="p">]]</span>
+<span class="n">df_mov_avg</span> <span class="o">=</span> <span class="n">df_mov_avg</span><span class="p">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s">'Timestamp'</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">df_mov_avg</span><span class="p">[</span><span class="s">'MA Polarity'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_mov_avg</span><span class="p">.</span><span class="n">polarity</span><span class="p">.</span><span class="n">rolling</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">min_periods</span><span class="o">=</span><span class="mi">3</span><span class="p">).</span><span class="n">mean</span><span class="p">()</span>
+<span class="n">df_mov_avg</span><span class="p">[</span><span class="s">'MA Subjectivity'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_mov_avg</span><span class="p">.</span><span class="n">subjectivity</span><span class="p">.</span><span class="n">rolling</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">min_periods</span><span class="o">=</span><span class="mi">3</span><span class="p">).</span><span class="n">mean</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_mov_avg</span><span class="p">.</span><span class="n">tail</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Timestamp</th>
+      <th>polarity</th>
+      <th>subjectivity</th>
+      <th>MA Polarity</th>
+      <th>MA Subjectivity</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>4</th>
+      <td>2021-07-31 07:26:36</td>
+      <td>0.089286</td>
+      <td>0.27381</td>
+      <td>0.116323</td>
+      <td>0.401171</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2021-07-31 07:26:36</td>
+      <td>0.300000</td>
+      <td>0.95000</td>
+      <td>0.146323</td>
+      <td>0.496171</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2021-07-31 07:26:36</td>
+      <td>0.000000</td>
+      <td>1.00000</td>
+      <td>0.133823</td>
+      <td>0.579504</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2021-07-31 07:26:36</td>
+      <td>0.650000</td>
+      <td>0.75000</td>
+      <td>0.155489</td>
+      <td>0.594504</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>2021-07-31 07:26:36</td>
+      <td>0.000000</td>
+      <td>1.00000</td>
+      <td>0.188823</td>
+      <td>0.654504</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_mov_avg</span><span class="p">.</span><span class="n">dtypes</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Timestamp          datetime64[ns]
+polarity                  float64
+subjectivity              float64
+MA Polarity               float64
+MA Subjectivity           float64
+dtype: object
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">plot</span><span class="p">(</span><span class="n">df_mov_avg</span><span class="p">[</span><span class="s">'Timestamp'</span><span class="p">],</span> <span class="n">df_mov_avg</span><span class="p">[</span><span class="s">'MA Polarity'</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s">'darkorange'</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">set_title</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">.</span><span class="n">join</span><span class="p">([</span><span class="s">"Polarity"</span><span class="p">]))</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="n">plot</span><span class="p">(</span><span class="n">df_mov_avg</span><span class="p">[</span><span class="s">'Timestamp'</span><span class="p">],</span> <span class="n">df_mov_avg</span><span class="p">[</span><span class="s">'MA Subjectivity'</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s">'darkorchid'</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="n">set_title</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">.</span><span class="n">join</span><span class="p">([</span><span class="s">"Subjectivity"</span><span class="p">]))</span>
+
+
+<span class="n">fig</span><span class="p">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">.</span><span class="n">join</span><span class="p">([</span><span class="s">"MA of Sentiment Scores"</span><span class="p">]),</span> <span class="n">y</span><span class="o">=</span><span class="mf">0.98</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><img src="output_82_0.png" alt="png" /></p>
+
+<h3 id="cleaned-tweets-wordcloud">Cleaned Tweets WordCloud</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Text of all words in column Tweets
+</span>
+<span class="n">text</span> <span class="o">=</span> <span class="s">" "</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">review</span> <span class="k">for</span> <span class="n">review</span> <span class="ow">in</span> <span class="n">df_cleaned</span><span class="p">.</span><span class="n">cleaned_tweets</span><span class="p">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">))</span>
+<span class="k">print</span> <span class="p">(</span><span class="s">"There are {} words in the combination of all cells in column Tweets."</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">text</span><span class="p">)))</span>
+
+<span class="c1"># Create stopword list:
+# remove words that we want to exclude
+</span>
+<span class="n">stopwords</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">STOPWORDS</span><span class="p">)</span>
+
+<span class="c1"># Generate a word cloud image
+</span>
+<span class="n">wordcloud</span> <span class="o">=</span> <span class="n">WordCloud</span><span class="p">(</span><span class="n">stopwords</span><span class="o">=</span><span class="n">stopwords</span><span class="p">,</span> <span class="n">background_color</span><span class="o">=</span><span class="s">"white"</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">800</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span><span class="n">colormap</span><span class="o">=</span><span class="s">'plasma'</span><span class="p">).</span><span class="n">generate</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+
+<span class="c1"># Display the generated image:
+# the matplotlib way:
+</span>
+<span class="n">fig</span><span class="o">=</span><span class="n">plt</span><span class="p">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">tight_layout</span><span class="p">(</span><span class="n">pad</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">axis</span><span class="p">(</span><span class="s">"off"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">wordcloud</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s">'bilinear'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>There are 130215 words in the combination of all cells in column Tweets.
+</code></pre></div></div>
+
+<p><img src="output_84_1.png" alt="png" /></p>
+
+<h3 id="positive-tweets-wordcloud">Positive Tweets WordCloud</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_pos</span> <span class="o">=</span> <span class="n">df_vis</span><span class="p">[</span><span class="n">df_vis</span><span class="p">[</span><span class="s">'polar_label'</span><span class="p">]</span><span class="o">==</span><span class="s">'positive'</span><span class="p">]</span>
+
+<span class="c1"># Text of all words in column Tweets
+</span>
+<span class="n">text</span> <span class="o">=</span> <span class="s">" "</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">review</span> <span class="k">for</span> <span class="n">review</span> <span class="ow">in</span> <span class="n">df_pos</span><span class="p">.</span><span class="n">cleaned_tweets</span><span class="p">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">))</span>
+<span class="k">print</span> <span class="p">(</span><span class="s">"There are {} words in the combination of all cells in column Tweets."</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">text</span><span class="p">)))</span>
+
+<span class="c1"># Create stopword list:
+# remove words that we want to exclude
+</span>
+<span class="n">stopwords</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">STOPWORDS</span><span class="p">)</span>
+
+<span class="c1"># Generate a word cloud image
+</span>
+<span class="n">wordcloud</span> <span class="o">=</span> <span class="n">WordCloud</span><span class="p">(</span><span class="n">stopwords</span><span class="o">=</span><span class="n">stopwords</span><span class="p">,</span> <span class="n">background_color</span><span class="o">=</span><span class="s">"white"</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">800</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span><span class="n">colormap</span><span class="o">=</span><span class="s">'inferno'</span><span class="p">).</span><span class="n">generate</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+
+<span class="c1"># Display the generated image:
+# the matplotlib way:
+</span>
+<span class="n">fig</span><span class="o">=</span><span class="n">plt</span><span class="p">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">tight_layout</span><span class="p">(</span><span class="n">pad</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">axis</span><span class="p">(</span><span class="s">"off"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">wordcloud</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s">'bilinear'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>There are 72234 words in the combination of all cells in column Tweets.
+</code></pre></div></div>
+
+<p><img src="output_86_1.png" alt="png" /></p>
+
+<h3 id="negative-tweets-wordcloud">Negative Tweets WordCloud</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_neg</span> <span class="o">=</span> <span class="n">df_vis</span><span class="p">[</span><span class="n">df_vis</span><span class="p">[</span><span class="s">'polar_label'</span><span class="p">]</span><span class="o">==</span><span class="s">'negative'</span><span class="p">]</span>
+
+<span class="c1"># Text of all words in column Tweets
+</span>
+<span class="n">text</span> <span class="o">=</span> <span class="s">" "</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">review</span> <span class="k">for</span> <span class="n">review</span> <span class="ow">in</span> <span class="n">df_neg</span><span class="p">.</span><span class="n">cleaned_tweets</span><span class="p">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">))</span>
+<span class="k">print</span> <span class="p">(</span><span class="s">"There are {} words in the combination of all cells in column Tweets."</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">text</span><span class="p">)))</span>
+
+<span class="c1"># Create stopword list:
+# remove words that we want to exclude
+</span>
+<span class="n">stopwords</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">STOPWORDS</span><span class="p">)</span>
+
+<span class="c1"># Generate a word cloud image
+</span>
+<span class="n">wordcloud</span> <span class="o">=</span> <span class="n">WordCloud</span><span class="p">(</span><span class="n">stopwords</span><span class="o">=</span><span class="n">stopwords</span><span class="p">,</span> <span class="n">background_color</span><span class="o">=</span><span class="s">"white"</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">800</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span><span class="n">colormap</span><span class="o">=</span><span class="s">'tab10'</span><span class="p">).</span><span class="n">generate</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+
+<span class="c1"># Display the generated image:
+# the matplotlib way:
+</span>
+<span class="n">fig</span><span class="o">=</span><span class="n">plt</span><span class="p">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">tight_layout</span><span class="p">(</span><span class="n">pad</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">axis</span><span class="p">(</span><span class="s">"off"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">wordcloud</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s">'bilinear'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>There are 11599 words in the combination of all cells in column Tweets.
+</code></pre></div></div>
+
+<p><img src="output_88_1.png" alt="png" /></p>
+
+<h3 id="objective-tweets-wordcloud">Objective Tweets WordCloud</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_obj</span> <span class="o">=</span> <span class="n">df_vis</span><span class="p">[</span><span class="n">df_vis</span><span class="p">[</span><span class="s">'subj_label'</span><span class="p">]</span><span class="o">==</span><span class="s">'objective'</span><span class="p">]</span>
+
+<span class="c1"># Text of all words in column Tweets
+</span>
+<span class="n">text</span> <span class="o">=</span> <span class="s">" "</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">review</span> <span class="k">for</span> <span class="n">review</span> <span class="ow">in</span> <span class="n">df_obj</span><span class="p">.</span><span class="n">cleaned_tweets</span><span class="p">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">))</span>
+<span class="k">print</span> <span class="p">(</span><span class="s">"There are {} words in the combination of all cells in column Tweets."</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">text</span><span class="p">)))</span>
+
+<span class="c1"># Create stopword list:
+# remove words that we want to exclude
+</span>
+<span class="n">stopwords</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">STOPWORDS</span><span class="p">)</span>
+
+<span class="c1"># Generate a word cloud image
+</span>
+<span class="n">wordcloud</span> <span class="o">=</span> <span class="n">WordCloud</span><span class="p">(</span><span class="n">stopwords</span><span class="o">=</span><span class="n">stopwords</span><span class="p">,</span> <span class="n">background_color</span><span class="o">=</span><span class="s">"white"</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">800</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span><span class="n">colormap</span><span class="o">=</span><span class="s">'tab10'</span><span class="p">).</span><span class="n">generate</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+
+<span class="c1"># Display the generated image:
+# the matplotlib way:
+</span>
+<span class="n">fig</span><span class="o">=</span><span class="n">plt</span><span class="p">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">tight_layout</span><span class="p">(</span><span class="n">pad</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">axis</span><span class="p">(</span><span class="s">"off"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">wordcloud</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s">'bilinear'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>There are 81725 words in the combination of all cells in column Tweets.
+</code></pre></div></div>
+
+<p><img src="output_90_1.png" alt="png" /></p>
+
+<h3 id="subjective-tweets-wordcloud">Subjective Tweets WordCloud</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_subj</span> <span class="o">=</span> <span class="n">df_vis</span><span class="p">[</span><span class="n">df_vis</span><span class="p">[</span><span class="s">'subj_label'</span><span class="p">]</span><span class="o">==</span><span class="s">'subjective'</span><span class="p">]</span>
+
+<span class="c1"># Text of all words in column Tweets
+</span>
+<span class="n">text</span> <span class="o">=</span> <span class="s">" "</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">review</span> <span class="k">for</span> <span class="n">review</span> <span class="ow">in</span> <span class="n">df_subj</span><span class="p">.</span><span class="n">cleaned_tweets</span><span class="p">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">))</span>
+<span class="k">print</span> <span class="p">(</span><span class="s">"There are {} words in the combination of all cells in column Tweets."</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">text</span><span class="p">)))</span>
+
+<span class="c1"># Create stopword list:
+# remove words that we want to exclude
+</span>
+<span class="n">stopwords</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">STOPWORDS</span><span class="p">)</span>
+
+<span class="c1"># Generate a word cloud image
+</span>
+<span class="n">wordcloud</span> <span class="o">=</span> <span class="n">WordCloud</span><span class="p">(</span><span class="n">stopwords</span><span class="o">=</span><span class="n">stopwords</span><span class="p">,</span> <span class="n">background_color</span><span class="o">=</span><span class="s">"white"</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">800</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span><span class="n">colormap</span><span class="o">=</span><span class="s">'tab10'</span><span class="p">).</span><span class="n">generate</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+
+<span class="c1"># Display the generated image:
+# the matplotlib way:
+</span>
+<span class="n">fig</span><span class="o">=</span><span class="n">plt</span><span class="p">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">tight_layout</span><span class="p">(</span><span class="n">pad</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">axis</span><span class="p">(</span><span class="s">"off"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">wordcloud</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s">'bilinear'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>There are 44634 words in the combination of all cells in column Tweets.
+</code></pre></div></div>
+
+<p><img src="output_92_1.png" alt="png" /></p>
+
+<h3 id="label-count-and-correlation-heatmap">Label Count and Correlation Heatmap</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="n">sns</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
+<span class="n">fig</span><span class="p">.</span><span class="n">set_size_inches</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span><span class="mi">10</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s">'Cleaned Tweets EDA'</span><span class="p">)</span>
+<span class="n">label_counts</span><span class="o">=</span><span class="n">df_vis</span><span class="p">[</span><span class="s">'polar_label'</span><span class="p">].</span><span class="n">value_counts</span><span class="p">()</span>
+<span class="n">label_counts</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="s">'pie'</span><span class="p">,</span><span class="n">autopct</span><span class="o">=</span><span class="s">'%1.1f%%'</span><span class="p">,</span><span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">set_title</span><span class="p">(</span><span class="s">"Count of labels"</span><span class="p">)</span>
+
+<span class="n">corr</span> <span class="o">=</span> <span class="n">df_mov_avg</span><span class="p">.</span><span class="n">corr</span><span class="p">()</span>
+<span class="n">sns</span><span class="p">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">corr</span><span class="p">,</span><span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">annot</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span><span class="n">cmap</span><span class="o">=</span><span class="s">"vlag"</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="n">set_title</span><span class="p">(</span><span class="s">"Correlation between variables"</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="n">tick_params</span><span class="p">(</span><span class="n">labelrotation</span><span class="o">=</span><span class="mi">45</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="s">'y'</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+
+</code></pre></div></div>
+
+<p><img src="output_94_0.png" alt="png" /></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;Figure size 720x720 with 0 Axes&gt;
+</code></pre></div></div>
+
+<h3 id="correlation-between-polarity-and-subjectivity">Correlation Between Polarity and Subjectivity</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
+<span class="n">fig</span><span class="p">.</span><span class="n">set_size_inches</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span><span class="mi">20</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s">'Correlation Between Subjectivity and Polarity'</span><span class="p">)</span>
+
+<span class="c1">#polarity distribution
+</span><span class="n">sns</span><span class="p">.</span><span class="n">kdeplot</span><span class="p">(</span>
+   <span class="n">data</span><span class="o">=</span><span class="n">df_vis</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s">"polarity"</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s">"polar_label"</span><span class="p">,</span>
+   <span class="n">fill</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">palette</span><span class="o">=</span><span class="s">"Set1"</span><span class="p">,</span>
+   <span class="n">alpha</span><span class="o">=</span><span class="p">.</span><span class="mi">5</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+<span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">].</span><span class="n">set_title</span><span class="p">(</span><span class="s">"Distribution of Polarity Scores"</span><span class="p">)</span>
+
+<span class="c1">#correlation between polarity and subjectivity
+</span><span class="n">corr_s_p</span> <span class="o">=</span> <span class="n">df_vis</span><span class="p">[[</span><span class="s">'polarity'</span><span class="p">,</span><span class="s">'subjectivity'</span><span class="p">]].</span><span class="n">corr</span><span class="p">()</span>
+<span class="n">sns</span><span class="p">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">corr_s_p</span><span class="p">,</span><span class="n">annot</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span><span class="n">cmap</span><span class="o">=</span><span class="s">"vlag"</span><span class="p">,</span><span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">].</span><span class="n">set_title</span><span class="p">(</span><span class="s">"Correlation between Polarity and Subjectivity"</span><span class="p">)</span>
+
+<span class="c1">#jointplot of subjectivity and polarity
+</span><span class="n">sns</span><span class="p">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">df_vis</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s">"polarity"</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s">"subjectivity"</span><span class="p">,</span><span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">sns</span><span class="p">.</span><span class="n">kdeplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">df_vis</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s">"polarity"</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s">"subjectivity"</span><span class="p">,</span> <span class="n">levels</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span>
+            <span class="n">linewidths</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span><span class="n">palette</span><span class="o">=</span><span class="s">'mako'</span><span class="p">,</span><span class="n">fill</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">].</span><span class="n">set_title</span><span class="p">(</span><span class="s">"Relationship between Polarity and Subjectivity"</span><span class="p">)</span>
+
+<span class="c1">#subjectivity distribution
+</span><span class="n">sns</span><span class="p">.</span><span class="n">kdeplot</span><span class="p">(</span>
+   <span class="n">data</span><span class="o">=</span><span class="n">df_vis</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s">"subjectivity"</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s">"subj_label"</span><span class="p">,</span>
+   <span class="n">fill</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">palette</span><span class="o">=</span><span class="s">"Set1"</span><span class="p">,</span>
+   <span class="n">alpha</span><span class="o">=</span><span class="p">.</span><span class="mi">5</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
+<span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">].</span><span class="n">set_title</span><span class="p">(</span><span class="s">"Distribution of Subjectivity Scores"</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>C:\Users\Haziq\Anaconda3\lib\site-packages\seaborn\distributions.py:306: UserWarning: Dataset has 0 variance; skipping density estimate.
+  warnings.warn(msg, UserWarning)
+C:\Users\Haziq\Anaconda3\lib\site-packages\seaborn\distributions.py:1182: UserWarning: linewidths is ignored by contourf
+  cset = contour_func(
+C:\Users\Haziq\Anaconda3\lib\site-packages\seaborn\distributions.py:306: UserWarning: Dataset has 0 variance; skipping density estimate.
+  warnings.warn(msg, UserWarning)
+</code></pre></div></div>
+
+<p><img src="output_96_1.png" alt="png" /></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;Figure size 720x720 with 0 Axes&gt;
+</code></pre></div></div>
+
+<h1 id="classification">Classification</h1>
+
+<h2 id="pre-processing">Pre-Processing</h2>
+
+<h3 id="encoding-the-data">Encoding the data</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_label</span><span class="p">.</span><span class="n">tail</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>cleaned_tweets</th>
+      <th>Timestamp</th>
+      <th>polarity</th>
+      <th>subjectivity</th>
+      <th>polar_label</th>
+      <th>subj_label</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1995</th>
+      <td>indonesia men single rise anthony sinisuka gin...</td>
+      <td>2021-07-31 07:20:01</td>
+      <td>0.089286</td>
+      <td>0.273810</td>
+      <td>positive</td>
+      <td>objective</td>
+    </tr>
+    <tr>
+      <th>1996</th>
+      <td>fight place semifinal cest srjdla</td>
+      <td>2021-07-31 07:20:00</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>neutral</td>
+      <td>objective</td>
+    </tr>
+    <tr>
+      <th>1997</th>
+      <td>little known village kabarwala thrower verg</td>
+      <td>2021-07-31 07:20:00</td>
+      <td>-0.187500</td>
+      <td>0.500000</td>
+      <td>negative</td>
+      <td>neutral</td>
+    </tr>
+    <tr>
+      <th>1998</th>
+      <td>one win gold nesthy petecio fight woman feathe...</td>
+      <td>2021-07-31 07:19:59</td>
+      <td>0.169444</td>
+      <td>0.647222</td>
+      <td>positive</td>
+      <td>subjective</td>
+    </tr>
+    <tr>
+      <th>1999</th>
+      <td>hello tokyo</td>
+      <td>2021-07-31 07:19:59</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>neutral</td>
+      <td>objective</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_class</span> <span class="o">=</span> <span class="n">df_label</span><span class="p">.</span><span class="n">copy</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_class</span><span class="p">.</span><span class="n">tail</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>cleaned_tweets</th>
+      <th>Timestamp</th>
+      <th>polarity</th>
+      <th>subjectivity</th>
+      <th>polar_label</th>
+      <th>subj_label</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1995</th>
+      <td>indonesia men single rise anthony sinisuka gin...</td>
+      <td>2021-07-31 07:20:01</td>
+      <td>0.089286</td>
+      <td>0.273810</td>
+      <td>positive</td>
+      <td>objective</td>
+    </tr>
+    <tr>
+      <th>1996</th>
+      <td>fight place semifinal cest srjdla</td>
+      <td>2021-07-31 07:20:00</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>neutral</td>
+      <td>objective</td>
+    </tr>
+    <tr>
+      <th>1997</th>
+      <td>little known village kabarwala thrower verg</td>
+      <td>2021-07-31 07:20:00</td>
+      <td>-0.187500</td>
+      <td>0.500000</td>
+      <td>negative</td>
+      <td>neutral</td>
+    </tr>
+    <tr>
+      <th>1998</th>
+      <td>one win gold nesthy petecio fight woman feathe...</td>
+      <td>2021-07-31 07:19:59</td>
+      <td>0.169444</td>
+      <td>0.647222</td>
+      <td>positive</td>
+      <td>subjective</td>
+    </tr>
+    <tr>
+      <th>1999</th>
+      <td>hello tokyo</td>
+      <td>2021-07-31 07:19:59</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>neutral</td>
+      <td>objective</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_class</span><span class="p">[</span><span class="s">'polar_label'</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">factorize</span><span class="p">(</span><span class="n">df_class</span><span class="p">[</span><span class="s">'polar_label'</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">df_class</span><span class="p">[</span><span class="s">'subj_label'</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">factorize</span><span class="p">(</span><span class="n">df_class</span><span class="p">[</span><span class="s">'subj_label'</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_class</span><span class="p">.</span><span class="n">tail</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>cleaned_tweets</th>
+      <th>Timestamp</th>
+      <th>polarity</th>
+      <th>subjectivity</th>
+      <th>polar_label</th>
+      <th>subj_label</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1995</th>
+      <td>indonesia men single rise anthony sinisuka gin...</td>
+      <td>2021-07-31 07:20:01</td>
+      <td>0.089286</td>
+      <td>0.273810</td>
+      <td>1</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>1996</th>
+      <td>fight place semifinal cest srjdla</td>
+      <td>2021-07-31 07:20:00</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>1997</th>
+      <td>little known village kabarwala thrower verg</td>
+      <td>2021-07-31 07:20:00</td>
+      <td>-0.187500</td>
+      <td>0.500000</td>
+      <td>2</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>1998</th>
+      <td>one win gold nesthy petecio fight woman feathe...</td>
+      <td>2021-07-31 07:19:59</td>
+      <td>0.169444</td>
+      <td>0.647222</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>1999</th>
+      <td>hello tokyo</td>
+      <td>2021-07-31 07:19:59</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<p>Polarity:</p>
+
+<ul>
+  <li>neutral = 1</li>
+  <li>positive = 2</li>
+  <li>negative = 0</li>
+</ul>
+
+<p>Subjectivity:</p>
+
+<ul>
+  <li>subjective = 0</li>
+  <li>objective = 1</li>
+  <li>neutral = 2</li>
+</ul>
+
+<h3 id="word-vectorization">Word vectorization</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="n">pd</span>
+<span class="kn">from</span> <span class="nn">sklearn.feature_extraction.text</span> <span class="kn">import</span> <span class="n">CountVectorizer</span><span class="p">,</span> <span class="n">ENGLISH_STOP_WORDS</span>
+
+<span class="n">vect</span> <span class="o">=</span> <span class="n">CountVectorizer</span><span class="p">(</span><span class="n">max_features</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">token_pattern</span><span class="o">=</span><span class="sa">r</span><span class="s">'[A-Za-z]+'</span><span class="p">,</span> <span class="n">stop_words</span><span class="o">=</span><span class="n">ENGLISH_STOP_WORDS</span><span class="p">)</span>
+<span class="n">vect</span><span class="p">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df_class</span><span class="p">.</span><span class="n">cleaned_tweets</span><span class="p">)</span>
+<span class="n">vect_trans</span> <span class="o">=</span> <span class="n">vect</span><span class="p">.</span><span class="n">transform</span><span class="p">(</span><span class="n">df_class</span><span class="p">.</span><span class="n">cleaned_tweets</span><span class="p">)</span>
+<span class="n">tweet_class</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">vect_trans</span><span class="p">.</span><span class="n">toarray</span><span class="p">(),</span> <span class="n">columns</span><span class="o">=</span><span class="n">vect</span><span class="p">.</span><span class="n">get_feature_names</span><span class="p">())</span>
+<span class="n">tweet_class</span><span class="p">[</span><span class="s">'polar_label'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_class</span><span class="p">.</span><span class="n">polar_label</span>
+<span class="n">tweet_class</span><span class="p">[</span><span class="s">'subj_label'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_class</span><span class="p">.</span><span class="n">subj_label</span>
+<span class="n">tweet_class</span><span class="p">.</span><span class="n">tail</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>aapne</th>
+      <th>advance</th>
+      <th>amazing</th>
+      <th>amp</th>
+      <th>anders</th>
+      <th>anthony</th>
+      <th>antonsen</th>
+      <th>assured</th>
+      <th>athle</th>
+      <th>athlete</th>
+      <th>...</th>
+      <th>wanting</th>
+      <th>watch</th>
+      <th>win</th>
+      <th>winning</th>
+      <th>witness</th>
+      <th>woman</th>
+      <th>world</th>
+      <th>wow</th>
+      <th>polar_label</th>
+      <th>subj_label</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1990</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>1991</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>1992</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>1993</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>1994</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>1995</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>1996</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>1997</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>1998</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>1999</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table>
+<p>10 rows × 202 columns</p>
+</div>
+
+<h2 id="training-and-evaluation">Training and Evaluation</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Define the vector of targets and matrix of features
+</span><span class="n">y</span> <span class="o">=</span> <span class="n">tweet_class</span><span class="p">.</span><span class="n">polar_label</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">tweet_class</span><span class="p">.</span><span class="n">drop</span><span class="p">(</span><span class="s">'polar_label'</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
+<span class="c1"># Split the data into training and testing sets
+</span><span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">123</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="n">y</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Import the classification models
+</span><span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LogisticRegression</span>
+<span class="kn">from</span> <span class="nn">sklearn.svm</span> <span class="kn">import</span> <span class="n">SVC</span>
+<span class="kn">from</span> <span class="nn">sklearn.neural_network</span> <span class="kn">import</span> <span class="n">MLPClassifier</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">lr_model</span><span class="o">=</span><span class="n">LogisticRegression</span><span class="p">().</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span><span class="n">y_train</span><span class="p">)</span>
+<span class="n">svm_model</span><span class="o">=</span><span class="n">SVC</span><span class="p">().</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span><span class="n">y_train</span><span class="p">)</span>
+<span class="n">nn_model</span><span class="o">=</span><span class="n">MLPClassifier</span><span class="p">().</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span><span class="n">y_train</span><span class="p">)</span>
+
+<span class="k">print</span><span class="p">(</span><span class="s">'Logistic Regression Accuracy: {:.2f}%'</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">lr_model</span><span class="p">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span><span class="n">y_test</span><span class="p">)</span><span class="o">*</span><span class="mi">100</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="s">'Support Vector Machine Accuracy: {:.2f}%'</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">svm_model</span><span class="p">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span><span class="n">y_test</span><span class="p">)</span><span class="o">*</span><span class="mi">100</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="s">'Neural Network Accuracy: {:.2f}%'</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">nn_model</span><span class="p">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span><span class="n">y_test</span><span class="p">)</span><span class="o">*</span><span class="mi">100</span><span class="p">))</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>C:\Users\Haziq\Anaconda3\lib\site-packages\sklearn\neural_network\_multilayer_perceptron.py:582: ConvergenceWarning: Stochastic Optimizer: Maximum iterations (200) reached and the optimization hasn't converged yet.
+  warnings.warn(
+
+
+Logistic Regression Accuracy: 81.75%
+Support Vector Machine Accuracy: 83.31%
+Neural Network Accuracy: 83.44%
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">accuracy_score</span> <span class="k">as</span> <span class="n">acs</span>
+<span class="c1">#make predictions
+</span><span class="n">lr_pred</span> <span class="o">=</span> <span class="n">lr_model</span><span class="p">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+<span class="n">svm_pred</span> <span class="o">=</span> <span class="n">svm_model</span><span class="p">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+<span class="n">nn_pred</span> <span class="o">=</span> <span class="n">nn_model</span><span class="p">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+
+<span class="c1">#accuracy score
+</span><span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">r2_score</span> <span class="k">as</span> <span class="n">r2</span>
+<span class="k">print</span><span class="p">(</span><span class="n">acs</span><span class="p">(</span><span class="n">lr_pred</span><span class="p">,</span> <span class="n">y_test</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="n">acs</span><span class="p">(</span><span class="n">svm_pred</span><span class="p">,</span> <span class="n">y_test</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="n">acs</span><span class="p">(</span><span class="n">nn_pred</span><span class="p">,</span> <span class="n">y_test</span><span class="p">))</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>0.8175
+0.833125
+0.834375
+</code></pre></div></div>
+
+<h3 id="confusion-matrix">Confusion Matrix</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="n">sns</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">confusion_matrix</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
+<span class="n">fig</span><span class="p">.</span><span class="n">set_size_inches</span><span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+
+<span class="n">lr_cmat</span> <span class="o">=</span> <span class="n">confusion_matrix</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span><span class="n">lr_pred</span><span class="p">)</span>
+<span class="n">svm_cmat</span> <span class="o">=</span> <span class="n">confusion_matrix</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span><span class="n">svm_pred</span><span class="p">)</span>
+<span class="n">nn_cmat</span> <span class="o">=</span> <span class="n">confusion_matrix</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span><span class="n">nn_pred</span><span class="p">)</span>
+
+<span class="n">color</span> <span class="o">=</span><span class="s">'vlag'</span>
+<span class="n">sns</span><span class="p">.</span><span class="nb">set</span><span class="p">(</span><span class="n">font_scale</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s">"Prediction Model Confusion Matrix"</span><span class="p">)</span>
+
+<span class="n">sns</span><span class="p">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">lr_cmat</span><span class="p">,</span><span class="n">annot</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span><span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">cmap</span><span class="o">=</span><span class="n">color</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">set_title</span><span class="p">(</span><span class="s">'Logistic Regression'</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s">'Actual'</span><span class="p">,</span><span class="n">fontsize</span> <span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s">'Predicted'</span><span class="p">,</span><span class="n">fontsize</span> <span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+
+<span class="n">sns</span><span class="p">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">svm_cmat</span><span class="p">,</span><span class="n">annot</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span><span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">cmap</span><span class="o">=</span><span class="n">color</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="n">set_title</span><span class="p">(</span><span class="s">'Support Vector machine'</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s">'Actual'</span><span class="p">,</span><span class="n">fontsize</span> <span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s">'Predicted'</span><span class="p">,</span><span class="n">fontsize</span> <span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+
+<span class="n">sns</span><span class="p">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">nn_cmat</span><span class="p">,</span><span class="n">annot</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span><span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="n">cmap</span><span class="o">=</span><span class="n">color</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">].</span><span class="n">set_title</span><span class="p">(</span><span class="s">'Neural Network'</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">].</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s">'Actual'</span><span class="p">,</span><span class="n">fontsize</span> <span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">].</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s">'Predicted'</span><span class="p">,</span><span class="n">fontsize</span> <span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><img src="output_115_0.png" alt="png" /></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;Figure size 720x720 with 0 Axes&gt;
+</code></pre></div></div>
+
+<h3 id="classification-report">Classification Report</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="n">sns</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">classification_report</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="n">pd</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">true</span> <span class="o">=</span> <span class="n">y_test</span>
+<span class="n">target_names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">([</span><span class="s">'negative'</span><span class="p">,</span><span class="s">'neutral'</span><span class="p">,</span><span class="s">'positive'</span><span class="p">])</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">lr_clf_report</span> <span class="o">=</span> <span class="n">classification_report</span><span class="p">(</span><span class="n">true</span><span class="p">,</span>
+                                   <span class="n">lr_pred</span><span class="p">,</span>
+                                   <span class="n">target_names</span><span class="o">=</span><span class="n">target_names</span><span class="p">,</span>
+                                   <span class="n">output_dict</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+<span class="n">svm_clf_report</span> <span class="o">=</span> <span class="n">classification_report</span><span class="p">(</span><span class="n">true</span><span class="p">,</span>
+                                   <span class="n">svm_pred</span><span class="p">,</span>
+                                   <span class="n">target_names</span><span class="o">=</span><span class="n">target_names</span><span class="p">,</span>
+                                   <span class="n">output_dict</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+<span class="n">nn_clf_report</span> <span class="o">=</span> <span class="n">classification_report</span><span class="p">(</span><span class="n">true</span><span class="p">,</span>
+                                   <span class="n">nn_pred</span><span class="p">,</span>
+                                   <span class="n">target_names</span><span class="o">=</span><span class="n">target_names</span><span class="p">,</span>
+                                   <span class="n">output_dict</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
+<span class="n">fig</span><span class="p">.</span><span class="n">set_size_inches</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s">"Prediction Model Classification Report"</span><span class="p">)</span>
+
+<span class="n">sns</span><span class="p">.</span><span class="nb">set</span><span class="p">(</span><span class="n">font_scale</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">color</span> <span class="o">=</span><span class="s">'vlag'</span>
+
+<span class="n">sns</span><span class="p">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">pd</span><span class="p">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">lr_clf_report</span><span class="p">).</span><span class="n">iloc</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:].</span><span class="n">T</span><span class="p">,</span> <span class="n">annot</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span><span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">cmap</span><span class="o">=</span><span class="n">color</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">set_title</span><span class="p">(</span><span class="s">'Logistic Regression'</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">tick_params</span><span class="p">(</span><span class="n">labelrotation</span><span class="o">=</span><span class="mi">45</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="s">'y'</span><span class="p">)</span>
+
+
+<span class="n">sns</span><span class="p">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">pd</span><span class="p">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">svm_clf_report</span><span class="p">).</span><span class="n">iloc</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:].</span><span class="n">T</span><span class="p">,</span> <span class="n">annot</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span><span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">cmap</span><span class="o">=</span><span class="n">color</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="n">set_title</span><span class="p">(</span><span class="s">'Support Vector machine'</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="n">tick_params</span><span class="p">(</span><span class="n">labelrotation</span><span class="o">=</span><span class="mi">45</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="s">'y'</span><span class="p">)</span>
+
+
+<span class="n">sns</span><span class="p">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">pd</span><span class="p">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">nn_clf_report</span><span class="p">).</span><span class="n">iloc</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:].</span><span class="n">T</span><span class="p">,</span> <span class="n">annot</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span><span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="n">cmap</span><span class="o">=</span><span class="n">color</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">].</span><span class="n">set_title</span><span class="p">(</span><span class="s">'Neural Network'</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">].</span><span class="n">tick_params</span><span class="p">(</span><span class="n">labelrotation</span><span class="o">=</span><span class="mi">45</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="s">'y'</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><img src="output_120_0.png" alt="png" /></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;Figure size 1008x720 with 0 Axes&gt;
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+</code></pre></div></div>
+
+</div>
+  </main>
+
+  <footer class="mt-auto py-3 text-center">
+
+  <small class="text-muted mb-2">
+    <i class="fas fa-code"></i> with <i class="fas fa-heart"></i>
+    by <strong>Ameer Haziq Basharuddin</strong>
+  </small>
+
+  <div class="container-fluid justify-content-center"><a class="social mx-1"  href="mailto:ameerhaziq.work@gmail.com"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#db4437'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fas fa-envelope fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.github.com/ameerhaziq20"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#333333'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-github fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.instagram.com/emyrbreezy"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#405de6'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-instagram fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.linkedin.com/in/ameer-haziq-basharuddin-89593520a/"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#007bb5'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-linkedin-in fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.twitter.com/frisk__y"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#1da1f2'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-twitter fa-1x"></i>
+    </a>
+
+</div><small id="attribution">
+    theme <a href="https://github.com/YoussefRaafatNasry/portfolYOU">portfolYOU</a>
+  </small>
+  
+</footer>
+
+  
+  <!-- GitHub Buttons -->
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+
+<!-- jQuery CDN -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<!-- Popper.js CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"></script>
+
+<!-- Bootstrap JS CDN -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<!-- wow.js CDN & Activation -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.js"></script>
+<script> new WOW().init(); </script>
+
+<!-- Initialize all tooltips -->
+<script>
+$(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+})
+</script>
+
+
+</body>
+
+</html>

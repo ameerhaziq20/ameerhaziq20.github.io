@@ -1,7 +1,7 @@
 ---
 name: Android Attendance Application with Temperature Scanner
 tools: [Kotlin, Android Studio]
-image: https://www.sketchappsources.com/resources/source-image/project-neon-groove-music-ui.png
+image: https://sm.pcmag.com/t/pcmag_ap/news/a/a-wallpape/a-wallpaper-can-crash-some-android-10-phones_1mhp.1920.jpg
 description: A Useful tool for attendace recording during COVID-19 pandemic.
 ---
 
