@@ -4,7 +4,7 @@ description         : >-
                       Data for good, Data for Insights :coffee:,
                       Love my codes to be clean and useful :heart:.
                       Accepted the fact that most data are messy.
-baseurl             : "/main"                     # Change to empty quotes if you are hosting your site at <your-username>.github.io directly
+baseurl             : ""                     # Change to empty quotes if you are hosting your site at <your-username>.github.io directly
 repository          : ameerhaziq20/ameerhaziq20.github.io     # Change to <your-username>/<your-username>.github.io (or remove it if you don't need remote projects)
 remote_theme        : YoussefRaafatNasry/portfolYOU
 
