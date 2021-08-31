@@ -1,0 +1,2398 @@
+<!DOCTYPE html>
+
+<!--
+  portfolYOU Jekyll theme by Youssef Raafat
+  Free for personal and commercial use under the MIT license
+  https://github.com/YoussefRaafatNasry/portfolYOU
+-->
+
+<html lang="en" class="h-100">
+
+<head>
+
+  
+  
+
+  
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Malaysia Covid-19 Analysis and Prediction">
+  <meta property="og:description" content="Wonder how's the Covid-19 situation in Malaysia? Is it getting worse or getting better? Let's find out.">
+
+  <title>Malaysia Covid-19 Analysis and Prediction</title>
+  <meta name="description" content="Wonder how's the Covid-19 situation in Malaysia? Is it getting worse or getting better? Let's find out.">
+
+  <link rel="shortcut icon" type="image/x-icon" href="/assets/favicon.ico">
+
+  <!-- Theme style -->
+  <script src="/assets/js/theme.js"></script>
+
+  <!-- Font Awesome CDN -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.10.0/css/all.css">
+
+  <!-- Bootstrap CSS CDN -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
+
+  <!-- Animate CSS CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.css">
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="/assets/css/style.css">
+
+</head>
+
+<body class="h-100 d-flex flex-column">
+
+  <main class="flex-shrink-0 container mt-5">
+    <nav class="navbar navbar-expand-lg navbar-themed">
+
+  <a class="navbar-brand" href="/"><h5><b>Haziq's Page</b></h5></a>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+    <i class="fas fa-1x fa-bars text-themed"></i>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav ml-auto"><a class="nav-item nav-link active" href="/projects/">Projects</a>
+
+      <a class="nav-item nav-link " href="/blog/">Blog</a>
+
+      <a class="nav-item nav-link " href="/about/">About</a>
+
+      
+
+      <span id="theme-toggler" class="nav-item nav-link" role="button" onclick="toggleTheme()"></span>
+    </div>
+  </div>
+
+</nav>
+    <div class="col-lg-10 mx-auto mt-5 post">
+  <h1 id="1-questions">1. Questions</h1>
+
+<p>This analysis will try to answer the following questions:</p>
+<ul>
+  <li>What factor that most likely to cause an increases in the number of new cases?</li>
+  <li>How Covid-19 affects differently in different states?</li>
+  <li>When will we achieve herd immunity?</li>
+  <li>Will new cases increases or decrease next month?</li>
+</ul>
+
+<h1 id="2-measurement-priorities">2. Measurement Priorities</h1>
+
+<h2 id="what-to-measure">What To Measure:</h2>
+
+<ul>
+  <li>Correlation between each factor in the dataset using correlation matrix.</li>
+  <li>The difference in the count of new cases and in the states.</li>
+  <li>Percentage of fully vaccinated individuals angainst the total population.</li>
+  <li>Number of forecasted new cases in the next 30 days using time series forecasting.</li>
+</ul>
+
+<h1 id="3-data-collection">3. Data Collection</h1>
+
+<ul>
+  <li>Source
+    <ul>
+      <li>For this analysis, we will make use of the dataset from The Ministry of Health Malaysia GitHub page.</li>
+      <li>Since they don’t provide data for vaccinations, we will obtain the data from other sources which in this case is from Our World in Data.</li>
+      <li>These sites frequently updates these data values, we will use programmatically automate this data collection process each time we restart the notebook</li>
+    </ul>
+  </li>
+  <li>Storage
+    <ul>
+      <li>The data collected from the sites will bw stored as a CSV file in the /dataset directory.</li>
+      <li>This allows the data can still be analysed localy when connectivity problems persists.</li>
+    </ul>
+  </li>
+</ul>
+
+<h1 id="4-cleaning-and-analyze-data">4. Cleaning and Analyze Data</h1>
+
+<p>Datasets are obtained from:</p>
+
+<p>https://github.com/MoH-Malaysia/covid19-public/</p>
+
+<p>https://github.com/owid/covid-19-data/tree/master/public/data/vaccinations</p>
+
+<h1 id="importing-the-data">Importing the data</h1>
+<p>Since the data is frequently updated, we will grab the data directly from the site instead of having to download the csv files manually to perform the analysis. The other good part about this is that the analysis done in on the latest data provided.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="n">pd</span>
+<span class="kn">import</span> <span class="nn">io</span>
+<span class="kn">import</span> <span class="nn">requests</span>
+<span class="n">url</span><span class="o">=</span><span class="s">"https://raw.githubusercontent.com/MoH-Malaysia/covid19-public/main/epidemic/tests_malaysia.csv"</span>
+<span class="n">s</span><span class="o">=</span><span class="n">requests</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">).</span><span class="n">content</span>
+<span class="n">tests</span><span class="o">=</span><span class="n">pd</span><span class="p">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">io</span><span class="p">.</span><span class="n">StringIO</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">decode</span><span class="p">(</span><span class="s">'utf-8'</span><span class="p">)))</span>
+<span class="n">tests</span><span class="p">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s">'dataset/tests_malaysia.csv'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">url</span><span class="o">=</span><span class="s">"https://raw.githubusercontent.com/MoH-Malaysia/covid19-public/main/epidemic/cases_malaysia.csv"</span>
+<span class="n">s</span><span class="o">=</span><span class="n">requests</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">).</span><span class="n">content</span>
+<span class="n">cases</span><span class="o">=</span><span class="n">pd</span><span class="p">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">io</span><span class="p">.</span><span class="n">StringIO</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">decode</span><span class="p">(</span><span class="s">'utf-8'</span><span class="p">)))</span>
+<span class="n">cases</span><span class="p">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s">'dataset/cases_malaysia.csv'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">url</span><span class="o">=</span><span class="s">"https://raw.githubusercontent.com/MoH-Malaysia/covid19-public/main/epidemic/cases_state.csv"</span>
+<span class="n">s</span><span class="o">=</span><span class="n">requests</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">).</span><span class="n">content</span>
+<span class="n">state_cases</span><span class="o">=</span><span class="n">pd</span><span class="p">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">io</span><span class="p">.</span><span class="n">StringIO</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">decode</span><span class="p">(</span><span class="s">'utf-8'</span><span class="p">)))</span>
+<span class="n">state_cases</span><span class="p">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s">'dataset/cases_state.csv'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">url</span><span class="o">=</span><span class="s">"https://raw.githubusercontent.com/MoH-Malaysia/covid19-public/main/mysejahtera/trace_malaysia.csv"</span>
+<span class="n">s</span><span class="o">=</span><span class="n">requests</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">).</span><span class="n">content</span>
+<span class="n">casual_contacts</span><span class="o">=</span><span class="n">pd</span><span class="p">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">io</span><span class="p">.</span><span class="n">StringIO</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">decode</span><span class="p">(</span><span class="s">'utf-8'</span><span class="p">)))</span>
+<span class="n">casual_contacts</span><span class="p">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s">'dataset/trace_malaysia.csv'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">url</span><span class="o">=</span><span class="s">"https://raw.githubusercontent.com/MoH-Malaysia/covid19-public/main/epidemic/deaths_malaysia.csv"</span>
+<span class="n">s</span><span class="o">=</span><span class="n">requests</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">).</span><span class="n">content</span>
+<span class="n">deaths_public</span><span class="o">=</span><span class="n">pd</span><span class="p">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">io</span><span class="p">.</span><span class="n">StringIO</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">decode</span><span class="p">(</span><span class="s">'utf-8'</span><span class="p">)))</span>
+<span class="n">deaths_public</span><span class="p">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s">'dataset/deaths_malaysia.csv'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">url</span><span class="o">=</span><span class="s">"https://raw.githubusercontent.com/MoH-Malaysia/covid19-public/main/epidemic/deaths_state.csv"</span>
+<span class="n">s</span><span class="o">=</span><span class="n">requests</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">).</span><span class="n">content</span>
+<span class="n">deaths_state</span><span class="o">=</span><span class="n">pd</span><span class="p">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">io</span><span class="p">.</span><span class="n">StringIO</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">decode</span><span class="p">(</span><span class="s">'utf-8'</span><span class="p">)))</span>
+<span class="n">deaths_state</span><span class="p">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s">'dataset/death_state.csv'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">url</span><span class="o">=</span><span class="s">"https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/vaccinations/vaccinations.csv"</span>
+<span class="n">s</span><span class="o">=</span><span class="n">requests</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">).</span><span class="n">content</span>
+<span class="n">vaccination_who</span><span class="o">=</span><span class="n">pd</span><span class="p">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">io</span><span class="p">.</span><span class="n">StringIO</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">decode</span><span class="p">(</span><span class="s">'utf-8'</span><span class="p">)))</span>
+<span class="n">vaccination_who</span><span class="p">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s">'dataset/vaccinations.csv'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">url</span><span class="o">=</span><span class="s">"https://raw.githubusercontent.com/MoH-Malaysia/covid19-public/main/epidemic/tests_state.csv"</span>
+<span class="n">s</span><span class="o">=</span><span class="n">requests</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">).</span><span class="n">content</span>
+<span class="n">tests_state</span><span class="o">=</span><span class="n">pd</span><span class="p">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">io</span><span class="p">.</span><span class="n">StringIO</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">decode</span><span class="p">(</span><span class="s">'utf-8'</span><span class="p">)))</span>
+<span class="n">tests_state</span><span class="p">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s">'dataset/tests_state.csv'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">url</span><span class="o">=</span><span class="s">'https://raw.githubusercontent.com/MoH-Malaysia/covid19-public/main/static/population.csv'</span>
+<span class="n">s</span><span class="o">=</span><span class="n">requests</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">).</span><span class="n">content</span>
+<span class="n">population</span><span class="o">=</span><span class="n">pd</span><span class="p">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">io</span><span class="p">.</span><span class="n">StringIO</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">decode</span><span class="p">(</span><span class="s">'utf-8'</span><span class="p">)))</span>
+<span class="n">population</span><span class="p">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s">'dataset/population.csv'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h1 id="eda">EDA</h1>
+
+<h2 id="factors-that-correlates-to-the-number-of-new-cases">Factors that correlates to the number of new cases</h2>
+<p>In this section we will see the correlation between the variables which may be related to the rise of new cases.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># This is formatted as code
+</code></pre></div></div>
+
+<h3 id="data-cleaning">Data Cleaning</h3>
+
+<h4 id="making-a-backup-of-the-dataframe">Making a backup of the DataFrame</h4>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_tests</span><span class="o">=</span><span class="n">tests</span><span class="p">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">df_cases</span><span class="o">=</span><span class="n">cases</span><span class="p">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">df_death_public</span><span class="o">=</span><span class="n">deaths_public</span><span class="p">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">df_casual_contacts</span><span class="o">=</span><span class="n">casual_contacts</span><span class="p">.</span><span class="n">copy</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_cases</span><span class="p">.</span><span class="n">tail</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>date</th>
+      <th>cases_new</th>
+      <th>cases_import</th>
+      <th>cases_recovered</th>
+      <th>cluster_import</th>
+      <th>cluster_religious</th>
+      <th>cluster_community</th>
+      <th>cluster_highRisk</th>
+      <th>cluster_education</th>
+      <th>cluster_detentionCentre</th>
+      <th>cluster_workplace</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>579</th>
+      <td>2021-08-26</td>
+      <td>24599</td>
+      <td>8</td>
+      <td>22655</td>
+      <td>0.0</td>
+      <td>24.0</td>
+      <td>542.0</td>
+      <td>93.0</td>
+      <td>35.0</td>
+      <td>73.0</td>
+      <td>1944.0</td>
+    </tr>
+    <tr>
+      <th>580</th>
+      <td>2021-08-27</td>
+      <td>22070</td>
+      <td>15</td>
+      <td>21877</td>
+      <td>0.0</td>
+      <td>2.0</td>
+      <td>474.0</td>
+      <td>17.0</td>
+      <td>3.0</td>
+      <td>150.0</td>
+      <td>1022.0</td>
+    </tr>
+    <tr>
+      <th>581</th>
+      <td>2021-08-28</td>
+      <td>22597</td>
+      <td>12</td>
+      <td>19492</td>
+      <td>0.0</td>
+      <td>6.0</td>
+      <td>467.0</td>
+      <td>84.0</td>
+      <td>7.0</td>
+      <td>92.0</td>
+      <td>1505.0</td>
+    </tr>
+    <tr>
+      <th>582</th>
+      <td>2021-08-29</td>
+      <td>20579</td>
+      <td>7</td>
+      <td>20845</td>
+      <td>0.0</td>
+      <td>12.0</td>
+      <td>392.0</td>
+      <td>16.0</td>
+      <td>4.0</td>
+      <td>81.0</td>
+      <td>1458.0</td>
+    </tr>
+    <tr>
+      <th>583</th>
+      <td>2021-08-30</td>
+      <td>19268</td>
+      <td>16</td>
+      <td>21257</td>
+      <td>0.0</td>
+      <td>4.0</td>
+      <td>460.0</td>
+      <td>37.0</td>
+      <td>72.0</td>
+      <td>89.0</td>
+      <td>1034.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<h4 id="check-for-null-values-for-all-dataframes">Check for null values for all DataFrames</h4>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">print</span><span class="p">(</span><span class="n">df_tests</span><span class="p">.</span><span class="n">isna</span><span class="p">().</span><span class="nb">sum</span><span class="p">())</span>
+<span class="k">print</span><span class="p">(</span><span class="s">'</span><span class="se">\n</span><span class="s">'</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">df_cases</span><span class="p">.</span><span class="n">isna</span><span class="p">().</span><span class="nb">sum</span><span class="p">())</span>
+<span class="k">print</span><span class="p">(</span><span class="s">'</span><span class="se">\n</span><span class="s">'</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">df_casual_contacts</span><span class="p">.</span><span class="n">isna</span><span class="p">().</span><span class="nb">sum</span><span class="p">())</span>
+<span class="k">print</span><span class="p">(</span><span class="s">'</span><span class="se">\n</span><span class="s">'</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">df_death_public</span><span class="p">.</span><span class="n">isna</span><span class="p">().</span><span class="nb">sum</span><span class="p">())</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>date      0
+rtk-ag    0
+pcr       0
+dtype: int64
+
+
+date                         0
+cases_new                    0
+cases_import                 0
+cases_recovered              0
+cluster_import             342
+cluster_religious          342
+cluster_community          342
+cluster_highRisk           342
+cluster_education          342
+cluster_detentionCentre    342
+cluster_workplace          342
+dtype: int64
+
+
+date                0
+casual_contacts     0
+hide_large         50
+hide_small         50
+dtype: int64
+
+
+date            0
+deaths_new      0
+deaths_bid    234
+dtype: int64
+</code></pre></div></div>
+
+<h4 id="check-the-data-types">Check the data types</h4>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">print</span><span class="p">(</span><span class="n">df_tests</span><span class="p">.</span><span class="n">dtypes</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s">'</span><span class="se">\n</span><span class="s">'</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">df_cases</span><span class="p">.</span><span class="n">dtypes</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s">'</span><span class="se">\n</span><span class="s">'</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">df_casual_contacts</span><span class="p">.</span><span class="n">dtypes</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s">'</span><span class="se">\n</span><span class="s">'</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">df_death_public</span><span class="p">.</span><span class="n">dtypes</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>date      object
+rtk-ag     int64
+pcr        int64
+dtype: object
+
+
+date                        object
+cases_new                    int64
+cases_import                 int64
+cases_recovered              int64
+cluster_import             float64
+cluster_religious          float64
+cluster_community          float64
+cluster_highRisk           float64
+cluster_education          float64
+cluster_detentionCentre    float64
+cluster_workplace          float64
+dtype: object
+
+
+date                object
+casual_contacts      int64
+hide_large         float64
+hide_small         float64
+dtype: object
+
+
+date           object
+deaths_new      int64
+deaths_bid    float64
+dtype: object
+</code></pre></div></div>
+
+<h4 id="covert-date-column-into-datetime">Covert Date column into Datetime</h4>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_tests</span><span class="p">[</span><span class="s">'date'</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df_tests</span><span class="p">[</span><span class="s">'date'</span><span class="p">])</span>
+<span class="n">df_cases</span><span class="p">[</span><span class="s">'date'</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df_cases</span><span class="p">[</span><span class="s">'date'</span><span class="p">])</span>
+<span class="n">df_casual_contacts</span><span class="p">[</span><span class="s">'date'</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df_casual_contacts</span><span class="p">[</span><span class="s">'date'</span><span class="p">])</span>
+<span class="n">df_death_public</span><span class="p">[</span><span class="s">'date'</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df_cases</span><span class="p">[</span><span class="s">'date'</span><span class="p">])</span>
+</code></pre></div></div>
+
+<h4 id="create-dataframe-with-selected-columns">Create DataFrame with selected columns</h4>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_cases_new</span><span class="o">=</span><span class="n">df_cases</span><span class="p">[[</span><span class="s">'date'</span><span class="p">,</span><span class="s">'cases_new'</span><span class="p">]]</span>
+<span class="n">df_casual_contacts</span><span class="o">=</span><span class="n">df_casual_contacts</span><span class="p">[[</span><span class="s">'date'</span><span class="p">,</span><span class="s">'casual_contacts'</span><span class="p">]]</span>
+<span class="n">df_death_total</span><span class="o">=</span><span class="n">df_death_public</span><span class="p">[[</span><span class="s">'date'</span><span class="p">,</span><span class="s">'deaths_new'</span><span class="p">]]</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">new_cases_and_tests</span> <span class="o">=</span><span class="n">pd</span><span class="p">.</span><span class="n">merge</span><span class="p">(</span><span class="n">df_cases_new</span><span class="p">,</span><span class="n">df_tests</span><span class="p">,</span><span class="n">on</span><span class="o">=</span><span class="s">"date"</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s">'right'</span><span class="p">)</span>
+<span class="n">test_cases_contacts</span> <span class="o">=</span><span class="n">pd</span><span class="p">.</span><span class="n">merge</span><span class="p">(</span><span class="n">new_cases_and_tests</span><span class="p">,</span><span class="n">df_casual_contacts</span><span class="p">,</span><span class="n">on</span><span class="o">=</span><span class="s">"date"</span><span class="p">,</span><span class="n">how</span><span class="o">=</span><span class="s">'left'</span><span class="p">)</span>
+<span class="n">df_merged</span> <span class="o">=</span><span class="n">pd</span><span class="p">.</span><span class="n">merge</span><span class="p">(</span><span class="n">test_cases_contacts</span><span class="p">,</span><span class="n">df_death_total</span><span class="p">,</span><span class="n">on</span><span class="o">=</span><span class="s">"date"</span><span class="p">,</span><span class="n">how</span><span class="o">=</span><span class="s">'left'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_merged</span><span class="p">.</span><span class="n">tail</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>date</th>
+      <th>cases_new</th>
+      <th>rtk-ag</th>
+      <th>pcr</th>
+      <th>casual_contacts</th>
+      <th>deaths_new</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>579</th>
+      <td>2021-08-25</td>
+      <td>22642.0</td>
+      <td>90167</td>
+      <td>78146</td>
+      <td>69220.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>580</th>
+      <td>2021-08-26</td>
+      <td>24599.0</td>
+      <td>79606</td>
+      <td>72735</td>
+      <td>75321.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>581</th>
+      <td>2021-08-27</td>
+      <td>22070.0</td>
+      <td>79606</td>
+      <td>74976</td>
+      <td>66642.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>582</th>
+      <td>2021-08-28</td>
+      <td>22597.0</td>
+      <td>63708</td>
+      <td>71096</td>
+      <td>58375.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>583</th>
+      <td>2021-08-29</td>
+      <td>20579.0</td>
+      <td>54462</td>
+      <td>54230</td>
+      <td>43888.0</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_merged</span><span class="p">.</span><span class="n">isna</span><span class="p">().</span><span class="nb">sum</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>date                 0
+cases_new            1
+rtk-ag               0
+pcr                  0
+casual_contacts    402
+deaths_new          52
+dtype: int64
+</code></pre></div></div>
+
+<h4 id="handling-null-values">Handling null values</h4>
+<p>Since theres a substantial amount of missing values, we will use iterative imputer. It will estimate the values according to the featues.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">sklearn.experimental</span> <span class="kn">import</span> <span class="n">enable_iterative_imputer</span>
+<span class="kn">from</span> <span class="nn">sklearn.impute</span> <span class="kn">import</span> <span class="n">IterativeImputer</span>
+<span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LinearRegression</span>
+<span class="n">x</span><span class="o">=</span><span class="n">df_merged</span><span class="p">[[</span><span class="s">'cases_new'</span><span class="p">,</span><span class="s">'casual_contacts'</span><span class="p">,</span><span class="s">'pcr'</span><span class="p">,</span><span class="s">'rtk-ag'</span><span class="p">,</span><span class="s">'deaths_new'</span><span class="p">]]</span>
+
+<span class="n">it_imputer</span> <span class="o">=</span> <span class="n">IterativeImputer</span><span class="p">(</span><span class="n">min_value</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">y</span><span class="o">=</span><span class="n">it_imputer</span><span class="p">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+<span class="n">y</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">columns</span> <span class="o">=</span> <span class="n">x</span><span class="p">.</span><span class="n">columns</span><span class="p">)</span>
+<span class="n">pd</span><span class="p">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+
+<span class="n">cleaned_df</span> <span class="o">=</span><span class="n">pd</span><span class="p">.</span><span class="n">merge</span><span class="p">(</span><span class="n">y</span><span class="p">,</span><span class="n">df_merged</span><span class="p">[</span><span class="s">'date'</span><span class="p">],</span> <span class="n">left_index</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">right_index</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+<span class="n">pd</span><span class="p">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">cleaned_df</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>cases_new</th>
+      <th>casual_contacts</th>
+      <th>pcr</th>
+      <th>rtk-ag</th>
+      <th>deaths_new</th>
+      <th>date</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0.0</td>
+      <td>3396.759427</td>
+      <td>2.0</td>
+      <td>0.0</td>
+      <td>1.009825</td>
+      <td>2020-01-24</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>4.0</td>
+      <td>3402.271668</td>
+      <td>5.0</td>
+      <td>0.0</td>
+      <td>2.000000</td>
+      <td>2020-01-25</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0.0</td>
+      <td>3397.749226</td>
+      <td>14.0</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>2020-01-26</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0.0</td>
+      <td>3398.514204</td>
+      <td>24.0</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>2020-01-27</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0.0</td>
+      <td>3400.661511</td>
+      <td>53.0</td>
+      <td>0.0</td>
+      <td>1.000000</td>
+      <td>2020-01-28</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>579</th>
+      <td>22642.0</td>
+      <td>69220.000000</td>
+      <td>78146.0</td>
+      <td>90167.0</td>
+      <td>624.783182</td>
+      <td>2021-08-25</td>
+    </tr>
+    <tr>
+      <th>580</th>
+      <td>24599.0</td>
+      <td>75321.000000</td>
+      <td>72735.0</td>
+      <td>79606.0</td>
+      <td>692.018053</td>
+      <td>2021-08-26</td>
+    </tr>
+    <tr>
+      <th>581</th>
+      <td>22070.0</td>
+      <td>66642.000000</td>
+      <td>74976.0</td>
+      <td>79606.0</td>
+      <td>614.659292</td>
+      <td>2021-08-27</td>
+    </tr>
+    <tr>
+      <th>582</th>
+      <td>22597.0</td>
+      <td>58375.000000</td>
+      <td>71096.0</td>
+      <td>63708.0</td>
+      <td>649.646922</td>
+      <td>2021-08-28</td>
+    </tr>
+    <tr>
+      <th>583</th>
+      <td>20579.0</td>
+      <td>43888.000000</td>
+      <td>54230.0</td>
+      <td>54462.0</td>
+      <td>605.879692</td>
+      <td>2021-08-29</td>
+    </tr>
+  </tbody>
+</table>
+<p>584 rows × 6 columns</p>
+</div>
+
+<h4 id="convert-numerical-values-to-integer">Convert numerical values to integer</h4>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">cleaned_df</span><span class="p">[[</span><span class="s">'cases_new'</span><span class="p">,</span><span class="s">'casual_contacts'</span><span class="p">,</span><span class="s">'pcr'</span><span class="p">,</span> <span class="s">'rtk-ag'</span><span class="p">,</span><span class="s">'deaths_new'</span><span class="p">]]</span><span class="o">=</span><span class="n">cleaned_df</span><span class="p">[[</span><span class="s">'cases_new'</span><span class="p">,</span><span class="s">'casual_contacts'</span><span class="p">,</span><span class="s">'pcr'</span><span class="p">,</span> <span class="s">'rtk-ag'</span><span class="p">,</span><span class="s">'deaths_new'</span><span class="p">]].</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h4 id="sort-values-by-date">Sort values by date</h4>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">cleaned_df</span><span class="p">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s">'date'</span><span class="p">,</span><span class="n">ascending</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>cases_new</th>
+      <th>casual_contacts</th>
+      <th>pcr</th>
+      <th>rtk-ag</th>
+      <th>deaths_new</th>
+      <th>date</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0</td>
+      <td>3396</td>
+      <td>2</td>
+      <td>0</td>
+      <td>1</td>
+      <td>2020-01-24</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>4</td>
+      <td>3402</td>
+      <td>5</td>
+      <td>0</td>
+      <td>2</td>
+      <td>2020-01-25</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0</td>
+      <td>3397</td>
+      <td>14</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2020-01-26</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0</td>
+      <td>3398</td>
+      <td>24</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2020-01-27</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0</td>
+      <td>3400</td>
+      <td>53</td>
+      <td>0</td>
+      <td>1</td>
+      <td>2020-01-28</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>579</th>
+      <td>22642</td>
+      <td>69220</td>
+      <td>78146</td>
+      <td>90167</td>
+      <td>624</td>
+      <td>2021-08-25</td>
+    </tr>
+    <tr>
+      <th>580</th>
+      <td>24599</td>
+      <td>75321</td>
+      <td>72735</td>
+      <td>79606</td>
+      <td>692</td>
+      <td>2021-08-26</td>
+    </tr>
+    <tr>
+      <th>581</th>
+      <td>22070</td>
+      <td>66642</td>
+      <td>74976</td>
+      <td>79606</td>
+      <td>614</td>
+      <td>2021-08-27</td>
+    </tr>
+    <tr>
+      <th>582</th>
+      <td>22597</td>
+      <td>58375</td>
+      <td>71096</td>
+      <td>63708</td>
+      <td>649</td>
+      <td>2021-08-28</td>
+    </tr>
+    <tr>
+      <th>583</th>
+      <td>20579</td>
+      <td>43888</td>
+      <td>54230</td>
+      <td>54462</td>
+      <td>605</td>
+      <td>2021-08-29</td>
+    </tr>
+  </tbody>
+</table>
+<p>584 rows × 6 columns</p>
+</div>
+
+<h3 id="visualization">Visualization</h3>
+
+<h4 id="correlation-matrix">Correlation matrix</h4>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="n">sns</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+
+<span class="n">corr</span><span class="o">=</span><span class="n">cleaned_df</span><span class="p">.</span><span class="n">corr</span><span class="p">()</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">8</span><span class="p">))</span>
+
+<span class="n">sns</span><span class="p">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">corr</span><span class="p">,</span><span class="n">annot</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span><span class="n">vmin</span><span class="o">=-</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s">'mako'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">title</span><span class="p">(</span><span class="s">'Correlation Heatmap'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><img src="https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(1)%20Covid-19%20Malaysia%20Analysis%20And%20Prediction/output_37_0.png" alt="png" /></p>
+
+<h4 id="description">Description</h4>
+<p>From the correlation matrix, we can see that there is a high positive correlation between death and new cases. This shows that as the count of new cases increase, the reported new death cases also increases. The amount of new cases is also have a high correlation with the amount of testing done. Among the two tests, rtk-ag test have a higher correlation coefficient than pcr. This may show that there are more positive cases reported by rtk-ag in comparison with pcr. Casual contacts also have a high correlation to the amount of new cases. This shows that casual contacts contributes to the amount of new covid cases.</p>
+
+<h4 id="dataset-variables-over-time">Dataset variables over time</h4>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="n">sns</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+
+<span class="n">fig</span><span class="o">=</span><span class="n">plt</span><span class="p">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">title</span><span class="p">(</span><span class="s">'Dataset variables over time'</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">rotation</span><span class="o">=</span><span class="mi">45</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">13</span><span class="p">)</span>
+<span class="c1">#sns.scatterplot(data=pd.melt(new_cases_and_tests, 'date'), x="date", y='value',hue='variable')
+</span><span class="n">sns</span><span class="p">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">pd</span><span class="p">.</span><span class="n">melt</span><span class="p">(</span><span class="n">cleaned_df</span><span class="p">,</span> <span class="s">'date'</span><span class="p">),</span> <span class="n">x</span><span class="o">=</span><span class="s">"date"</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s">'value'</span><span class="p">,</span><span class="n">hue</span><span class="o">=</span><span class="s">'variable'</span><span class="p">,</span><span class="n">palette</span><span class="o">=</span><span class="s">'husl'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="s">'x-large'</span><span class="p">,</span> <span class="n">title_fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="p">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">'Date'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">'Count'</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="p">.</span><span class="n">grid</span><span class="p">()</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><img src="https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(1)%20Covid-19%20Malaysia%20Analysis%20And%20Prediction/output_40_0.png" alt="png" /></p>
+
+<h5 id="description-1">Description</h5>
+<p>From the plot, we can see that the variables are having an upward trend as time progress. Notice the presence some occasional dips in the number of casual contacts everytime cases hits an all new time high which possibly due to the implementation of stricter Movement Control Order where people are refrained from travelling and even going out. This can be further seen on the filtered linegraph below.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="n">sns</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+
+<span class="n">fig</span><span class="o">=</span><span class="n">plt</span><span class="p">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">15</span><span class="p">))</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">title</span><span class="p">(</span><span class="s">'Casual contacts and new cases '</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">rotation</span><span class="o">=</span><span class="mi">45</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">13</span><span class="p">)</span>
+
+<span class="n">colors</span> <span class="o">=</span> <span class="p">[</span><span class="s">"#FF0B04"</span><span class="p">,</span> <span class="s">"#4374B3"</span><span class="p">]</span>
+
+
+<span class="n">sns</span><span class="p">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">pd</span><span class="p">.</span><span class="n">melt</span><span class="p">(</span><span class="n">cleaned_df</span><span class="p">[[</span><span class="s">'cases_new'</span><span class="p">,</span><span class="s">'casual_contacts'</span><span class="p">,</span><span class="s">'date'</span><span class="p">]],</span> <span class="s">'date'</span><span class="p">),</span>
+             <span class="n">x</span><span class="o">=</span><span class="s">"date"</span><span class="p">,</span>
+             <span class="n">y</span><span class="o">=</span><span class="s">'value'</span><span class="p">,</span>
+             <span class="n">hue</span><span class="o">=</span><span class="s">'variable'</span><span class="p">,</span>
+             <span class="n">palette</span><span class="o">=</span><span class="n">colors</span>
+            <span class="p">)</span>
+
+<span class="n">plt</span><span class="p">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="s">'x-large'</span><span class="p">,</span> <span class="n">title_fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="p">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">'Date'</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">'Count'</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="p">.</span><span class="n">grid</span><span class="p">()</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><img src="https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(1)%20Covid-19%20Malaysia%20Analysis%20And%20Prediction/output_42_0.png" alt="png" /></p>
+
+<h2 id="herd-immunity">Herd immunity</h2>
+<p>The first part that we want to analyze is the herd immunity achieved in Malaysia. Based on the government’s target, we need to have 80% of the population fully vaccinated against Covid-19 in order to achieve herd immunity.</p>
+
+<h3 id="data-cleaning-1">Data Cleaning</h3>
+
+<h4 id="making-a-backup-of-the-dataframe-1">Making a backup of the DataFrame</h4>
+
+<p>Just in case something happen, we can revert to its original values without updating from the dataset link.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_vaccination</span> <span class="o">=</span> <span class="n">vaccination_who</span><span class="p">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">df_population</span> <span class="o">=</span> <span class="n">population</span><span class="p">.</span><span class="n">copy</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_vaccination</span><span class="p">.</span><span class="n">head</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>location</th>
+      <th>iso_code</th>
+      <th>date</th>
+      <th>total_vaccinations</th>
+      <th>people_vaccinated</th>
+      <th>people_fully_vaccinated</th>
+      <th>total_boosters</th>
+      <th>daily_vaccinations_raw</th>
+      <th>daily_vaccinations</th>
+      <th>total_vaccinations_per_hundred</th>
+      <th>people_vaccinated_per_hundred</th>
+      <th>people_fully_vaccinated_per_hundred</th>
+      <th>total_boosters_per_hundred</th>
+      <th>daily_vaccinations_per_million</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Afghanistan</td>
+      <td>AFG</td>
+      <td>2021-02-22</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Afghanistan</td>
+      <td>AFG</td>
+      <td>2021-02-23</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>1367.0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>34.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Afghanistan</td>
+      <td>AFG</td>
+      <td>2021-02-24</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>1367.0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>34.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Afghanistan</td>
+      <td>AFG</td>
+      <td>2021-02-25</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>1367.0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>34.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Afghanistan</td>
+      <td>AFG</td>
+      <td>2021-02-26</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>1367.0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>34.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_population</span><span class="p">.</span><span class="n">head</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>state</th>
+      <th>idxs</th>
+      <th>pop</th>
+      <th>pop_18</th>
+      <th>pop_60</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Malaysia</td>
+      <td>0</td>
+      <td>32657400</td>
+      <td>23409600</td>
+      <td>3502000</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Johor</td>
+      <td>1</td>
+      <td>3781000</td>
+      <td>2711900</td>
+      <td>428700</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Kedah</td>
+      <td>2</td>
+      <td>2185100</td>
+      <td>1540600</td>
+      <td>272500</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Kelantan</td>
+      <td>3</td>
+      <td>1906700</td>
+      <td>1236200</td>
+      <td>194100</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Melaka</td>
+      <td>4</td>
+      <td>932700</td>
+      <td>677400</td>
+      <td>118500</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<h4 id="filter-columns-and-rows">Filter columns and rows</h4>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_population</span> <span class="o">=</span> <span class="n">df_population</span><span class="p">[</span><span class="n">df_population</span><span class="p">[</span><span class="s">'state'</span><span class="p">]</span><span class="o">==</span><span class="s">'Malaysia'</span><span class="p">]</span>
+<span class="n">df_vaccination</span> <span class="o">=</span> <span class="n">df_vaccination</span><span class="p">[</span><span class="n">df_vaccination</span><span class="p">[</span><span class="s">'iso_code'</span><span class="p">]</span> <span class="o">==</span><span class="s">'MYS'</span><span class="p">]</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_vax_col</span> <span class="o">=</span> <span class="n">df_vaccination</span><span class="p">[[</span><span class="s">'date'</span><span class="p">,</span> <span class="s">'total_vaccinations'</span><span class="p">,</span> <span class="s">'people_vaccinated'</span> <span class="p">,</span> <span class="s">'people_fully_vaccinated'</span><span class="p">,</span><span class="s">'daily_vaccinations'</span><span class="p">]]</span>
+</code></pre></div></div>
+
+<h4 id="covert-date-column-into-datetime-1">Covert Date column into Datetime</h4>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_vax_col</span><span class="p">[</span><span class="s">'date'</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df_vax_col</span><span class="p">[</span><span class="s">'date'</span><span class="p">])</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;ipython-input-162-eef09d30cdd7&gt;:1: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  df_vax_col['date'] = pd.to_datetime(df_vax_col['date'])
+</code></pre></div></div>
+
+<h4 id="check-for-null-values">Check for null values</h4>
+<p>If the rows with null values isn’t that abundant, we can drop these rows</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">print</span><span class="p">(</span><span class="n">df_vax_col</span><span class="p">.</span><span class="n">isna</span><span class="p">().</span><span class="nb">sum</span><span class="p">())</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>date                       0
+total_vaccinations         0
+people_vaccinated          0
+people_fully_vaccinated    4
+daily_vaccinations         1
+dtype: int64
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_vax_col</span><span class="p">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;ipython-input-164-c9825b337e79&gt;:1: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  df_vax_col.dropna(inplace=True)
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_vax_col</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>date</th>
+      <th>total_vaccinations</th>
+      <th>people_vaccinated</th>
+      <th>people_fully_vaccinated</th>
+      <th>daily_vaccinations</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>24008</th>
+      <td>2021-02-28</td>
+      <td>18721.0</td>
+      <td>18718.0</td>
+      <td>3.0</td>
+      <td>4665.0</td>
+    </tr>
+    <tr>
+      <th>24009</th>
+      <td>2021-03-01</td>
+      <td>34093.0</td>
+      <td>34086.0</td>
+      <td>7.0</td>
+      <td>6807.0</td>
+    </tr>
+    <tr>
+      <th>24010</th>
+      <td>2021-03-02</td>
+      <td>55749.0</td>
+      <td>55739.0</td>
+      <td>10.0</td>
+      <td>9282.0</td>
+    </tr>
+    <tr>
+      <th>24011</th>
+      <td>2021-03-03</td>
+      <td>78413.0</td>
+      <td>78398.0</td>
+      <td>15.0</td>
+      <td>11193.0</td>
+    </tr>
+    <tr>
+      <th>24012</th>
+      <td>2021-03-04</td>
+      <td>97954.0</td>
+      <td>97925.0</td>
+      <td>29.0</td>
+      <td>13821.0</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>24186</th>
+      <td>2021-08-25</td>
+      <td>32635907.0</td>
+      <td>18792979.0</td>
+      <td>13842928.0</td>
+      <td>450794.0</td>
+    </tr>
+    <tr>
+      <th>24187</th>
+      <td>2021-08-26</td>
+      <td>33044202.0</td>
+      <td>18948648.0</td>
+      <td>14095554.0</td>
+      <td>434903.0</td>
+    </tr>
+    <tr>
+      <th>24188</th>
+      <td>2021-08-27</td>
+      <td>33388102.0</td>
+      <td>19090519.0</td>
+      <td>14297962.0</td>
+      <td>414730.0</td>
+    </tr>
+    <tr>
+      <th>24189</th>
+      <td>2021-08-28</td>
+      <td>33724744.0</td>
+      <td>19241567.0</td>
+      <td>14487972.0</td>
+      <td>395723.0</td>
+    </tr>
+    <tr>
+      <th>24190</th>
+      <td>2021-08-29</td>
+      <td>34027548.0</td>
+      <td>19384218.0</td>
+      <td>14648590.0</td>
+      <td>375966.0</td>
+    </tr>
+  </tbody>
+</table>
+<p>183 rows × 5 columns</p>
+</div>
+
+<h3 id="visualization-1">Visualization</h3>
+
+<h4 id="merging-datasets">Merging datasets</h4>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_pop</span> <span class="o">=</span> <span class="n">df_population</span><span class="p">[</span><span class="s">'pop'</span><span class="p">]</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_vax_herd</span> <span class="o">=</span> <span class="n">df_vax_col</span><span class="p">.</span><span class="n">merge</span><span class="p">(</span><span class="n">df_pop</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s">'cross'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_vax_col</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>date</th>
+      <th>total_vaccinations</th>
+      <th>people_vaccinated</th>
+      <th>people_fully_vaccinated</th>
+      <th>daily_vaccinations</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>24008</th>
+      <td>2021-02-28</td>
+      <td>18721.0</td>
+      <td>18718.0</td>
+      <td>3.0</td>
+      <td>4665.0</td>
+    </tr>
+    <tr>
+      <th>24009</th>
+      <td>2021-03-01</td>
+      <td>34093.0</td>
+      <td>34086.0</td>
+      <td>7.0</td>
+      <td>6807.0</td>
+    </tr>
+    <tr>
+      <th>24010</th>
+      <td>2021-03-02</td>
+      <td>55749.0</td>
+      <td>55739.0</td>
+      <td>10.0</td>
+      <td>9282.0</td>
+    </tr>
+    <tr>
+      <th>24011</th>
+      <td>2021-03-03</td>
+      <td>78413.0</td>
+      <td>78398.0</td>
+      <td>15.0</td>
+      <td>11193.0</td>
+    </tr>
+    <tr>
+      <th>24012</th>
+      <td>2021-03-04</td>
+      <td>97954.0</td>
+      <td>97925.0</td>
+      <td>29.0</td>
+      <td>13821.0</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>24186</th>
+      <td>2021-08-25</td>
+      <td>32635907.0</td>
+      <td>18792979.0</td>
+      <td>13842928.0</td>
+      <td>450794.0</td>
+    </tr>
+    <tr>
+      <th>24187</th>
+      <td>2021-08-26</td>
+      <td>33044202.0</td>
+      <td>18948648.0</td>
+      <td>14095554.0</td>
+      <td>434903.0</td>
+    </tr>
+    <tr>
+      <th>24188</th>
+      <td>2021-08-27</td>
+      <td>33388102.0</td>
+      <td>19090519.0</td>
+      <td>14297962.0</td>
+      <td>414730.0</td>
+    </tr>
+    <tr>
+      <th>24189</th>
+      <td>2021-08-28</td>
+      <td>33724744.0</td>
+      <td>19241567.0</td>
+      <td>14487972.0</td>
+      <td>395723.0</td>
+    </tr>
+    <tr>
+      <th>24190</th>
+      <td>2021-08-29</td>
+      <td>34027548.0</td>
+      <td>19384218.0</td>
+      <td>14648590.0</td>
+      <td>375966.0</td>
+    </tr>
+  </tbody>
+</table>
+<p>183 rows × 5 columns</p>
+</div>
+
+<h4 id="plot-of-vaccination-progress-in-malaysia">Plot of Vaccination Progress in Malaysia</h4>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="n">sns</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+
+<span class="n">fig</span><span class="o">=</span><span class="n">plt</span><span class="p">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
+
+<span class="n">date</span> <span class="o">=</span> <span class="n">df_vax_herd</span><span class="p">[</span><span class="s">'date'</span><span class="p">]</span>
+<span class="n">sns</span><span class="p">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">date</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">df_vax_herd</span><span class="p">[</span><span class="s">'total_vaccinations'</span><span class="p">],</span> <span class="n">label</span> <span class="o">=</span> <span class="s">"Total vaccinations"</span><span class="p">)</span>
+<span class="n">sns</span><span class="p">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">date</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">df_vax_herd</span><span class="p">[</span><span class="s">'people_vaccinated'</span><span class="p">],</span> <span class="n">label</span> <span class="o">=</span> <span class="s">"People with 1st Dose"</span><span class="p">)</span>
+<span class="n">sns</span><span class="p">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">date</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">df_vax_herd</span><span class="p">[</span><span class="s">'people_fully_vaccinated'</span><span class="p">],</span> <span class="n">label</span> <span class="o">=</span> <span class="s">"People with 2nd Dose"</span><span class="p">)</span>
+<span class="c1">#sns.lineplot(x=date, y=df_vax_herd['daily_vaccinations'], label = "Daily Vaccinations rate")
+</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">title</span><span class="p">(</span><span class="s">'Vaccination Progress in Malaysia'</span><span class="p">,</span> <span class="n">fontsize</span> <span class="o">=</span> <span class="mi">20</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="p">.</span><span class="n">grid</span><span class="p">()</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">rotation</span><span class="o">=</span><span class="mi">45</span><span class="p">,</span> <span class="n">fontsize</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">'Date'</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="p">.</span><span class="n">yticks</span><span class="p">(</span><span class="n">fontsize</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">'Count'</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="p">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span> <span class="o">=</span> <span class="mi">15</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><img src="https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(1)%20Covid-19%20Malaysia%20Analysis%20And%20Prediction/output_64_0.png" alt="png" /></p>
+
+<h4 id="plot-of-malaysias-herd-immunity-percentage">Plot of Malaysia’s Herd Immunity percentage</h4>
+<p>Equation Herd Immunity is as follows:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Herd% = (Sum of Fully Vaccinated/Total Popuation) * 100
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_vax_herd</span><span class="p">[</span><span class="s">'herd_immunity'</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">df_vax_herd</span><span class="p">[</span><span class="s">'people_fully_vaccinated'</span><span class="p">]</span> <span class="o">/</span> <span class="n">df_vax_herd</span><span class="p">[</span><span class="s">'pop'</span><span class="p">])</span> <span class="o">*</span> <span class="mi">100</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="n">sns</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+
+<span class="n">fig</span><span class="o">=</span><span class="n">plt</span><span class="p">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
+
+<span class="n">sns</span><span class="p">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">df_vax_herd</span><span class="p">,</span><span class="n">x</span><span class="o">=</span><span class="n">df_vax_herd</span><span class="p">[</span><span class="s">'date'</span><span class="p">],</span><span class="n">y</span><span class="o">=</span><span class="n">df_vax_herd</span><span class="p">[</span><span class="s">'herd_immunity'</span><span class="p">],</span><span class="n">linewidth</span> <span class="o">=</span> <span class="mf">2.5</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s">'red'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">title</span><span class="p">(</span><span class="s">"Covid-19 Herd Immunity Progress in Malaysia"</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">"Date"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">"Percentage"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">grid</span><span class="p">()</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><img src="https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(1)%20Covid-19%20Malaysia%20Analysis%20And%20Prediction/output_67_0.png" alt="png" /></p>
+
+<h5 id="description-2">Description:</h5>
+<p>The vaccine admnistration had exponentially increased with a slight decreased rate aproaching September 2021.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">herd_immunity</span> <span class="o">=</span> <span class="p">(</span><span class="n">df_vax_herd</span><span class="p">[</span><span class="s">'people_fully_vaccinated'</span><span class="p">].</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">:,]</span> <span class="o">/</span> <span class="n">df_vax_herd</span><span class="p">[</span><span class="s">'pop'</span><span class="p">].</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">:,])</span> <span class="o">*</span> <span class="mi">100</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">print</span><span class="p">(</span><span class="s">"Malaysia's Herd Immunity Percentage: "</span> <span class="o">+</span> <span class="p">(</span><span class="n">herd_immunity</span><span class="p">.</span><span class="nb">round</span><span class="p">(</span><span class="mi">2</span><span class="p">).</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span> <span class="o">+</span> <span class="s">" %"</span><span class="p">))</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>182    Malaysia's Herd Immunity Percentage: 44.86 %
+dtype: object
+</code></pre></div></div>
+
+<h2 id="covid-19-cases-by-state">Covid-19 cases by state</h2>
+<p>This section will narrow down the analysis into each state.</p>
+
+<h3 id="count-of-new-cases-by-state">Count of new cases by state</h3>
+
+<h4 id="data-cleaning-2">Data Cleaning</h4>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_state_cases</span><span class="o">=</span><span class="n">state_cases</span><span class="p">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">df_death_public</span><span class="o">=</span><span class="n">deaths_public</span><span class="p">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">df_death_state</span><span class="o">=</span><span class="n">deaths_state</span><span class="p">.</span><span class="n">copy</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_state_cases</span><span class="p">.</span><span class="n">head</span><span class="p">()</span>
+<span class="c1">#df_death_public.head()
+#df_death_state.head()
+</span></code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>date</th>
+      <th>state</th>
+      <th>cases_new</th>
+      <th>cases_import</th>
+      <th>cases_recovered</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2020-01-25</td>
+      <td>Johor</td>
+      <td>4</td>
+      <td>4</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2020-01-25</td>
+      <td>Kedah</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2020-01-25</td>
+      <td>Kelantan</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2020-01-25</td>
+      <td>Melaka</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2020-01-25</td>
+      <td>Negeri Sembilan</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_state_cases</span><span class="p">[</span><span class="s">'date'</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df_state_cases</span><span class="p">[</span><span class="s">'date'</span><span class="p">])</span>
+<span class="n">df_death_public</span><span class="p">[</span><span class="s">'date'</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df_death_public</span><span class="p">[</span><span class="s">'date'</span><span class="p">])</span>
+<span class="n">df_death_state</span><span class="p">[</span><span class="s">'date'</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df_death_state</span><span class="p">[</span><span class="s">'date'</span><span class="p">])</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_state_cases</span><span class="p">.</span><span class="n">isna</span><span class="p">().</span><span class="nb">sum</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>date                0
+state               0
+cases_new           0
+cases_import        0
+cases_recovered    48
+dtype: int64
+</code></pre></div></div>
+
+<h4 id="visualization-2">Visualization</h4>
+
+<h5 id="plot-of-new-cases-from-each-state">Plot of New Cases from each State</h5>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="n">sns</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+
+<span class="n">fig</span><span class="o">=</span><span class="n">plt</span><span class="p">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">title</span><span class="p">(</span><span class="s">"Covid cases according to state"</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+
+<span class="n">sns</span><span class="p">.</span><span class="n">set_theme</span><span class="p">(</span><span class="n">style</span><span class="o">=</span><span class="s">"ticks"</span><span class="p">)</span>
+<span class="n">sns</span><span class="p">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="s">'cases_new'</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s">'date'</span><span class="p">,</span><span class="n">hue</span><span class="o">=</span><span class="s">'state'</span><span class="p">,</span><span class="n">size</span><span class="o">=</span><span class="s">"state"</span><span class="p">,</span><span class="n">data</span><span class="o">=</span><span class="n">df_state_cases</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="p">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">'Date'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">'Count of new cases'</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="p">.</span><span class="n">grid</span><span class="p">()</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">rotation</span><span class="o">=</span><span class="mi">45</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><img src="https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(1)%20Covid-19%20Malaysia%20Analysis%20And%20Prediction/output_80_0.png" alt="png" /></p>
+
+<h6 id="description-3">Description:</h6>
+<p>The plot shows that Selangor had significatly more cases throughout the time.Around April 2021, there is a low dip after the second ATH that occured around February 2021, and continued to increase exponantially going forward.</p>
+
+<h3 id="tests-by-state">Tests by state</h3>
+
+<h4 id="preparing-data">Preparing Data</h4>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_tests_state</span> <span class="o">=</span> <span class="n">tests_state</span><span class="p">.</span><span class="n">copy</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h5 id="sum-of-tests-by-state">Sum of tests by state</h5>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_ts</span> <span class="o">=</span> <span class="n">df_tests_state</span><span class="p">.</span><span class="n">groupby</span><span class="p">([</span><span class="s">'state'</span><span class="p">]).</span><span class="nb">sum</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_ts</span><span class="p">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h5 id="sum-values-both-testing-types">Sum values both testing types</h5>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_ts</span><span class="p">[</span><span class="s">'total_test'</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">df_ts</span><span class="p">[</span><span class="s">'rtk-ag'</span><span class="p">]</span> <span class="o">+</span> <span class="n">df_ts</span><span class="p">[</span><span class="s">'pcr'</span><span class="p">])</span>
+</code></pre></div></div>
+
+<h4 id="visualization-3">Visualization</h4>
+
+<h5 id="plot-of-total-covid-tests-by-state">Plot of Total Covid Tests By State</h5>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="n">sns</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="n">fig</span><span class="o">=</span><span class="n">plt</span><span class="p">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">title</span><span class="p">(</span><span class="s">"Covid Tests by State"</span><span class="p">)</span>
+<span class="n">sns</span><span class="p">.</span><span class="n">barplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s">"state"</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s">"total_test"</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">df_ts</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">grid</span><span class="p">()</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">'State'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">'Sum of Covid Tests'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">rotation</span><span class="o">=</span><span class="mi">45</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><img src="https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(1)%20Covid-19%20Malaysia%20Analysis%20And%20Prediction/output_92_0.png" alt="png" /></p>
+
+<h6 id="description-4">Description:</h6>
+<p>From the Covid Tests by State plot, we can see the top 3 states that have run the most test are Selangor, Johor, and, Sarawak. Despite being near to the Selangor state, W.P Putrajaya had significatly fewer tests done in the area.</p>
+
+<h1 id="covid-19-cases-forecast">Covid-19 cases forecast</h1>
+<p>For the forecast, we wil make use of two procedures of forecasting which is first by using Prophet and then by using NeuralProphet.</p>
+
+<h2 id="forecasting-with-prophet">Forecasting with Prophet</h2>
+
+<h3 id="install-dependecies">Install dependecies</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#Prophet Dependencies
+#!pip install pystan==2.19.1.1
+#!pip install prophet
+</span></code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#if unable to install
+#conda install --override-channels -c main -c conda-forge boost
+</span></code></pre></div></div>
+
+<h3 id="import-prophet">Import Prophet</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">prophet</span> <span class="kn">import</span> <span class="n">Prophet</span>
+</code></pre></div></div>
+
+<h3 id="create-y-and-ds-dataframe">Create y and ds DataFrame</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#pdf=cleaned_df.copy()
+</span><span class="n">pdf</span> <span class="o">=</span> <span class="n">df_cases</span><span class="p">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">pdf</span><span class="p">.</span><span class="n">tail</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>date</th>
+      <th>cases_new</th>
+      <th>cases_import</th>
+      <th>cases_recovered</th>
+      <th>cluster_import</th>
+      <th>cluster_religious</th>
+      <th>cluster_community</th>
+      <th>cluster_highRisk</th>
+      <th>cluster_education</th>
+      <th>cluster_detentionCentre</th>
+      <th>cluster_workplace</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>579</th>
+      <td>2021-08-26</td>
+      <td>24599</td>
+      <td>8</td>
+      <td>22655</td>
+      <td>0.0</td>
+      <td>24.0</td>
+      <td>542.0</td>
+      <td>93.0</td>
+      <td>35.0</td>
+      <td>73.0</td>
+      <td>1944.0</td>
+    </tr>
+    <tr>
+      <th>580</th>
+      <td>2021-08-27</td>
+      <td>22070</td>
+      <td>15</td>
+      <td>21877</td>
+      <td>0.0</td>
+      <td>2.0</td>
+      <td>474.0</td>
+      <td>17.0</td>
+      <td>3.0</td>
+      <td>150.0</td>
+      <td>1022.0</td>
+    </tr>
+    <tr>
+      <th>581</th>
+      <td>2021-08-28</td>
+      <td>22597</td>
+      <td>12</td>
+      <td>19492</td>
+      <td>0.0</td>
+      <td>6.0</td>
+      <td>467.0</td>
+      <td>84.0</td>
+      <td>7.0</td>
+      <td>92.0</td>
+      <td>1505.0</td>
+    </tr>
+    <tr>
+      <th>582</th>
+      <td>2021-08-29</td>
+      <td>20579</td>
+      <td>7</td>
+      <td>20845</td>
+      <td>0.0</td>
+      <td>12.0</td>
+      <td>392.0</td>
+      <td>16.0</td>
+      <td>4.0</td>
+      <td>81.0</td>
+      <td>1458.0</td>
+    </tr>
+    <tr>
+      <th>583</th>
+      <td>2021-08-30</td>
+      <td>19268</td>
+      <td>16</td>
+      <td>21257</td>
+      <td>0.0</td>
+      <td>4.0</td>
+      <td>460.0</td>
+      <td>37.0</td>
+      <td>72.0</td>
+      <td>89.0</td>
+      <td>1034.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">pdf</span><span class="p">.</span><span class="n">dtypes</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>date                       datetime64[ns]
+cases_new                           int64
+cases_import                        int64
+cases_recovered                     int64
+cluster_import                    float64
+cluster_religious                 float64
+cluster_community                 float64
+cluster_highRisk                  float64
+cluster_education                 float64
+cluster_detentionCentre           float64
+cluster_workplace                 float64
+dtype: object
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">pdf</span><span class="o">=</span><span class="n">pdf</span><span class="p">[[</span><span class="s">'cases_new'</span><span class="p">,</span><span class="s">'date'</span><span class="p">]]</span>
+<span class="n">pdf</span><span class="p">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s">'y'</span><span class="p">,</span> <span class="s">'ds'</span><span class="p">]</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">pdf</span><span class="p">.</span><span class="n">tail</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>y</th>
+      <th>ds</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>579</th>
+      <td>24599</td>
+      <td>2021-08-26</td>
+    </tr>
+    <tr>
+      <th>580</th>
+      <td>22070</td>
+      <td>2021-08-27</td>
+    </tr>
+    <tr>
+      <th>581</th>
+      <td>22597</td>
+      <td>2021-08-28</td>
+    </tr>
+    <tr>
+      <th>582</th>
+      <td>20579</td>
+      <td>2021-08-29</td>
+    </tr>
+    <tr>
+      <th>583</th>
+      <td>19268</td>
+      <td>2021-08-30</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<h3 id="hyperparameter-tuning">Hyperparameter tuning</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">itertools</span>    
+<span class="kn">from</span> <span class="nn">prophet.diagnostics</span> <span class="kn">import</span> <span class="n">cross_validation</span>
+<span class="kn">from</span> <span class="nn">prophet.diagnostics</span> <span class="kn">import</span> <span class="n">performance_metrics</span>
+
+
+<span class="c1">#cutoffs = pd.to_datetime(['2013-02-15', '2013-08-15', '2014-02-15'])
+</span>
+<span class="n">param_grid</span> <span class="o">=</span> <span class="p">{</span>  
+    <span class="s">'changepoint_prior_scale'</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.001</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span>
+    <span class="s">'seasonality_prior_scale'</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">],</span>
+<span class="p">}</span>
+
+<span class="c1"># Generate all combinations of parameters
+</span><span class="n">all_params</span> <span class="o">=</span> <span class="p">[</span><span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">param_grid</span><span class="p">.</span><span class="n">keys</span><span class="p">(),</span> <span class="n">v</span><span class="p">))</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">itertools</span><span class="p">.</span><span class="n">product</span><span class="p">(</span><span class="o">*</span><span class="n">param_grid</span><span class="p">.</span><span class="n">values</span><span class="p">())]</span>
+<span class="n">rmses</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># Store the RMSEs for each params here
+</span>
+<span class="c1"># Use cross validation to evaluate all parameters
+</span><span class="k">for</span> <span class="n">params</span> <span class="ow">in</span> <span class="n">all_params</span><span class="p">:</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">Prophet</span><span class="p">(</span><span class="o">**</span><span class="n">params</span><span class="p">).</span><span class="n">fit</span><span class="p">(</span><span class="n">pdf</span><span class="p">)</span>  <span class="c1"># Fit model with given params
+</span>    <span class="n">df_cv</span> <span class="o">=</span> <span class="n">cross_validation</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">initial</span><span class="o">=</span><span class="s">'467 days'</span><span class="p">,</span> <span class="n">horizon</span><span class="o">=</span><span class="s">'90 days'</span><span class="p">,</span> <span class="n">parallel</span><span class="o">=</span><span class="s">"processes"</span><span class="p">)</span>
+    <span class="n">df_p</span> <span class="o">=</span> <span class="n">performance_metrics</span><span class="p">(</span><span class="n">df_cv</span><span class="p">,</span> <span class="n">rolling_window</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">rmses</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">df_p</span><span class="p">[</span><span class="s">'rmse'</span><span class="p">].</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+<span class="c1"># Find the best parameters
+</span><span class="n">tuning_results</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">all_params</span><span class="p">)</span>
+<span class="n">tuning_results</span><span class="p">[</span><span class="s">'rmse'</span><span class="p">]</span> <span class="o">=</span> <span class="n">rmses</span>
+<span class="k">print</span><span class="p">(</span><span class="n">tuning_results</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    changepoint_prior_scale  seasonality_prior_scale          rmse
+0                     0.001                     0.01  10921.661903
+1                     0.001                     0.10  10919.509611
+2                     0.001                     1.00  10922.932525
+3                     0.001                    10.00  10922.933597
+4                     0.010                     0.01  10436.432092
+5                     0.010                     0.10  10454.540248
+6                     0.010                     1.00  10416.027803
+7                     0.010                    10.00  10388.626258
+8                     0.100                     0.01   9407.677955
+9                     0.100                     0.10   9493.458346
+10                    0.100                     1.00   9520.645030
+11                    0.100                    10.00   9485.789007
+12                    0.500                     0.01   7509.463922
+13                    0.500                     0.10   7498.125305
+14                    0.500                     1.00   7505.931754
+15                    0.500                    10.00   7440.287934
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="n">best_params</span> <span class="o">=</span> <span class="n">all_params</span><span class="p">[</span><span class="n">np</span><span class="p">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">rmses</span><span class="p">)]</span>
+<span class="k">print</span><span class="p">(</span><span class="n">best_params</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{'changepoint_prior_scale': 0.5, 'seasonality_prior_scale': 10.0}
+</code></pre></div></div>
+
+<h3 id="fit-prophet-model">Fit Prophet model</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">m</span> <span class="o">=</span> <span class="n">Prophet</span><span class="p">(</span><span class="n">interval_width</span><span class="o">=</span><span class="mf">0.95</span><span class="p">,</span>
+        <span class="n">yearly_seasonality</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+        <span class="c1">#weekly_seasonality=True,
+</span>        <span class="n">seasonality_mode</span><span class="o">=</span><span class="s">'additive'</span><span class="p">,</span>
+        <span class="n">changepoint_prior_scale</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+        <span class="n">seasonality_prior_scale</span><span class="o">=</span><span class="mi">10</span>
+           <span class="p">)</span>
+
+<span class="c1">#m.add_country_holidays(country_name='MY')
+</span>
+
+<span class="c1">#m.add_seasonality(name='monthly', period=30.5, fourier_order=5, prior_scale=0.02)
+</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">m</span><span class="p">.</span><span class="n">fit</span><span class="p">(</span><span class="n">pdf</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>INFO:prophet:Disabling daily seasonality. Run prophet with daily_seasonality=True to override this.
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#print(m.train_holiday_names)
+</span></code></pre></div></div>
+
+<h3 id="forecast-results">Forecast Results</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#do forecasting and view results
+</span><span class="n">future</span> <span class="o">=</span> <span class="n">m</span><span class="p">.</span><span class="n">make_future_dataframe</span><span class="p">(</span><span class="n">periods</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span><span class="n">freq</span><span class="o">=</span><span class="s">'D'</span><span class="p">)</span>
+<span class="n">forecast</span> <span class="o">=</span> <span class="n">m</span><span class="p">.</span><span class="n">predict</span><span class="p">(</span><span class="n">future</span><span class="p">)</span>
+<span class="n">forecast</span><span class="p">.</span><span class="n">head</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>ds</th>
+      <th>trend</th>
+      <th>yhat_lower</th>
+      <th>yhat_upper</th>
+      <th>trend_lower</th>
+      <th>trend_upper</th>
+      <th>additive_terms</th>
+      <th>additive_terms_lower</th>
+      <th>additive_terms_upper</th>
+      <th>weekly</th>
+      <th>weekly_lower</th>
+      <th>weekly_upper</th>
+      <th>yearly</th>
+      <th>yearly_lower</th>
+      <th>yearly_upper</th>
+      <th>multiplicative_terms</th>
+      <th>multiplicative_terms_lower</th>
+      <th>multiplicative_terms_upper</th>
+      <th>yhat</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2020-01-25</td>
+      <td>-1502.472873</td>
+      <td>-1203.062946</td>
+      <td>893.910368</td>
+      <td>-1502.472873</td>
+      <td>-1502.472873</td>
+      <td>1391.633483</td>
+      <td>1391.633483</td>
+      <td>1391.633483</td>
+      <td>124.582476</td>
+      <td>124.582476</td>
+      <td>124.582476</td>
+      <td>1267.051007</td>
+      <td>1267.051007</td>
+      <td>1267.051007</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>-110.839390</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2020-01-26</td>
+      <td>-1429.346929</td>
+      <td>-1192.930931</td>
+      <td>833.350203</td>
+      <td>-1429.346929</td>
+      <td>-1429.346929</td>
+      <td>1153.950894</td>
+      <td>1153.950894</td>
+      <td>1153.950894</td>
+      <td>-111.781693</td>
+      <td>-111.781693</td>
+      <td>-111.781693</td>
+      <td>1265.732587</td>
+      <td>1265.732587</td>
+      <td>1265.732587</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>-275.396035</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2020-01-27</td>
+      <td>-1356.220985</td>
+      <td>-1477.034897</td>
+      <td>618.404889</td>
+      <td>-1356.220985</td>
+      <td>-1356.220985</td>
+      <td>917.191560</td>
+      <td>917.191560</td>
+      <td>917.191560</td>
+      <td>-340.239836</td>
+      <td>-340.239836</td>
+      <td>-340.239836</td>
+      <td>1257.431397</td>
+      <td>1257.431397</td>
+      <td>1257.431397</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>-439.029424</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2020-01-28</td>
+      <td>-1283.095041</td>
+      <td>-1207.599285</td>
+      <td>882.946217</td>
+      <td>-1283.095041</td>
+      <td>-1283.095041</td>
+      <td>1155.585080</td>
+      <td>1155.585080</td>
+      <td>1155.585080</td>
+      <td>-86.379951</td>
+      <td>-86.379951</td>
+      <td>-86.379951</td>
+      <td>1241.965031</td>
+      <td>1241.965031</td>
+      <td>1241.965031</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>-127.509961</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2020-01-29</td>
+      <td>-1209.969097</td>
+      <td>-1009.384752</td>
+      <td>1069.025346</td>
+      <td>-1209.969097</td>
+      <td>-1209.969097</td>
+      <td>1258.893544</td>
+      <td>1258.893544</td>
+      <td>1258.893544</td>
+      <td>39.670032</td>
+      <td>39.670032</td>
+      <td>39.670032</td>
+      <td>1219.223512</td>
+      <td>1219.223512</td>
+      <td>1219.223512</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>48.924447</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#view tail
+</span><span class="n">forecast</span><span class="p">.</span><span class="n">tail</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>ds</th>
+      <th>trend</th>
+      <th>yhat_lower</th>
+      <th>yhat_upper</th>
+      <th>trend_lower</th>
+      <th>trend_upper</th>
+      <th>additive_terms</th>
+      <th>additive_terms_lower</th>
+      <th>additive_terms_upper</th>
+      <th>weekly</th>
+      <th>weekly_lower</th>
+      <th>weekly_upper</th>
+      <th>yearly</th>
+      <th>yearly_lower</th>
+      <th>yearly_upper</th>
+      <th>multiplicative_terms</th>
+      <th>multiplicative_terms_lower</th>
+      <th>multiplicative_terms_upper</th>
+      <th>yhat</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>609</th>
+      <td>2021-09-25</td>
+      <td>19866.414845</td>
+      <td>20634.434684</td>
+      <td>26150.146540</td>
+      <td>17321.585143</td>
+      <td>22901.588543</td>
+      <td>3380.779480</td>
+      <td>3380.779480</td>
+      <td>3380.779480</td>
+      <td>124.582476</td>
+      <td>124.582476</td>
+      <td>124.582476</td>
+      <td>3256.197004</td>
+      <td>3256.197004</td>
+      <td>3256.197004</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>23247.194325</td>
+    </tr>
+    <tr>
+      <th>610</th>
+      <td>2021-09-26</td>
+      <td>19957.572830</td>
+      <td>20130.609494</td>
+      <td>26207.417258</td>
+      <td>17253.248086</td>
+      <td>23173.709204</td>
+      <td>3112.683141</td>
+      <td>3112.683141</td>
+      <td>3112.683141</td>
+      <td>-111.781693</td>
+      <td>-111.781693</td>
+      <td>-111.781693</td>
+      <td>3224.464834</td>
+      <td>3224.464834</td>
+      <td>3224.464834</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>23070.255971</td>
+    </tr>
+    <tr>
+      <th>611</th>
+      <td>2021-09-27</td>
+      <td>20048.730815</td>
+      <td>19881.303817</td>
+      <td>26264.269832</td>
+      <td>17171.626612</td>
+      <td>23402.478726</td>
+      <td>2852.320910</td>
+      <td>2852.320910</td>
+      <td>2852.320910</td>
+      <td>-340.239836</td>
+      <td>-340.239836</td>
+      <td>-340.239836</td>
+      <td>3192.560747</td>
+      <td>3192.560747</td>
+      <td>3192.560747</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>22901.051725</td>
+    </tr>
+    <tr>
+      <th>612</th>
+      <td>2021-09-28</td>
+      <td>20139.888799</td>
+      <td>20167.106698</td>
+      <td>26689.837064</td>
+      <td>17120.444720</td>
+      <td>23734.217826</td>
+      <td>3074.241796</td>
+      <td>3074.241796</td>
+      <td>3074.241796</td>
+      <td>-86.379951</td>
+      <td>-86.379951</td>
+      <td>-86.379951</td>
+      <td>3160.621748</td>
+      <td>3160.621748</td>
+      <td>3160.621748</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>23214.130596</td>
+    </tr>
+    <tr>
+      <th>613</th>
+      <td>2021-09-29</td>
+      <td>20231.046784</td>
+      <td>20080.793640</td>
+      <td>27068.387395</td>
+      <td>17089.466718</td>
+      <td>23994.842698</td>
+      <td>3168.480850</td>
+      <td>3168.480850</td>
+      <td>3168.480850</td>
+      <td>39.670032</td>
+      <td>39.670032</td>
+      <td>39.670032</td>
+      <td>3128.810818</td>
+      <td>3128.810818</td>
+      <td>3128.810818</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>23399.527634</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">forecast</span><span class="p">[</span><span class="n">forecast</span><span class="p">[</span><span class="s">'ds'</span><span class="p">]</span><span class="o">==</span><span class="s">'2021-09-29'</span><span class="p">]</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>ds</th>
+      <th>trend</th>
+      <th>yhat_lower</th>
+      <th>yhat_upper</th>
+      <th>trend_lower</th>
+      <th>trend_upper</th>
+      <th>additive_terms</th>
+      <th>additive_terms_lower</th>
+      <th>additive_terms_upper</th>
+      <th>weekly</th>
+      <th>weekly_lower</th>
+      <th>weekly_upper</th>
+      <th>yearly</th>
+      <th>yearly_lower</th>
+      <th>yearly_upper</th>
+      <th>multiplicative_terms</th>
+      <th>multiplicative_terms_lower</th>
+      <th>multiplicative_terms_upper</th>
+      <th>yhat</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>613</th>
+      <td>2021-09-29</td>
+      <td>20231.046784</td>
+      <td>20080.79364</td>
+      <td>27068.387395</td>
+      <td>17089.466718</td>
+      <td>23994.842698</td>
+      <td>3168.48085</td>
+      <td>3168.48085</td>
+      <td>3168.48085</td>
+      <td>39.670032</td>
+      <td>39.670032</td>
+      <td>39.670032</td>
+      <td>3128.810818</td>
+      <td>3128.810818</td>
+      <td>3128.810818</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>23399.527634</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#plot the forecast
+</span><span class="n">plot1</span> <span class="o">=</span> <span class="n">m</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">forecast</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><img src="https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(1)%20Covid-19%20Malaysia%20Analysis%20And%20Prediction/output_116_0.png" alt="png" /></p>
+
+<h4 id="description-5">Description:</h4>
+<p>From the component plot, we can see that there is currently an upward trend in the number of new Covid-19 cases in Malaysia. As for the next 30 days, it is expcted cases to be around 23399 cases with a 20080 lower bound of the uncertainty interval, and 27068 upper bound of the uncertainty interval</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#plot the components
+</span><span class="n">plt2</span> <span class="o">=</span> <span class="n">m</span><span class="p">.</span><span class="n">plot_components</span><span class="p">(</span><span class="n">forecast</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><img src="https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(1)%20Covid-19%20Malaysia%20Analysis%20And%20Prediction/output_118_0.png" alt="png" /></p>
+
+<h4 id="description-6">Description:</h4>
+<p>From the componenets plot, we can see a strong uptrend from the beginning of August 2020 with a slowed rate around March 2021 before starting an increased rate afterwards. We can see that cases are mostylt lower at the start of the week and drops on Friday. There are also more cases happens around August and starts a downward trend going forward.</p>
+
+<h3 id="save-model">Save model</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">pickle</span>
+<span class="c1"># save the model to disk
+</span><span class="n">prophet_model_save</span> <span class="o">=</span> <span class="s">'prophet_model.sav'</span>
+<span class="n">pickle</span><span class="p">.</span><span class="n">dump</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="n">prophet_model_save</span><span class="p">,</span> <span class="s">'wb'</span><span class="p">))</span>
+</code></pre></div></div>
+
+</div>
+  </main>
+
+  <footer class="mt-auto py-3 text-center">
+
+  <small class="text-muted mb-2">
+    <i class="fas fa-code"></i> with <i class="fas fa-heart"></i>
+    by <strong>Ameer Haziq Basharuddin</strong>
+  </small>
+
+  <div class="container-fluid justify-content-center"><a class="social mx-1"  href="mailto:ameerhaziq.work@gmail.com"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#db4437'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fas fa-envelope fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.github.com/ameerhaziq20"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#333333'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-github fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.instagram.com/emyrbreezy"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#405de6'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-instagram fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.linkedin.com/in/ameer-haziq-basharuddin-89593520a/"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#007bb5'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-linkedin-in fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.twitter.com/frisk__y"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#1da1f2'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-twitter fa-1x"></i>
+    </a>
+
+</div><small id="attribution">
+    theme <a href="https://github.com/YoussefRaafatNasry/portfolYOU">portfolYOU</a>
+  </small>
+  
+</footer>
+
+  
+  <!-- GitHub Buttons -->
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+
+<!-- jQuery CDN -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<!-- Popper.js CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"></script>
+
+<!-- Bootstrap JS CDN -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<!-- wow.js CDN & Activation -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.js"></script>
+<script> new WOW().init(); </script>
+
+<!-- Initialize all tooltips -->
+<script>
+$(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+})
+</script>
+
+
+</body>
+
+</html>

@@ -1,40 +1,3 @@
----
-name: Malaysia Covid-19 Analysis and Prediction
-tools: [Python, Jupyter Notebook, Pandas, Prophet]
-image: https://www.emeraldgrouppublishing.com/sites/default/files/styles/service_page_banner_desktop/public/image/covid-cells.jpg
-description: Wonder how's the Covid-19 situation in Malaysia? Is it getting worse or getting better? Let's find out.
----
-
-# 1. Questions
-
-This analysis will try to answer the following questions:
-* What factor that most likely to cause an increases in the number of new cases?
-* How Covid-19 affects differently in different states?
-* When will we achieve herd immunity?
-* Will new cases increases or decrease next month?
-
-# 2. Measurement Priorities
-
-## What To Measure:
-
-* Correlation between each factor in the dataset using correlation matrix.
-* The difference in the count of new cases and in the states.
-* Percentage of fully vaccinated individuals angainst the total population.
-* Number of forecasted new cases in the next 30 days using time series forecasting.
-
-# 3. Data Collection
-
-* Source
-    * For this analysis, we will make use of the dataset from The Ministry of Health Malaysia GitHub page.
-    * Since they don't provide data for vaccinations, we will obtain the data from other sources which in this case is from Our World in Data.
-    * These sites frequently updates these data values, we will use programmatically automate this data collection process each time we restart the notebook
-
-* Storage
-    * The data collected from the sites will bw stored as a CSV file in the /dataset directory.
-    * This allows the data can still be analysed localy when connectivity problems persists.
-
-# 4. Cleaning and Analyze Data
-
 Datasets are obtained from:
 
 https://github.com/MoH-Malaysia/covid19-public/
@@ -812,7 +775,7 @@ plt.show()
 
 
     
-![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(1)%20Covid-19%20Malaysia%20Analysis%20And%20Prediction/output_37_0.png)
+![png](output_37_0.png)
     
 
 
@@ -842,7 +805,7 @@ plt.show()
 
 
     
-![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(1)%20Covid-19%20Malaysia%20Analysis%20And%20Prediction/output_40_0.png)
+![png](output_40_0.png)
     
 
 
@@ -879,7 +842,7 @@ plt.show()
 
 
     
-![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(1)%20Covid-19%20Malaysia%20Analysis%20And%20Prediction/output_42_0.png)
+![png](output_42_0.png)
     
 
 
@@ -1470,7 +1433,7 @@ plt.show()
 
 
     
-![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(1)%20Covid-19%20Malaysia%20Analysis%20And%20Prediction/output_64_0.png)
+![png](output_64_0.png)
     
 
 
@@ -1501,7 +1464,7 @@ plt.show()
 
 
     
-![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(1)%20Covid-19%20Malaysia%20Analysis%20And%20Prediction/output_67_0.png)
+![png](output_67_0.png)
     
 
 
@@ -1667,7 +1630,7 @@ plt.show()
 
 
     
-![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(1)%20Covid-19%20Malaysia%20Analysis%20And%20Prediction/output_80_0.png)
+![png](output_80_0.png)
     
 
 
@@ -1722,7 +1685,7 @@ plt.show()
 
 
     
-![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(1)%20Covid-19%20Malaysia%20Analysis%20And%20Prediction/output_92_0.png)
+![png](output_92_0.png)
     
 
 
@@ -1999,6 +1962,76 @@ tuning_results = pd.DataFrame(all_params)
 tuning_results['rmse'] = rmses
 print(tuning_results)
 ```
+
+    INFO:prophet:Disabling yearly seasonality. Run prophet with yearly_seasonality=True to override this.
+    INFO:prophet:Disabling daily seasonality. Run prophet with daily_seasonality=True to override this.
+    WARNING:prophet.models:Optimization terminated abnormally. Falling back to Newton.
+    INFO:prophet:Making 1 forecasts with cutoffs between 2021-06-01 00:00:00 and 2021-06-01 00:00:00
+    INFO:prophet:Applying in parallel with <concurrent.futures.process.ProcessPoolExecutor object at 0x00000206310261C0>
+    INFO:prophet:Disabling yearly seasonality. Run prophet with yearly_seasonality=True to override this.
+    INFO:prophet:Disabling daily seasonality. Run prophet with daily_seasonality=True to override this.
+    WARNING:prophet.models:Optimization terminated abnormally. Falling back to Newton.
+    INFO:prophet:Making 1 forecasts with cutoffs between 2021-06-01 00:00:00 and 2021-06-01 00:00:00
+    INFO:prophet:Applying in parallel with <concurrent.futures.process.ProcessPoolExecutor object at 0x0000020630F727F0>
+    INFO:prophet:Disabling yearly seasonality. Run prophet with yearly_seasonality=True to override this.
+    INFO:prophet:Disabling daily seasonality. Run prophet with daily_seasonality=True to override this.
+    WARNING:prophet.models:Optimization terminated abnormally. Falling back to Newton.
+    INFO:prophet:Making 1 forecasts with cutoffs between 2021-06-01 00:00:00 and 2021-06-01 00:00:00
+    INFO:prophet:Applying in parallel with <concurrent.futures.process.ProcessPoolExecutor object at 0x000002062CF19FD0>
+    INFO:prophet:Disabling yearly seasonality. Run prophet with yearly_seasonality=True to override this.
+    INFO:prophet:Disabling daily seasonality. Run prophet with daily_seasonality=True to override this.
+    WARNING:prophet.models:Optimization terminated abnormally. Falling back to Newton.
+    INFO:prophet:Making 1 forecasts with cutoffs between 2021-06-01 00:00:00 and 2021-06-01 00:00:00
+    INFO:prophet:Applying in parallel with <concurrent.futures.process.ProcessPoolExecutor object at 0x0000020630F72820>
+    INFO:prophet:Disabling yearly seasonality. Run prophet with yearly_seasonality=True to override this.
+    INFO:prophet:Disabling daily seasonality. Run prophet with daily_seasonality=True to override this.
+    INFO:prophet:Making 1 forecasts with cutoffs between 2021-06-01 00:00:00 and 2021-06-01 00:00:00
+    INFO:prophet:Applying in parallel with <concurrent.futures.process.ProcessPoolExecutor object at 0x0000020630F287F0>
+    INFO:prophet:Disabling yearly seasonality. Run prophet with yearly_seasonality=True to override this.
+    INFO:prophet:Disabling daily seasonality. Run prophet with daily_seasonality=True to override this.
+    INFO:prophet:Making 1 forecasts with cutoffs between 2021-06-01 00:00:00 and 2021-06-01 00:00:00
+    INFO:prophet:Applying in parallel with <concurrent.futures.process.ProcessPoolExecutor object at 0x000002063161ED00>
+    INFO:prophet:Disabling yearly seasonality. Run prophet with yearly_seasonality=True to override this.
+    INFO:prophet:Disabling daily seasonality. Run prophet with daily_seasonality=True to override this.
+    INFO:prophet:Making 1 forecasts with cutoffs between 2021-06-01 00:00:00 and 2021-06-01 00:00:00
+    INFO:prophet:Applying in parallel with <concurrent.futures.process.ProcessPoolExecutor object at 0x000002063162A880>
+    INFO:prophet:Disabling yearly seasonality. Run prophet with yearly_seasonality=True to override this.
+    INFO:prophet:Disabling daily seasonality. Run prophet with daily_seasonality=True to override this.
+    INFO:prophet:Making 1 forecasts with cutoffs between 2021-06-01 00:00:00 and 2021-06-01 00:00:00
+    INFO:prophet:Applying in parallel with <concurrent.futures.process.ProcessPoolExecutor object at 0x00000206310267C0>
+    INFO:prophet:Disabling yearly seasonality. Run prophet with yearly_seasonality=True to override this.
+    INFO:prophet:Disabling daily seasonality. Run prophet with daily_seasonality=True to override this.
+    INFO:prophet:Making 1 forecasts with cutoffs between 2021-06-01 00:00:00 and 2021-06-01 00:00:00
+    INFO:prophet:Applying in parallel with <concurrent.futures.process.ProcessPoolExecutor object at 0x00000206311BA7C0>
+    INFO:prophet:Disabling yearly seasonality. Run prophet with yearly_seasonality=True to override this.
+    INFO:prophet:Disabling daily seasonality. Run prophet with daily_seasonality=True to override this.
+    INFO:prophet:Making 1 forecasts with cutoffs between 2021-06-01 00:00:00 and 2021-06-01 00:00:00
+    INFO:prophet:Applying in parallel with <concurrent.futures.process.ProcessPoolExecutor object at 0x0000020630FA0520>
+    INFO:prophet:Disabling yearly seasonality. Run prophet with yearly_seasonality=True to override this.
+    INFO:prophet:Disabling daily seasonality. Run prophet with daily_seasonality=True to override this.
+    INFO:prophet:Making 1 forecasts with cutoffs between 2021-06-01 00:00:00 and 2021-06-01 00:00:00
+    INFO:prophet:Applying in parallel with <concurrent.futures.process.ProcessPoolExecutor object at 0x0000020631183430>
+    INFO:prophet:Disabling yearly seasonality. Run prophet with yearly_seasonality=True to override this.
+    INFO:prophet:Disabling daily seasonality. Run prophet with daily_seasonality=True to override this.
+    INFO:prophet:Making 1 forecasts with cutoffs between 2021-06-01 00:00:00 and 2021-06-01 00:00:00
+    INFO:prophet:Applying in parallel with <concurrent.futures.process.ProcessPoolExecutor object at 0x00000206310261C0>
+    INFO:prophet:Disabling yearly seasonality. Run prophet with yearly_seasonality=True to override this.
+    INFO:prophet:Disabling daily seasonality. Run prophet with daily_seasonality=True to override this.
+    INFO:prophet:Making 1 forecasts with cutoffs between 2021-06-01 00:00:00 and 2021-06-01 00:00:00
+    INFO:prophet:Applying in parallel with <concurrent.futures.process.ProcessPoolExecutor object at 0x00000206310261C0>
+    INFO:prophet:Disabling yearly seasonality. Run prophet with yearly_seasonality=True to override this.
+    INFO:prophet:Disabling daily seasonality. Run prophet with daily_seasonality=True to override this.
+    INFO:prophet:Making 1 forecasts with cutoffs between 2021-06-01 00:00:00 and 2021-06-01 00:00:00
+    INFO:prophet:Applying in parallel with <concurrent.futures.process.ProcessPoolExecutor object at 0x00000206311BA220>
+    INFO:prophet:Disabling yearly seasonality. Run prophet with yearly_seasonality=True to override this.
+    INFO:prophet:Disabling daily seasonality. Run prophet with daily_seasonality=True to override this.
+    INFO:prophet:Making 1 forecasts with cutoffs between 2021-06-01 00:00:00 and 2021-06-01 00:00:00
+    INFO:prophet:Applying in parallel with <concurrent.futures.process.ProcessPoolExecutor object at 0x0000020630F8A3D0>
+    INFO:prophet:Disabling yearly seasonality. Run prophet with yearly_seasonality=True to override this.
+    INFO:prophet:Disabling daily seasonality. Run prophet with daily_seasonality=True to override this.
+    INFO:prophet:Making 1 forecasts with cutoffs between 2021-06-01 00:00:00 and 2021-06-01 00:00:00
+    INFO:prophet:Applying in parallel with <concurrent.futures.process.ProcessPoolExecutor object at 0x00000206316853D0>
+    
 
         changepoint_prior_scale  seasonality_prior_scale          rmse
     0                     0.001                     0.01  10921.661903
@@ -2475,7 +2508,7 @@ plot1 = m.plot(forecast)
 
 
     
-![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(1)%20Covid-19%20Malaysia%20Analysis%20And%20Prediction/output_116_0.png)
+![png](output_116_0.png)
     
 
 
@@ -2490,7 +2523,7 @@ plt2 = m.plot_components(forecast)
 
 
     
-![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(1)%20Covid-19%20Malaysia%20Analysis%20And%20Prediction/output_118_0.png)
+![png](output_118_0.png)
     
 
 
