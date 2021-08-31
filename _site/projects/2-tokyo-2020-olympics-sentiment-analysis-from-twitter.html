@@ -110,7 +110,7 @@
   </li>
 </ul>
 
-<h1 id="4-cleaning-and-analyze-data">4. Cleaning and Analyze Data</h1>
+<hr />
 
 <h1 id="importing-main-libraries">Importing main libraries</h1>
 
@@ -130,10 +130,10 @@
 </code></pre></div></div>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#authentication information.
-</span><span class="n">consumer_key</span> <span class="o">=</span><span class="s">'anCVWho0e8QQe01EWZssqiaXR'</span>
-<span class="n">consumer_secret</span><span class="o">=</span><span class="s">'GPk8VccE9YlZPScpm0Mau5mpby1x1RtxhTpOhbDUV2oxjSMX9K'</span>
-<span class="n">access_token</span><span class="o">=</span><span class="s">'1023697939-UCOITQBDkUQTYLtc4TlDYvSwR7C5PGBohGI8zH4'</span>
-<span class="n">access_token_secret</span><span class="o">=</span><span class="n">pl</span>
+</span><span class="n">consumer_key</span> <span class="o">=</span><span class="s">'*********'</span>
+<span class="n">consumer_secret</span><span class="o">=</span><span class="s">'*********'</span>
+<span class="n">access_token</span><span class="o">=</span><span class="s">'*********'</span>
+<span class="n">access_token_secret</span><span class="o">=</span><span class="s">'**********'</span>
 </code></pre></div></div>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#Authentication
@@ -144,75 +144,23 @@
 
 <h2 id="collect-tweets">Collect Tweets</h2>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># #fetch tweets
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="c1">#fetch tweets
 </span>
-<span class="c1"># hashtag = '#F9'
-# query = tw.Cursor(api.search,q=hashtag, lang='en').items(2000)
-# tweets = [{'Tweets':tweet.text,'Timestamp':tweet.created_at} for tweet in query]
-# print(tweets)
-</span>
+ <span class="n">hashtag</span> <span class="o">=</span> <span class="s">'#Tokyo2020'</span>
+ <span class="n">query</span> <span class="o">=</span> <span class="n">tw</span><span class="p">.</span><span class="n">Cursor</span><span class="p">(</span><span class="n">api</span><span class="p">.</span><span class="n">search</span><span class="p">,</span><span class="n">q</span><span class="o">=</span><span class="n">hashtag</span><span class="p">,</span> <span class="n">lang</span><span class="o">=</span><span class="s">'en'</span><span class="p">).</span><span class="n">items</span><span class="p">(</span><span class="mi">2000</span><span class="p">)</span>
+ <span class="n">tweets</span> <span class="o">=</span> <span class="p">[{</span><span class="s">'Tweets'</span><span class="p">:</span><span class="n">tweet</span><span class="p">.</span><span class="n">text</span><span class="p">,</span><span class="s">'Timestamp'</span><span class="p">:</span><span class="n">tweet</span><span class="p">.</span><span class="n">created_at</span><span class="p">}</span> <span class="k">for</span> <span class="n">tweet</span> <span class="ow">in</span> <span class="n">query</span><span class="p">]</span>
+ <span class="k">print</span><span class="p">(</span><span class="n">tweets</span><span class="p">)</span>
+
 </code></pre></div></div>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#create a copy of the raw data
 </span><span class="n">tweet</span><span class="o">=</span><span class="n">tweets</span><span class="p">.</span><span class="n">copy</span><span class="p">()</span>
 </code></pre></div></div>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#view data
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#store as DataFrame
 </span><span class="n">data</span><span class="o">=</span><span class="n">pd</span><span class="p">.</span><span class="n">DataFrame</span><span class="p">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">tweet</span><span class="p">)</span>
 <span class="n">data</span><span class="p">.</span><span class="n">head</span><span class="p">()</span>
 </code></pre></div></div>
-
-<div>
-<style scoped="">
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>Tweets</th>
-      <th>Timestamp</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>#F9 is so disappointing .. lacked everything</td>
-      <td>2021-08-09 12:24:23</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>follow : @TweetsNMC \n\n#F9 #VinDiesel #Domini...</td>
-      <td>2021-08-09 12:22:46</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>RT @InnerCityGeeks: NEW EPISODE OF THE #PODCAS...</td>
-      <td>2021-08-09 12:21:31</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>Nah, everybody will know your tremendous feat,...</td>
-      <td>2021-08-09 12:21:01</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>F9: The Fast Saga... The drama 🤦🏽‍♀️🙄😒\n#F9</td>
-      <td>2021-08-09 12:16:19</td>
-    </tr>
-  </tbody>
-</table>
-</div>
 
 <h2 id="export-collected-data">Export Collected Data</h2>
 
@@ -354,7 +302,7 @@ memory usage: 31.4+ KB
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>There are 270852 words in the combination of all cells in column Tweets.
 </code></pre></div></div>
 
-<p><img src="output_29_1.png" alt="png" /></p>
+<p><img src="https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(2)%20Tokyo%202020%20Olympics%20Sentiment%20Analysis%20from%20Twitter/output_29_1.jpg" alt="png" /></p>
 
 <h2 id="language-detection">Language Detection</h2>
 
@@ -1129,7 +1077,7 @@ dtype: object
 <span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
 </code></pre></div></div>
 
-<p><img src="output_82_0.png" alt="png" /></p>
+<p><img src="https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(2)%20Tokyo%202020%20Olympics%20Sentiment%20Analysis%20from%20Twitter/output_82_0.jpg" alt="png" /></p>
 
 <h3 id="cleaned-tweets-wordcloud">Cleaned Tweets WordCloud</h3>
 
@@ -1160,7 +1108,7 @@ dtype: object
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>There are 130215 words in the combination of all cells in column Tweets.
 </code></pre></div></div>
 
-<p><img src="output_84_1.png" alt="png" /></p>
+<p><img src="https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(2)%20Tokyo%202020%20Olympics%20Sentiment%20Analysis%20from%20Twitter/output_84_1.jpg" alt="png" /></p>
 
 <h3 id="positive-tweets-wordcloud">Positive Tweets WordCloud</h3>
 
@@ -1193,7 +1141,7 @@ dtype: object
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>There are 72234 words in the combination of all cells in column Tweets.
 </code></pre></div></div>
 
-<p><img src="output_86_1.png" alt="png" /></p>
+<p><img src="https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(2)%20Tokyo%202020%20Olympics%20Sentiment%20Analysis%20from%20Twitter/output_86_1.jpg" alt="png" /></p>
 
 <h3 id="negative-tweets-wordcloud">Negative Tweets WordCloud</h3>
 
@@ -1226,7 +1174,7 @@ dtype: object
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>There are 11599 words in the combination of all cells in column Tweets.
 </code></pre></div></div>
 
-<p><img src="output_88_1.png" alt="png" /></p>
+<p><img src="https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(2)%20Tokyo%202020%20Olympics%20Sentiment%20Analysis%20from%20Twitter/output_88_1.jpg" alt="png" /></p>
 
 <h3 id="objective-tweets-wordcloud">Objective Tweets WordCloud</h3>
 
@@ -1259,7 +1207,7 @@ dtype: object
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>There are 81725 words in the combination of all cells in column Tweets.
 </code></pre></div></div>
 
-<p><img src="output_90_1.png" alt="png" /></p>
+<p><img src="https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(2)%20Tokyo%202020%20Olympics%20Sentiment%20Analysis%20from%20Twitter/output_90_1.jpg" alt="png" /></p>
 
 <h3 id="subjective-tweets-wordcloud">Subjective Tweets WordCloud</h3>
 
@@ -1292,7 +1240,7 @@ dtype: object
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>There are 44634 words in the combination of all cells in column Tweets.
 </code></pre></div></div>
 
-<p><img src="output_92_1.png" alt="png" /></p>
+<p><img src="https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(2)%20Tokyo%202020%20Olympics%20Sentiment%20Analysis%20from%20Twitter/output_92_1.jpg" alt="png" /></p>
 
 <h3 id="label-count-and-correlation-heatmap">Label Count and Correlation Heatmap</h3>
 
@@ -1317,7 +1265,7 @@ dtype: object
 
 </code></pre></div></div>
 
-<p><img src="output_94_0.png" alt="png" /></p>
+<p><img src="https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(2)%20Tokyo%202020%20Olympics%20Sentiment%20Analysis%20from%20Twitter/output_94_0.jpg" alt="png" /></p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;Figure size 720x720 with 0 Axes&gt;
 </code></pre></div></div>
@@ -1368,7 +1316,7 @@ C:\Users\Haziq\Anaconda3\lib\site-packages\seaborn\distributions.py:306: UserWar
   warnings.warn(msg, UserWarning)
 </code></pre></div></div>
 
-<p><img src="output_96_1.png" alt="png" /></p>
+<p><img src="https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(2)%20Tokyo%202020%20Olympics%20Sentiment%20Analysis%20from%20Twitter/output_96_1.jpg" alt="png" /></p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;Figure size 720x720 with 0 Axes&gt;
 </code></pre></div></div>
@@ -2029,7 +1977,7 @@ Neural Network Accuracy: 83.44%
 <span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
 </code></pre></div></div>
 
-<p><img src="output_115_0.png" alt="png" /></p>
+<p><img src="https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(2)%20Tokyo%202020%20Olympics%20Sentiment%20Analysis%20from%20Twitter/output_115_0.jpg" alt="png" /></p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;Figure size 720x720 with 0 Axes&gt;
 </code></pre></div></div>
@@ -2088,13 +2036,11 @@ Neural Network Accuracy: 83.44%
 <span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
 </code></pre></div></div>
 
-<p><img src="output_120_0.png" alt="png" /></p>
+<p><img src="output_120_0.jpg" alt="png" /></p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;Figure size 1008x720 with 0 Axes&gt;
 </code></pre></div></div>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
-</code></pre></div></div>
 
 </div>
   </main>

@@ -33,7 +33,7 @@ This analysis will try to answer the following questions:
     * The collected Tweets will be stored in a CSV and TXT file.
     * The cleaned Tweets will also be stored as both CSV and TXT file.
 
-# 4. Cleaning and Analyze Data
+---
 
 # Importing main libraries
 
@@ -59,10 +59,10 @@ import tweepy as tw
 
 ```python
 #authentication information.
-consumer_key ='anCVWho0e8QQe01EWZssqiaXR'
-consumer_secret='GPk8VccE9YlZPScpm0Mau5mpby1x1RtxhTpOhbDUV2oxjSMX9K'
-access_token='1023697939-UCOITQBDkUQTYLtc4TlDYvSwR7C5PGBohGI8zH4'
-access_token_secret=pl
+consumer_key ='*********'
+consumer_secret='*********'
+access_token='*********'
+access_token_secret='**********'
 ```
 
 
@@ -77,12 +77,12 @@ api=tw.API(auth,wait_on_rate_limit=True)
 
 
 ```python
-# #fetch tweets
+ #fetch tweets
 
-# hashtag = '#F9'
-# query = tw.Cursor(api.search,q=hashtag, lang='en').items(2000)
-# tweets = [{'Tweets':tweet.text,'Timestamp':tweet.created_at} for tweet in query]
-# print(tweets)
+ hashtag = '#Tokyo2020'
+ query = tw.Cursor(api.search,q=hashtag, lang='en').items(2000)
+ tweets = [{'Tweets':tweet.text,'Timestamp':tweet.created_at} for tweet in query]
+ print(tweets)
 
 ```
 
@@ -94,67 +94,10 @@ tweet=tweets.copy()
 
 
 ```python
-#view data
+#store as DataFrame
 data=pd.DataFrame.from_dict(tweet)
 data.head()
 ```
-
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>Tweets</th>
-      <th>Timestamp</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>#F9 is so disappointing .. lacked everything</td>
-      <td>2021-08-09 12:24:23</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>follow : @TweetsNMC \n\n#F9 #VinDiesel #Domini...</td>
-      <td>2021-08-09 12:22:46</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>RT @InnerCityGeeks: NEW EPISODE OF THE #PODCAS...</td>
-      <td>2021-08-09 12:21:31</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>Nah, everybody will know your tremendous feat,...</td>
-      <td>2021-08-09 12:21:01</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>F9: The Fast Saga... The drama 🤦🏽‍♀️🙄😒\n#F9</td>
-      <td>2021-08-09 12:16:19</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-
 
 ## Export Collected Data
 
@@ -333,7 +276,7 @@ plt.show()
 
 
     
-![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(2)%20Tokyo%202020%20Olympics%20Sentiment%20Analysis%20from%20Twitter/output_29_1.png)
+![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(2)%20Tokyo%202020%20Olympics%20Sentiment%20Analysis%20from%20Twitter/output_29_1.jpg)
     
 
 
@@ -1243,7 +1186,7 @@ plt.show()
 
 
     
-![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(2)%20Tokyo%202020%20Olympics%20Sentiment%20Analysis%20from%20Twitter/output_82_0.png)
+![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(2)%20Tokyo%202020%20Olympics%20Sentiment%20Analysis%20from%20Twitter/output_82_0.jpg)
     
 
 
@@ -1280,7 +1223,7 @@ plt.show()
 
 
     
-![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(2)%20Tokyo%202020%20Olympics%20Sentiment%20Analysis%20from%20Twitter/output_84_1.png)
+![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(2)%20Tokyo%202020%20Olympics%20Sentiment%20Analysis%20from%20Twitter/output_84_1.jpg)
     
 
 
@@ -1319,7 +1262,7 @@ plt.show()
 
 
     
-![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(2)%20Tokyo%202020%20Olympics%20Sentiment%20Analysis%20from%20Twitter/output_86_1.png)
+![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(2)%20Tokyo%202020%20Olympics%20Sentiment%20Analysis%20from%20Twitter/output_86_1.jpg)
     
 
 
@@ -1358,7 +1301,7 @@ plt.show()
 
 
     
-![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(2)%20Tokyo%202020%20Olympics%20Sentiment%20Analysis%20from%20Twitter/output_88_1.png)
+![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(2)%20Tokyo%202020%20Olympics%20Sentiment%20Analysis%20from%20Twitter/output_88_1.jpg)
     
 
 
@@ -1397,7 +1340,7 @@ plt.show()
 
 
     
-![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(2)%20Tokyo%202020%20Olympics%20Sentiment%20Analysis%20from%20Twitter/output_90_1.png)
+![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(2)%20Tokyo%202020%20Olympics%20Sentiment%20Analysis%20from%20Twitter/output_90_1.jpg)
     
 
 
@@ -1436,7 +1379,7 @@ plt.show()
 
 
     
-![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(2)%20Tokyo%202020%20Olympics%20Sentiment%20Analysis%20from%20Twitter/output_92_1.png)
+![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(2)%20Tokyo%202020%20Olympics%20Sentiment%20Analysis%20from%20Twitter/output_92_1.jpg)
     
 
 
@@ -1467,7 +1410,7 @@ plt.show()
 
 
     
-![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(2)%20Tokyo%202020%20Olympics%20Sentiment%20Analysis%20from%20Twitter/output_94_0.png)
+![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(2)%20Tokyo%202020%20Olympics%20Sentiment%20Analysis%20from%20Twitter/output_94_0.jpg)
     
 
 
@@ -1525,7 +1468,7 @@ plt.show()
 
 
     
-![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(2)%20Tokyo%202020%20Olympics%20Sentiment%20Analysis%20from%20Twitter/output_96_1.png)
+![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(2)%20Tokyo%202020%20Olympics%20Sentiment%20Analysis%20from%20Twitter/output_96_1.jpg)
     
 
 
@@ -2233,7 +2176,7 @@ plt.show()
 
 
     
-![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(2)%20Tokyo%202020%20Olympics%20Sentiment%20Analysis%20from%20Twitter/output_115_0.png)
+![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(2)%20Tokyo%202020%20Olympics%20Sentiment%20Analysis%20from%20Twitter/output_115_0.jpg)
     
 
 
@@ -2305,7 +2248,7 @@ plt.show()
 
 
     
-![png](output_120_0.png)
+![png](output_120_0.jpg)
     
 
 
