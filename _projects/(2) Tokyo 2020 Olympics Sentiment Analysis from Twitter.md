@@ -2248,7 +2248,7 @@ plt.show()
 
 
     
-![jpg](output_120_0.jpg)
+![jpg](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(2)%20Tokyo%202020%20Olympics%20Sentiment%20Analysis%20from%20Twitter/output_120_0.jpg)
     
 
 
