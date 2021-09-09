@@ -1,8 +1,8 @@
 ---
 title: Learn React.js in 5 minutes
 tags: [React, JavaScript, Web Development]
-style: border
-color: primary
+style: fill
+color: danger
 description: A quick introduction to the popular JavaScript library.
 ---
 
