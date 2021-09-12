@@ -1,0 +1,1807 @@
+<!DOCTYPE html>
+
+<!--
+  portfolYOU Jekyll theme by Youssef Raafat
+  Free for personal and commercial use under the MIT license
+  https://github.com/YoussefRaafatNasry/portfolYOU
+-->
+
+<html lang="en" class="h-100">
+
+<head>
+
+  
+  
+
+  
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Fast 9 Reddit Comments Sentiment Analysis using NLTK and PRAW">
+  <meta property="og:description" content="Let's see how Redditors respond to the Fast & Furious 9 movie.">
+
+  <title>Fast 9 Reddit Comments Sentiment Analysis using NLTK and PRAW</title>
+  <meta name="description" content="Let's see how Redditors respond to the Fast & Furious 9 movie.">
+
+  <link rel="shortcut icon" type="image/x-icon" href="/assets/favicon.ico">
+
+  <!-- Theme style -->
+  <script src="/assets/js/theme.js"></script>
+
+  <!-- Font Awesome CDN -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.10.0/css/all.css">
+
+  <!-- Bootstrap CSS CDN -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
+
+  <!-- Animate CSS CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.css">
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="/assets/css/style.css">
+
+</head>
+
+<body class="h-100 d-flex flex-column">
+
+  <main class="flex-shrink-0 container mt-5">
+    <nav class="navbar navbar-expand-lg navbar-themed">
+
+  <a class="navbar-brand" href="/"><h5><b>Haziq's Page</b></h5></a>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+    <i class="fas fa-1x fa-bars text-themed"></i>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav ml-auto"><a class="nav-item nav-link active" href="/projects/">Projects</a>
+
+      <a class="nav-item nav-link " href="/blog/">Blog</a>
+
+      <a class="nav-item nav-link " href="/about/">About</a>
+
+      
+
+      <span id="theme-toggler" class="nav-item nav-link" role="button" onclick="toggleTheme()"></span>
+    </div>
+  </div>
+
+</nav>
+    <div class="col-lg-10 mx-auto mt-5 markdown-body">
+  <p><img src="https://image11.m1905.cn/uploadfile/2021/0421/20210421100242955450.jpg" alt="jpg" /></p>
+
+<p>Let’s analyze the reviews for the Fast &amp; Furious 9 movie. If you’re unfamiliar with the premise of the latest outing for Dominic Toretto (played by Vin Diesel) and his family, here’s a brief recap. Following the events of The Fate of the Furious, the crew must face off against Jakob (played by John Cena), who is Dominic’s younger brother and a deadly assassin. Here, we will scrape comments from a Reddit post discusing about their thoughts about the movie.</p>
+
+<h1 id="1-questions">1. Questions</h1>
+
+<p>This analysis will try to answer the following questions:</p>
+<ul>
+  <li>What are the Redditors comments on the Fast 9 movie?</li>
+  <li>Are the comments mostly potray their opinions or stating a fact?</li>
+  <li>What are the positive and negative comments mostly about?</li>
+</ul>
+
+<h1 id="2-measurement-priorities">2. Measurement Priorities</h1>
+
+<ul>
+  <li>The polarity of the Redditor’s comments by analyzing the sentiment’s polarity score.</li>
+  <li>The subjectivity of the Redditor’s comments by analyzing the subjectivity score of the sentiments.</li>
+  <li>Creating a collection of words for each polarity of sentiments using word clouds.</li>
+</ul>
+
+<h1 id="3-data-collection">3. Data Collection</h1>
+
+<ul>
+  <li>Source
+    <ul>
+      <li>The Tweets collected will be from reddit.com using their API.</li>
+      <li>The python library PRAW will be used to gather the comments.</li>
+    </ul>
+  </li>
+  <li>Storage
+    <ul>
+      <li>The collected comments will be stored in a CSV file.</li>
+      <li>The cleaned comments will also be stored as both CSV file.</li>
+    </ul>
+  </li>
+</ul>
+
+<hr />
+
+<h1 id="obtain-reddit-comments">Obtain Reddit Comments</h1>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">praw</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="n">pd</span>
+<span class="kn">import</span> <span class="nn">datetime</span> <span class="k">as</span> <span class="n">dt</span> 
+</code></pre></div></div>
+
+<h2 id="create-instance-of-reddit">Create Instance of Reddit</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">reddit</span> <span class="o">=</span> <span class="n">praw</span><span class="p">.</span><span class="n">Reddit</span><span class="p">(</span>
+    <span class="n">user_agent</span><span class="o">=</span><span class="s">"Comment Extraction (by u/USERNAME)"</span><span class="p">,</span>
+    <span class="n">client_id</span><span class="o">=</span><span class="s">"i7IXjJbBHhouB1TZ-epfyA"</span><span class="p">,</span>
+    <span class="n">client_secret</span><span class="o">=</span><span class="s">"oKpZ3ULqlw1Dv104s95YhITqR9Y8pw"</span><span class="p">,</span>
+    <span class="n">username</span><span class="o">=</span><span class="s">"emyrbreezy"</span><span class="p">,</span>
+    <span class="n">password</span><span class="o">=</span><span class="s">"Iwant69reddit"</span><span class="p">,</span>
+<span class="p">)</span>
+</code></pre></div></div>
+
+<h2 id="link-to-reddit-post">Link to Reddit Post</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">url</span> <span class="o">=</span> <span class="s">"https://www.reddit.com/r/movies/comments/o7e258/official_discussion_f9_the_fast_saga_spoilers/"</span>
+<span class="n">submission</span> <span class="o">=</span> <span class="n">reddit</span><span class="p">.</span><span class="n">submission</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h2 id="parsing-the-comments">Parsing the comments</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">praw.models</span> <span class="kn">import</span> <span class="n">MoreComments</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+
+<span class="c1"># Create temporary list to hold the comments data.
+</span><span class="n">list_comments</span><span class="o">=</span><span class="p">[]</span>
+<span class="n">list_time</span><span class="o">=</span><span class="p">[]</span>
+
+<span class="c1"># Store in a dictionary.
+</span><span class="n">dict_collect</span> <span class="o">=</span> <span class="p">{</span><span class="s">'comments'</span><span class="p">:</span><span class="n">list_comments</span><span class="p">,</span>
+                <span class="s">'time'</span><span class="p">:</span> <span class="n">list_time</span><span class="p">,</span>
+               <span class="p">}</span>
+
+<span class="c1"># Loop through each top level comment.
+</span><span class="k">for</span> <span class="n">top_level_comment</span> <span class="ow">in</span> <span class="n">submission</span><span class="p">.</span><span class="n">comments</span><span class="p">:</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">top_level_comment</span><span class="p">,</span> <span class="n">MoreComments</span><span class="p">):</span>
+        <span class="k">continue</span>
+    <span class="c1"># Append comment to list
+</span>    <span class="n">list_comments</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">top_level_comment</span><span class="p">.</span><span class="n">body</span><span class="p">)</span>
+    
+    <span class="c1"># Convert and append time to list
+</span>    <span class="n">time</span> <span class="o">=</span> <span class="p">(</span><span class="n">datetime</span><span class="p">.</span><span class="n">utcfromtimestamp</span><span class="p">(</span><span class="n">top_level_comment</span><span class="p">.</span><span class="n">created_utc</span><span class="p">).</span><span class="n">strftime</span><span class="p">(</span><span class="s">'%Y-%m-%d %H:%M:%S'</span><span class="p">))</span>
+    <span class="n">list_time</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">time</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h2 id="convert-to-dataframe">Convert to DataFrame</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">DataFrame</span><span class="p">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">dict_collect</span><span class="p">)</span>
+<span class="n">df</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>comments</th>
+      <th>time</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>If you’re ever falling to your death try land ...</td>
+      <td>2021-06-25 02:24:48</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Hellen Mirren saying John Cena and Vin Diesel ...</td>
+      <td>2021-06-25 06:23:22</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>I think the most intimidating villain in the m...</td>
+      <td>2021-06-25 04:46:46</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Tez: we'll be alright as long as we obey the l...</td>
+      <td>2021-06-25 02:46:44</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>I wish Dom would interact more with the rest o...</td>
+      <td>2021-06-25 02:29:29</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>95</th>
+      <td>F10&amp;11 are gonna get the Infinity War/Endgame ...</td>
+      <td>2021-06-26 10:42:18</td>
+    </tr>
+    <tr>
+      <th>96</th>
+      <td>I got many problems with the plot. Doms brothe...</td>
+      <td>2021-07-04 20:50:01</td>
+    </tr>
+    <tr>
+      <th>97</th>
+      <td>They did my dude Sean the Tokyo Drifter dirty....</td>
+      <td>2021-07-29 21:03:51</td>
+    </tr>
+    <tr>
+      <th>98</th>
+      <td>I have a nephew who is eight and loves cars bu...</td>
+      <td>2021-07-16 06:26:07</td>
+    </tr>
+    <tr>
+      <th>99</th>
+      <td>That Toretto Nordic blood</td>
+      <td>2021-06-26 04:02:12</td>
+    </tr>
+  </tbody>
+</table>
+<p>100 rows × 2 columns</p>
+</div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df</span><span class="p">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s">'dataset/fast_9_review.csv'</span><span class="p">,</span><span class="n">index</span> <span class="o">=</span> <span class="bp">False</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h1 id="eda">EDA</h1>
+<p>Let’s take a look at our gathered comments about Fast 9 from the posts.</p>
+
+<h2 id="word-count">Word count</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">eda</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s">'dataset/fast_9_review.csv'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">eda</span><span class="p">.</span><span class="n">head</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>comments</th>
+      <th>time</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>If you’re ever falling to your death try land ...</td>
+      <td>2021-06-25 02:24:48</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Hellen Mirren saying John Cena and Vin Diesel ...</td>
+      <td>2021-06-25 06:23:22</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>I think the most intimidating villain in the m...</td>
+      <td>2021-06-25 04:46:46</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Tez: we'll be alright as long as we obey the l...</td>
+      <td>2021-06-25 02:46:44</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>I wish Dom would interact more with the rest o...</td>
+      <td>2021-06-25 02:29:29</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">eda</span><span class="p">[</span><span class="s">'word_count'</span><span class="p">]</span> <span class="o">=</span> <span class="n">eda</span><span class="p">[</span><span class="s">'comments'</span><span class="p">].</span><span class="nb">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">).</span><span class="n">split</span><span class="p">(</span><span class="s">" "</span><span class="p">)))</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">eda</span><span class="p">.</span><span class="n">head</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>comments</th>
+      <th>time</th>
+      <th>word_count</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>If you’re ever falling to your death try land ...</td>
+      <td>2021-06-25 02:24:48</td>
+      <td>22</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Hellen Mirren saying John Cena and Vin Diesel ...</td>
+      <td>2021-06-25 06:23:22</td>
+      <td>22</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>I think the most intimidating villain in the m...</td>
+      <td>2021-06-25 04:46:46</td>
+      <td>14</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Tez: we'll be alright as long as we obey the l...</td>
+      <td>2021-06-25 02:46:44</td>
+      <td>19</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>I wish Dom would interact more with the rest o...</td>
+      <td>2021-06-25 02:29:29</td>
+      <td>28</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">print</span><span class="p">(</span><span class="s">'Average Word count: '</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">eda</span><span class="p">[</span><span class="s">'word_count'</span><span class="p">].</span><span class="n">mean</span><span class="p">()))</span><span class="o">+</span> <span class="s">' words'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Average Word count: 46 words
+</code></pre></div></div>
+
+<h2 id="average-word-lenght">Average word lenght</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">avg_word</span><span class="p">(</span><span class="n">comments</span><span class="p">):</span>
+  <span class="n">words</span> <span class="o">=</span> <span class="n">comments</span><span class="p">.</span><span class="n">split</span><span class="p">()</span>
+  <span class="k">return</span> <span class="nb">int</span><span class="p">((</span><span class="nb">sum</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">word</span><span class="p">)</span> <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">words</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">words</span><span class="p">)))</span>
+
+<span class="c1"># Calculate average words
+</span><span class="n">eda</span><span class="p">[</span><span class="s">'avg_word_len'</span><span class="p">]</span> <span class="o">=</span> <span class="n">eda</span><span class="p">[</span><span class="s">'comments'</span><span class="p">].</span><span class="nb">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">avg_word</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">eda</span><span class="p">.</span><span class="n">head</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>comments</th>
+      <th>time</th>
+      <th>word_count</th>
+      <th>avg_word_len</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>If you’re ever falling to your death try land ...</td>
+      <td>2021-06-25 02:24:48</td>
+      <td>22</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Hellen Mirren saying John Cena and Vin Diesel ...</td>
+      <td>2021-06-25 06:23:22</td>
+      <td>22</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>I think the most intimidating villain in the m...</td>
+      <td>2021-06-25 04:46:46</td>
+      <td>14</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Tez: we'll be alright as long as we obey the l...</td>
+      <td>2021-06-25 02:46:44</td>
+      <td>19</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>I wish Dom would interact more with the rest o...</td>
+      <td>2021-06-25 02:29:29</td>
+      <td>28</td>
+      <td>3</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<h2 id="character-count">Character count</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">eda</span><span class="p">[</span><span class="s">'char_count'</span><span class="p">]</span> <span class="o">=</span> <span class="n">eda</span><span class="p">[</span><span class="s">'comments'</span><span class="p">].</span><span class="nb">str</span><span class="p">.</span><span class="nb">len</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">eda</span><span class="p">.</span><span class="n">head</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>comments</th>
+      <th>time</th>
+      <th>word_count</th>
+      <th>avg_word_len</th>
+      <th>char_count</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>If you’re ever falling to your death try land ...</td>
+      <td>2021-06-25 02:24:48</td>
+      <td>22</td>
+      <td>4</td>
+      <td>111</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Hellen Mirren saying John Cena and Vin Diesel ...</td>
+      <td>2021-06-25 06:23:22</td>
+      <td>22</td>
+      <td>4</td>
+      <td>126</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>I think the most intimidating villain in the m...</td>
+      <td>2021-06-25 04:46:46</td>
+      <td>14</td>
+      <td>4</td>
+      <td>81</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Tez: we'll be alright as long as we obey the l...</td>
+      <td>2021-06-25 02:46:44</td>
+      <td>19</td>
+      <td>3</td>
+      <td>98</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>I wish Dom would interact more with the rest o...</td>
+      <td>2021-06-25 02:29:29</td>
+      <td>28</td>
+      <td>3</td>
+      <td>135</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">print</span><span class="p">(</span><span class="s">'Average character count: '</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">eda</span><span class="p">[</span><span class="s">'char_count'</span><span class="p">].</span><span class="n">mean</span><span class="p">()))</span><span class="o">+</span> <span class="s">' words'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Average character count: 251 words
+</code></pre></div></div>
+
+<h2 id="stopword-count">Stopword count</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Import stopwords
+</span><span class="kn">from</span> <span class="nn">nltk.corpus</span> <span class="kn">import</span> <span class="n">stopwords</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">stop_words</span> <span class="o">=</span> <span class="n">stopwords</span><span class="p">.</span><span class="n">words</span><span class="p">(</span><span class="s">'english'</span><span class="p">)</span>
+<span class="n">eda</span><span class="p">[</span><span class="s">'stopword_count'</span><span class="p">]</span> <span class="o">=</span> <span class="n">eda</span><span class="p">[</span><span class="s">'comments'</span><span class="p">].</span><span class="nb">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">len</span><span class="p">([</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">x</span><span class="p">.</span><span class="n">split</span><span class="p">()</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">stop_words</span><span class="p">]))</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">eda</span><span class="p">.</span><span class="n">head</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>comments</th>
+      <th>time</th>
+      <th>word_count</th>
+      <th>avg_word_len</th>
+      <th>char_count</th>
+      <th>stopword_count</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>If you’re ever falling to your death try land ...</td>
+      <td>2021-06-25 02:24:48</td>
+      <td>22</td>
+      <td>4</td>
+      <td>111</td>
+      <td>9</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Hellen Mirren saying John Cena and Vin Diesel ...</td>
+      <td>2021-06-25 06:23:22</td>
+      <td>22</td>
+      <td>4</td>
+      <td>126</td>
+      <td>8</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>I think the most intimidating villain in the m...</td>
+      <td>2021-06-25 04:46:46</td>
+      <td>14</td>
+      <td>4</td>
+      <td>81</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Tez: we'll be alright as long as we obey the l...</td>
+      <td>2021-06-25 02:46:44</td>
+      <td>19</td>
+      <td>3</td>
+      <td>98</td>
+      <td>7</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>I wish Dom would interact more with the rest o...</td>
+      <td>2021-06-25 02:29:29</td>
+      <td>28</td>
+      <td>3</td>
+      <td>135</td>
+      <td>12</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<h2 id="summary-statistics">Summary statistics</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">eda</span><span class="p">.</span><span class="n">describe</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>word_count</th>
+      <th>avg_word_len</th>
+      <th>char_count</th>
+      <th>stopword_count</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>count</th>
+      <td>100.000000</td>
+      <td>100.000000</td>
+      <td>100.000000</td>
+      <td>100.000000</td>
+    </tr>
+    <tr>
+      <th>mean</th>
+      <td>46.480000</td>
+      <td>4.040000</td>
+      <td>251.420000</td>
+      <td>18.430000</td>
+    </tr>
+    <tr>
+      <th>std</th>
+      <td>64.721233</td>
+      <td>1.033969</td>
+      <td>355.543465</td>
+      <td>26.918228</td>
+    </tr>
+    <tr>
+      <th>min</th>
+      <td>1.000000</td>
+      <td>3.000000</td>
+      <td>9.000000</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>25%</th>
+      <td>14.000000</td>
+      <td>4.000000</td>
+      <td>67.000000</td>
+      <td>5.000000</td>
+    </tr>
+    <tr>
+      <th>50%</th>
+      <td>22.500000</td>
+      <td>4.000000</td>
+      <td>126.000000</td>
+      <td>9.000000</td>
+    </tr>
+    <tr>
+      <th>75%</th>
+      <td>51.250000</td>
+      <td>4.000000</td>
+      <td>268.750000</td>
+      <td>21.250000</td>
+    </tr>
+    <tr>
+      <th>max</th>
+      <td>465.000000</td>
+      <td>9.000000</td>
+      <td>2604.000000</td>
+      <td>196.000000</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<h1 id="process-text">Process Text</h1>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s">'dataset/fast_9_review.csv'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">data</span><span class="p">.</span><span class="n">head</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>comments</th>
+      <th>time</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>If you’re ever falling to your death try land ...</td>
+      <td>2021-06-25 02:24:48</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Hellen Mirren saying John Cena and Vin Diesel ...</td>
+      <td>2021-06-25 06:23:22</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>I think the most intimidating villain in the m...</td>
+      <td>2021-06-25 04:46:46</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Tez: we'll be alright as long as we obey the l...</td>
+      <td>2021-06-25 02:46:44</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>I wish Dom would interact more with the rest o...</td>
+      <td>2021-06-25 02:29:29</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<h2 id="convert-to-lowercase">Convert to lowercase</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Converting each comments to lowercase
+</span><span class="n">data</span><span class="p">[</span><span class="s">'lowercased'</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s">'comments'</span><span class="p">].</span><span class="nb">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="s">" "</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">x</span><span class="p">.</span><span class="n">split</span><span class="p">()))</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">data</span><span class="p">.</span><span class="n">head</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>comments</th>
+      <th>time</th>
+      <th>lowercased</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>If you’re ever falling to your death try land ...</td>
+      <td>2021-06-25 02:24:48</td>
+      <td>if you’re ever falling to your death try land ...</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Hellen Mirren saying John Cena and Vin Diesel ...</td>
+      <td>2021-06-25 06:23:22</td>
+      <td>hellen mirren saying john cena and vin diesel ...</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>I think the most intimidating villain in the m...</td>
+      <td>2021-06-25 04:46:46</td>
+      <td>i think the most intimidating villain in the m...</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Tez: we'll be alright as long as we obey the l...</td>
+      <td>2021-06-25 02:46:44</td>
+      <td>tez: we'll be alright as long as we obey the l...</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>I wish Dom would interact more with the rest o...</td>
+      <td>2021-06-25 02:29:29</td>
+      <td>i wish dom would interact more with the rest o...</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<h2 id="punctuations-removal">Punctuations removal</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># remove punctuations from comments
+</span><span class="n">data</span><span class="p">[</span><span class="s">'nopunc'</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s">'lowercased'</span><span class="p">].</span><span class="nb">str</span><span class="p">.</span><span class="n">replace</span><span class="p">(</span><span class="s">'[^\w\s]'</span><span class="p">,</span> <span class="s">''</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;ipython-input-138-94766295ce28&gt;:2: FutureWarning: The default value of regex will change from True to False in a future version.
+  data['nopunc'] = data['lowercased'].str.replace('[^\w\s]', '')
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">data</span><span class="p">.</span><span class="n">head</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>comments</th>
+      <th>time</th>
+      <th>lowercased</th>
+      <th>nopunc</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>If you’re ever falling to your death try land ...</td>
+      <td>2021-06-25 02:24:48</td>
+      <td>if you’re ever falling to your death try land ...</td>
+      <td>if youre ever falling to your death try land o...</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Hellen Mirren saying John Cena and Vin Diesel ...</td>
+      <td>2021-06-25 06:23:22</td>
+      <td>hellen mirren saying john cena and vin diesel ...</td>
+      <td>hellen mirren saying john cena and vin diesel ...</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>I think the most intimidating villain in the m...</td>
+      <td>2021-06-25 04:46:46</td>
+      <td>i think the most intimidating villain in the m...</td>
+      <td>i think the most intimidating villain in the m...</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Tez: we'll be alright as long as we obey the l...</td>
+      <td>2021-06-25 02:46:44</td>
+      <td>tez: we'll be alright as long as we obey the l...</td>
+      <td>tez well be alright as long as we obey the law...</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>I wish Dom would interact more with the rest o...</td>
+      <td>2021-06-25 02:29:29</td>
+      <td>i wish dom would interact more with the rest o...</td>
+      <td>i wish dom would interact more with the rest o...</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<h2 id="remove-stopwords">Remove stopwords</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Import stopwords
+</span><span class="kn">from</span> <span class="nn">nltk.corpus</span> <span class="kn">import</span> <span class="n">stopwords</span>
+<span class="n">stop_words</span> <span class="o">=</span> <span class="n">stopwords</span><span class="p">.</span><span class="n">words</span><span class="p">(</span><span class="s">'english'</span><span class="p">)</span>
+
+<span class="n">data</span><span class="p">[</span><span class="s">'nopunc_nostop'</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s">'nopunc'</span><span class="p">].</span><span class="nb">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="s">" "</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">x</span><span class="p">.</span><span class="n">split</span><span class="p">()</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">stop_words</span><span class="p">))</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">data</span><span class="p">.</span><span class="n">head</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>comments</th>
+      <th>time</th>
+      <th>lowercased</th>
+      <th>nopunc</th>
+      <th>nopunc_nostop</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>If you’re ever falling to your death try land ...</td>
+      <td>2021-06-25 02:24:48</td>
+      <td>if you’re ever falling to your death try land ...</td>
+      <td>if youre ever falling to your death try land o...</td>
+      <td>youre ever falling death try land car break fa...</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Hellen Mirren saying John Cena and Vin Diesel ...</td>
+      <td>2021-06-25 06:23:22</td>
+      <td>hellen mirren saying john cena and vin diesel ...</td>
+      <td>hellen mirren saying john cena and vin diesel ...</td>
+      <td>hellen mirren saying john cena vin diesel simi...</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>I think the most intimidating villain in the m...</td>
+      <td>2021-06-25 04:46:46</td>
+      <td>i think the most intimidating villain in the m...</td>
+      <td>i think the most intimidating villain in the m...</td>
+      <td>think intimidating villain movie charlize ther...</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Tez: we'll be alright as long as we obey the l...</td>
+      <td>2021-06-25 02:46:44</td>
+      <td>tez: we'll be alright as long as we obey the l...</td>
+      <td>tez well be alright as long as we obey the law...</td>
+      <td>tez well alright long obey laws physics entire...</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>I wish Dom would interact more with the rest o...</td>
+      <td>2021-06-25 02:29:29</td>
+      <td>i wish dom would interact more with the rest o...</td>
+      <td>i wish dom would interact more with the rest o...</td>
+      <td>wish dom would interact rest crew felt like ha...</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># View the top 30 words used
+</span><span class="n">freq</span><span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">Series</span><span class="p">(</span><span class="s">" "</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s">'nopunc_nostop'</span><span class="p">]).</span><span class="n">split</span><span class="p">()).</span><span class="n">value_counts</span><span class="p">()[:</span><span class="mi">30</span><span class="p">]</span>
+<span class="n">freq</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>movie        44
+dom          38
+like         25
+one          19
+scene        18
+car          17
+space        15
+also         15
+fast         14
+family       13
+got          13
+movies       13
+dont         12
+end          12
+going        12
+han          12
+felt         11
+vin          11
+cena         11
+doms         11
+part         11
+back         11
+get          10
+time         10
+even         10
+shaw         10
+still        10
+franchise     9
+roman         9
+actually      9
+dtype: int64
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">other_stopwords</span> <span class="o">=</span> <span class="p">[</span><span class="s">'actually'</span><span class="p">,</span> <span class="s">'time'</span><span class="p">,</span> <span class="s">'one'</span><span class="p">,</span> <span class="s">'get'</span><span class="p">,</span> <span class="s">'got'</span><span class="p">,</span> <span class="s">'even'</span><span class="p">,</span> <span class="s">'time'</span><span class="p">]</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">data</span><span class="p">[</span><span class="s">'nopunc_nostop_nocommon'</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s">'nopunc_nostop'</span><span class="p">].</span><span class="nb">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="s">""</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="s">" "</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">x</span><span class="p">.</span><span class="n">split</span><span class="p">()</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">other_stopwords</span><span class="p">)))</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">data</span><span class="p">.</span><span class="n">head</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>comments</th>
+      <th>time</th>
+      <th>lowercased</th>
+      <th>nopunc</th>
+      <th>nopunc_nostop</th>
+      <th>nopunc_nostop_nocommon</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>If you’re ever falling to your death try land ...</td>
+      <td>2021-06-25 02:24:48</td>
+      <td>if you’re ever falling to your death try land ...</td>
+      <td>if youre ever falling to your death try land o...</td>
+      <td>youre ever falling death try land car break fa...</td>
+      <td>youre ever falling death try land car break fa...</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Hellen Mirren saying John Cena and Vin Diesel ...</td>
+      <td>2021-06-25 06:23:22</td>
+      <td>hellen mirren saying john cena and vin diesel ...</td>
+      <td>hellen mirren saying john cena and vin diesel ...</td>
+      <td>hellen mirren saying john cena vin diesel simi...</td>
+      <td>hellen mirren saying john cena vin diesel simi...</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>I think the most intimidating villain in the m...</td>
+      <td>2021-06-25 04:46:46</td>
+      <td>i think the most intimidating villain in the m...</td>
+      <td>i think the most intimidating villain in the m...</td>
+      <td>think intimidating villain movie charlize ther...</td>
+      <td>think intimidating villain movie charlize ther...</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Tez: we'll be alright as long as we obey the l...</td>
+      <td>2021-06-25 02:46:44</td>
+      <td>tez: we'll be alright as long as we obey the l...</td>
+      <td>tez well be alright as long as we obey the law...</td>
+      <td>tez well alright long obey laws physics entire...</td>
+      <td>tez well alright long obey laws physics entire...</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>I wish Dom would interact more with the rest o...</td>
+      <td>2021-06-25 02:29:29</td>
+      <td>i wish dom would interact more with the rest o...</td>
+      <td>i wish dom would interact more with the rest o...</td>
+      <td>wish dom would interact rest crew felt like ha...</td>
+      <td>wish dom would interact rest crew felt like ha...</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<h2 id="lemmatize-the-comments">Lemmatize the comments</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Import textblob
+</span><span class="kn">from</span> <span class="nn">textblob</span> <span class="kn">import</span> <span class="n">Word</span>
+
+<span class="c1"># Lemmatize final review format
+</span><span class="n">data</span><span class="p">[</span><span class="s">'cleaned_comments'</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s">'nopunc_nostop_nocommon'</span><span class="p">].</span><span class="nb">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="s">" "</span><span class="p">.</span><span class="n">join</span><span class="p">([</span><span class="n">Word</span><span class="p">(</span><span class="n">word</span><span class="p">).</span><span class="n">lemmatize</span><span class="p">()</span> <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">x</span><span class="p">.</span><span class="n">split</span><span class="p">()]))</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">data</span><span class="p">.</span><span class="n">head</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>comments</th>
+      <th>time</th>
+      <th>lowercased</th>
+      <th>nopunc</th>
+      <th>nopunc_nostop</th>
+      <th>nopunc_nostop_nocommon</th>
+      <th>cleaned_comments</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>If you’re ever falling to your death try land ...</td>
+      <td>2021-06-25 02:24:48</td>
+      <td>if you’re ever falling to your death try land ...</td>
+      <td>if youre ever falling to your death try land o...</td>
+      <td>youre ever falling death try land car break fa...</td>
+      <td>youre ever falling death try land car break fa...</td>
+      <td>youre ever falling death try land car break fa...</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Hellen Mirren saying John Cena and Vin Diesel ...</td>
+      <td>2021-06-25 06:23:22</td>
+      <td>hellen mirren saying john cena and vin diesel ...</td>
+      <td>hellen mirren saying john cena and vin diesel ...</td>
+      <td>hellen mirren saying john cena vin diesel simi...</td>
+      <td>hellen mirren saying john cena vin diesel simi...</td>
+      <td>hellen mirren saying john cena vin diesel simi...</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>I think the most intimidating villain in the m...</td>
+      <td>2021-06-25 04:46:46</td>
+      <td>i think the most intimidating villain in the m...</td>
+      <td>i think the most intimidating villain in the m...</td>
+      <td>think intimidating villain movie charlize ther...</td>
+      <td>think intimidating villain movie charlize ther...</td>
+      <td>think intimidating villain movie charlize ther...</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Tez: we'll be alright as long as we obey the l...</td>
+      <td>2021-06-25 02:46:44</td>
+      <td>tez: we'll be alright as long as we obey the l...</td>
+      <td>tez well be alright as long as we obey the law...</td>
+      <td>tez well alright long obey laws physics entire...</td>
+      <td>tez well alright long obey laws physics entire...</td>
+      <td>tez well alright long obey law physic entire m...</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>I wish Dom would interact more with the rest o...</td>
+      <td>2021-06-25 02:29:29</td>
+      <td>i wish dom would interact more with the rest o...</td>
+      <td>i wish dom would interact more with the rest o...</td>
+      <td>wish dom would interact rest crew felt like ha...</td>
+      <td>wish dom would interact rest crew felt like ha...</td>
+      <td>wish dom would interact rest crew felt like ha...</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<h2 id="export-cleaned-comments">Export cleaned comments</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">data</span><span class="p">[[</span><span class="s">'cleaned_comments'</span><span class="p">,</span><span class="s">'time'</span><span class="p">]].</span><span class="n">to_csv</span><span class="p">(</span><span class="s">'dataset/fast_9_review_cleaned.csv'</span><span class="p">,</span><span class="n">index</span> <span class="o">=</span> <span class="bp">False</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h1 id="visualization">Visualization</h1>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s">'dataset/fast_9_review_cleaned.csv'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>cleaned_comments</th>
+      <th>time</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>youre ever falling death try land car break fa...</td>
+      <td>2021-06-25 02:24:48</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>hellen mirren saying john cena vin diesel simi...</td>
+      <td>2021-06-25 06:23:22</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>think intimidating villain movie charlize ther...</td>
+      <td>2021-06-25 04:46:46</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>tez well alright long obey law physic entire m...</td>
+      <td>2021-06-25 02:46:44</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>wish dom would interact rest crew felt like ha...</td>
+      <td>2021-06-25 02:29:29</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>95</th>
+      <td>f1011 gonna infinity warendgame treatment gonn...</td>
+      <td>2021-06-26 10:42:18</td>
+    </tr>
+    <tr>
+      <th>96</th>
+      <td>many problem plot doms brother big spyevil guy...</td>
+      <td>2021-07-04 20:50:01</td>
+    </tr>
+    <tr>
+      <th>97</th>
+      <td>dude sean tokyo drifter dirty fuck behind plan...</td>
+      <td>2021-07-29 21:03:51</td>
+    </tr>
+    <tr>
+      <th>98</th>
+      <td>nephew eight love car mum wont let watch ff mo...</td>
+      <td>2021-07-16 06:26:07</td>
+    </tr>
+    <tr>
+      <th>99</th>
+      <td>toretto nordic blood</td>
+      <td>2021-06-26 04:02:12</td>
+    </tr>
+  </tbody>
+</table>
+<p>100 rows × 2 columns</p>
+</div>
+
+<h2 id="polarity-and-subjectivity">Polarity and Subjectivity</h2>
+
+<h3 id="calculate-score">Calculate score</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Calculate polarity
+</span><span class="kn">from</span> <span class="nn">textblob</span> <span class="kn">import</span> <span class="n">TextBlob</span>
+<span class="n">df</span><span class="p">[</span><span class="s">'polarity'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s">'cleaned_comments'</span><span class="p">].</span><span class="nb">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">TextBlob</span><span class="p">(</span><span class="n">x</span><span class="p">).</span><span class="n">sentiment</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+<span class="c1"># Calculate subjectivity
+</span><span class="n">df</span><span class="p">[</span><span class="s">'subjectivity'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s">'cleaned_comments'</span><span class="p">].</span><span class="nb">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">TextBlob</span><span class="p">(</span><span class="n">x</span><span class="p">).</span><span class="n">sentiment</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df</span><span class="p">.</span><span class="n">head</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>cleaned_comments</th>
+      <th>time</th>
+      <th>polarity</th>
+      <th>subjectivity</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>youre ever falling death try land car break fa...</td>
+      <td>2021-06-25 02:24:48</td>
+      <td>0.025000</td>
+      <td>0.175000</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>hellen mirren saying john cena vin diesel simi...</td>
+      <td>2021-06-25 06:23:22</td>
+      <td>0.066667</td>
+      <td>0.266667</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>think intimidating villain movie charlize ther...</td>
+      <td>2021-06-25 04:46:46</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>tez well alright long obey law physic entire m...</td>
+      <td>2021-06-25 02:46:44</td>
+      <td>0.087500</td>
+      <td>0.581250</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>wish dom would interact rest crew felt like ha...</td>
+      <td>2021-06-25 02:29:29</td>
+      <td>-0.291667</td>
+      <td>0.541667</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Summary statictics of the scores
+</span><span class="n">df</span><span class="p">.</span><span class="n">describe</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>polarity</th>
+      <th>subjectivity</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>count</th>
+      <td>100.000000</td>
+      <td>100.000000</td>
+    </tr>
+    <tr>
+      <th>mean</th>
+      <td>0.057331</td>
+      <td>0.439929</td>
+    </tr>
+    <tr>
+      <th>std</th>
+      <td>0.286197</td>
+      <td>0.272889</td>
+    </tr>
+    <tr>
+      <th>min</th>
+      <td>-0.900000</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>25%</th>
+      <td>0.000000</td>
+      <td>0.300000</td>
+    </tr>
+    <tr>
+      <th>50%</th>
+      <td>0.046165</td>
+      <td>0.435020</td>
+    </tr>
+    <tr>
+      <th>75%</th>
+      <td>0.200000</td>
+      <td>0.606399</td>
+    </tr>
+    <tr>
+      <th>max</th>
+      <td>1.000000</td>
+      <td>1.000000</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<h3 id="label-the-scores">Label the scores</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Add polarity label
+</span>
+<span class="k">def</span> <span class="nf">polar_label</span><span class="p">(</span><span class="n">polar</span><span class="p">):</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">polar</span><span class="o">&lt;-</span><span class="mf">0.5</span><span class="p">):</span>
+    <span class="k">return</span> <span class="s">"negative"</span>
+  <span class="k">elif</span> <span class="p">(</span><span class="n">polar</span><span class="o">&gt;=-</span><span class="mf">0.5</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">polar</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">):</span>
+    <span class="k">return</span> <span class="s">"weak negative"</span>
+  <span class="k">elif</span> <span class="p">(</span><span class="n">polar</span><span class="o">==</span><span class="mi">0</span><span class="p">):</span>
+    <span class="k">return</span> <span class="s">"neutral"</span>
+  <span class="k">elif</span> <span class="p">(</span><span class="n">polar</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span><span class="ow">and</span><span class="p">(</span><span class="n">polar</span><span class="o">&lt;=</span><span class="mf">0.5</span><span class="p">):</span>
+    <span class="k">return</span> <span class="s">"weak positive"</span>
+  <span class="k">else</span><span class="p">:</span>
+    <span class="k">return</span> <span class="s">"positive"</span>
+
+<span class="n">df</span><span class="p">[</span><span class="s">'polar_label'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s">'polarity'</span><span class="p">].</span><span class="nb">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">polar_label</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Add subjectivity label
+</span>
+<span class="k">def</span> <span class="nf">subj_label</span><span class="p">(</span><span class="n">subj</span><span class="p">):</span>
+  <span class="k">if</span> <span class="n">subj</span><span class="o">&lt;</span><span class="mf">0.5</span><span class="p">:</span>
+    <span class="k">return</span> <span class="s">"objective"</span>
+  <span class="k">elif</span> <span class="n">subj</span><span class="o">==</span><span class="mf">0.5</span><span class="p">:</span>
+    <span class="k">return</span> <span class="s">"neutral"</span>
+  <span class="k">else</span><span class="p">:</span>
+    <span class="k">return</span> <span class="s">"subjective"</span>
+
+<span class="n">df</span><span class="p">[</span><span class="s">'subj_label'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s">'subjectivity'</span><span class="p">].</span><span class="nb">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">subj_label</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df</span><span class="p">.</span><span class="n">head</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>cleaned_comments</th>
+      <th>time</th>
+      <th>polarity</th>
+      <th>subjectivity</th>
+      <th>polar_label</th>
+      <th>subj_label</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>youre ever falling death try land car break fa...</td>
+      <td>2021-06-25 02:24:48</td>
+      <td>0.025000</td>
+      <td>0.175000</td>
+      <td>weak positive</td>
+      <td>objective</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>hellen mirren saying john cena vin diesel simi...</td>
+      <td>2021-06-25 06:23:22</td>
+      <td>0.066667</td>
+      <td>0.266667</td>
+      <td>weak positive</td>
+      <td>objective</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>think intimidating villain movie charlize ther...</td>
+      <td>2021-06-25 04:46:46</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>neutral</td>
+      <td>objective</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>tez well alright long obey law physic entire m...</td>
+      <td>2021-06-25 02:46:44</td>
+      <td>0.087500</td>
+      <td>0.581250</td>
+      <td>weak positive</td>
+      <td>subjective</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>wish dom would interact rest crew felt like ha...</td>
+      <td>2021-06-25 02:29:29</td>
+      <td>-0.291667</td>
+      <td>0.541667</td>
+      <td>weak negative</td>
+      <td>subjective</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># count of polar label
+</span><span class="n">df</span><span class="p">[</span><span class="s">'polar_label'</span><span class="p">].</span><span class="n">value_counts</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>weak positive    52
+neutral          20
+weak negative    19
+positive          5
+negative          4
+Name: polar_label, dtype: int64
+</code></pre></div></div>
+
+<h2 id="score-distribution">Score distribution</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="n">sns</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">plt</span><span class="p">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">5</span><span class="p">),</span><span class="n">facecolor</span><span class="o">=</span><span class="s">'1'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">title</span><span class="p">(</span><span class="s">'Polarity score distribution'</span><span class="p">)</span>
+
+<span class="n">sns</span><span class="p">.</span><span class="n">kdeplot</span><span class="p">(</span>
+   <span class="n">data</span><span class="o">=</span><span class="n">df</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s">"polarity"</span><span class="p">,</span> 
+   <span class="n">fill</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">palette</span><span class="o">=</span><span class="s">"Set1"</span><span class="p">,</span>
+   <span class="n">alpha</span><span class="o">=</span><span class="p">.</span><span class="mi">5</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><img src="output_67_0.png" alt="png" /></p>
+
+<p><strong>Description:</strong> The polarity score distribution graph shows a unimodal bell shaped distribution. A left skew is shown from the distribution which tells us that the mean gets pulled towards the tail, and is less than the median.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">plt</span><span class="p">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">5</span><span class="p">),</span><span class="n">facecolor</span><span class="o">=</span><span class="s">'1'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">title</span><span class="p">(</span><span class="s">'Subjectivity score distribution'</span><span class="p">)</span>
+
+<span class="n">sns</span><span class="p">.</span><span class="n">kdeplot</span><span class="p">(</span>
+   <span class="n">data</span><span class="o">=</span><span class="n">df</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s">"subjectivity"</span><span class="p">,</span> 
+   <span class="n">fill</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">palette</span><span class="o">=</span><span class="s">"Set1"</span><span class="p">,</span>
+   <span class="n">alpha</span><span class="o">=</span><span class="p">.</span><span class="mi">5</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><img src="output_69_0.png" alt="png" /></p>
+
+<p><strong>Description:</strong> The subjectivity score distribution graph shows a bimodal distribution. A slight right skew is shown from the distribution which tells us that the mean gets pulled towards the tail, and is greater than the median.</p>
+
+<h2 id="label-count">Label count</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">plt</span><span class="p">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">5</span><span class="p">),</span><span class="n">facecolor</span><span class="o">=</span><span class="s">'1'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">title</span><span class="p">(</span><span class="s">'Count of polarity score'</span><span class="p">)</span>
+
+<span class="n">sns</span><span class="p">.</span><span class="n">countplot</span><span class="p">(</span>
+   <span class="n">data</span><span class="o">=</span><span class="n">df</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s">"polar_label"</span><span class="p">,</span><span class="n">palette</span><span class="o">=</span><span class="s">"Set1"</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><img src="output_72_0.png" alt="png" /></p>
+
+<p><strong>Description:</strong> The bar chart shows that count of polarity labels from the Fast 9 movie Reddit comments. From the chart we can see that most of the comments are ‘weak positive’. This shows that Reddit comments on the post are reacting slightly positive towards the movie.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">plt</span><span class="p">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">5</span><span class="p">),</span><span class="n">facecolor</span><span class="o">=</span><span class="s">'1'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">title</span><span class="p">(</span><span class="s">'Count of polarity score'</span><span class="p">)</span>
+
+<span class="n">sns</span><span class="p">.</span><span class="n">countplot</span><span class="p">(</span>
+   <span class="n">data</span><span class="o">=</span><span class="n">df</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s">"subj_label"</span><span class="p">,</span><span class="n">palette</span><span class="o">=</span><span class="s">"Set1"</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><img src="output_74_0.png" alt="png" /></p>
+
+<p><strong>Description:</strong> The bar chart shows that count of subjectivity labels from the Fast 9 movie Reddit comments. From the chart we can see that most of the comments are ‘objective’. This means that most of the collected comments are mostly factual albeit by only a small margin.</p>
+
+<h2 id="wordcloud">Wordcloud</h2>
+
+<h3 id="positive-comments-wordcloud">Positive comments wordcloud</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">wordcloud</span> <span class="kn">import</span> <span class="n">WordCloud</span><span class="p">,</span> <span class="n">STOPWORDS</span><span class="p">,</span> <span class="n">ImageColorGenerator</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Text of all words in column Tweets
+</span>
+<span class="n">df_neg</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s">'polar_label'</span><span class="p">]</span><span class="o">==</span><span class="s">'negative'</span><span class="p">]</span>
+
+<span class="n">text</span> <span class="o">=</span> <span class="s">" "</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">review</span> <span class="k">for</span> <span class="n">review</span> <span class="ow">in</span> <span class="n">df_neg</span><span class="p">.</span><span class="n">cleaned_comments</span><span class="p">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">))</span>
+<span class="k">print</span> <span class="p">(</span><span class="s">"There are {} words in the combination of all cells in column Tweets."</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">text</span><span class="p">)))</span>
+
+<span class="c1"># Create stopword list:
+# remove words that we want to exclude
+</span>
+<span class="n">stopwords</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">STOPWORDS</span><span class="p">)</span>
+
+<span class="c1"># Generate a word cloud image
+</span>
+<span class="n">wordcloud</span> <span class="o">=</span> <span class="n">WordCloud</span><span class="p">(</span><span class="n">stopwords</span><span class="o">=</span><span class="n">stopwords</span><span class="p">,</span> <span class="n">background_color</span><span class="o">=</span><span class="s">"white"</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">800</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span><span class="n">colormap</span><span class="o">=</span><span class="s">'Set1'</span><span class="p">).</span><span class="n">generate</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+
+<span class="c1"># Display the generated image:
+# the matplotlib way:
+</span>
+<span class="n">fig</span><span class="o">=</span><span class="n">plt</span><span class="p">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">tight_layout</span><span class="p">(</span><span class="n">pad</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">axis</span><span class="p">(</span><span class="s">"off"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">wordcloud</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s">'bilinear'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>There are 328 words in the combination of all cells in column Tweets.
+</code></pre></div></div>
+
+<p><img src="output_79_1.png" alt="png" /></p>
+
+<h3 id="negative-comments-wordcloud">Negative comments wordcloud</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Text of all words in column Tweets
+</span>
+<span class="n">df_neg</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s">'polar_label'</span><span class="p">]</span><span class="o">==</span><span class="s">'positive'</span><span class="p">]</span>
+
+<span class="n">text</span> <span class="o">=</span> <span class="s">" "</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">review</span> <span class="k">for</span> <span class="n">review</span> <span class="ow">in</span> <span class="n">df_neg</span><span class="p">.</span><span class="n">cleaned_comments</span><span class="p">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">))</span>
+<span class="k">print</span> <span class="p">(</span><span class="s">"There are {} words in the combination of all cells in column Tweets."</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">text</span><span class="p">)))</span>
+
+<span class="c1"># Create stopword list:
+# remove words that we want to exclude
+</span>
+<span class="n">stopwords</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">STOPWORDS</span><span class="p">)</span>
+
+<span class="c1"># Generate a word cloud image
+</span>
+<span class="n">wordcloud</span> <span class="o">=</span> <span class="n">WordCloud</span><span class="p">(</span><span class="n">stopwords</span><span class="o">=</span><span class="n">stopwords</span><span class="p">,</span> <span class="n">background_color</span><span class="o">=</span><span class="s">"white"</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">800</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span><span class="n">colormap</span><span class="o">=</span><span class="s">'plasma'</span><span class="p">).</span><span class="n">generate</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+
+<span class="c1"># Display the generated image:
+# the matplotlib way:
+</span>
+<span class="n">fig</span><span class="o">=</span><span class="n">plt</span><span class="p">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">tight_layout</span><span class="p">(</span><span class="n">pad</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">axis</span><span class="p">(</span><span class="s">"off"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">wordcloud</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s">'bilinear'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>There are 274 words in the combination of all cells in column Tweets.
+</code></pre></div></div>
+
+<p><img src="output_81_1.png" alt="png" /></p>
+
+
+</div>
+  </main>
+
+  <footer class="mt-auto py-3 text-center">
+
+  <small class="text-muted mb-2">
+    <i class="fas fa-code"></i> with <i class="fas fa-heart"></i>
+    by <strong>Ameer Haziq Basharuddin</strong>
+  </small>
+
+  <div class="container-fluid justify-content-center"><a class="social mx-1"  href="mailto:ameerhaziq.work@gmail.com"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#db4437'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fas fa-envelope fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.github.com/ameerhaziq20"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#333333'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-github fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.instagram.com/emyrbreezy"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#405de6'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-instagram fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.linkedin.com/in/ameer-haziq-basharuddin-89593520a/"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#007bb5'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-linkedin-in fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.twitter.com/frisk__y"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#1da1f2'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-twitter fa-1x"></i>
+    </a>
+
+</div><small id="attribution">
+    theme <a href="https://github.com/YoussefRaafatNasry/portfolYOU">portfolYOU</a>
+  </small>
+  
+</footer>
+
+  
+  <!-- GitHub Buttons -->
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+
+<!-- jQuery CDN -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<!-- Popper.js CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"></script>
+
+<!-- Bootstrap JS CDN -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<!-- wow.js CDN & Activation -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.js"></script>
+<script> new WOW().init(); </script>
+
+<!-- Initialize all tooltips -->
+<script>
+$(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+})
+</script>
+
+
+</body>
+
+</html>

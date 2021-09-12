@@ -33,7 +33,7 @@ This analysis will try to answer the following questions:
     * The data collected from the sites will bw stored as a CSV file in the /dataset directory.
     * This allows the data can still be analysed localy when connectivity problems persists.
 
-# 4. Cleaning and Analyze Data
+---
 
 Datasets are obtained from:
 
