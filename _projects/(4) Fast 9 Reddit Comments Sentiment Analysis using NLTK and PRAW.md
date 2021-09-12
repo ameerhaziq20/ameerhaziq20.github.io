@@ -32,6 +32,8 @@ This analysis will try to answer the following questions:
     * The collected comments will be stored in a CSV file.
     * The cleaned comments will also be stored as both CSV file.
 
+
+##### [Github link for project](https://github.com/ameerhaziq20/Fast-9-Movie-Sentiment-Analysis-From-Reddit-Using-PRAW/)
 ---
 
 # Obtain Reddit Comments
