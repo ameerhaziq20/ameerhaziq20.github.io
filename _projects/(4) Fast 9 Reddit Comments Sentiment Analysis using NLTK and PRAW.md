@@ -25,7 +25,7 @@ This analysis will try to answer the following questions:
 # 3. Data Collection
 
 * Source
-    * The Tweets collected will be from reddit.com using their API.
+    * The comments collected will be from reddit.com using their API.
     * The python library PRAW will be used to gather the comments.
 
 * Storage
