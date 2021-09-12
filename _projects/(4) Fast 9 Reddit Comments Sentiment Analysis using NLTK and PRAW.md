@@ -49,10 +49,10 @@ import datetime as dt
 ```python
 reddit = praw.Reddit(
     user_agent="Comment Extraction (by u/USERNAME)",
-    client_id="i7IXjJbBHhouB1TZ-epfyA",
-    client_secret="oKpZ3ULqlw1Dv104s95YhITqR9Y8pw",
-    username="emyrbreezy",
-    password="Iwant69reddit",
+    client_id="*********",
+    client_secret="*********",
+    username="*********",
+    password="*********",
 )
 ```
 
