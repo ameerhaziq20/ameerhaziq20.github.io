@@ -5,6 +5,9 @@ image: https://www.emeraldgrouppublishing.com/sites/default/files/styles/service
 description: Wonder how's the Covid-19 situation in Malaysia? Is it getting worse or getting better? Let's find out.
 ---
 
+
+![jpg](https://assets.weforum.org/article/image/large_Gt3_maI3Pg1p3LCdz686W_z41IEvOy6elJNQmu_oRLc.jpg)
+
 # 1. Questions
 
 This analysis will try to answer the following questions:
@@ -33,6 +36,7 @@ This analysis will try to answer the following questions:
     * The data collected from the sites will bw stored as a CSV file in the /dataset directory.
     * This allows the data can still be analysed localy when connectivity problems persists.
 
+##### [Github link for project](https://github.com/ameerhaziq20/Malaysia_COVID_19_Cases_Analysis_and_Prediction)
 ---
 
 Datasets are obtained from:

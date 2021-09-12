@@ -1,0 +1,3958 @@
+<!DOCTYPE html>
+
+<!--
+  portfolYOU Jekyll theme by Youssef Raafat
+  Free for personal and commercial use under the MIT license
+  https://github.com/YoussefRaafatNasry/portfolYOU
+-->
+
+<html lang="en" class="h-100">
+
+<head>
+
+  
+  
+
+  
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Death cause Analysis Malaysia">
+  <meta property="og:description" content="Data wrangling practice project using Python and Pandas.">
+
+  <title>Death cause Analysis Malaysia</title>
+  <meta name="description" content="Data wrangling practice project using Python and Pandas.">
+
+  <link rel="shortcut icon" type="image/x-icon" href="/assets/favicon.ico">
+
+  <!-- Theme style -->
+  <script src="/assets/js/theme.js"></script>
+
+  <!-- Font Awesome CDN -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.10.0/css/all.css">
+
+  <!-- Bootstrap CSS CDN -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
+
+  <!-- Animate CSS CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.css">
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="/assets/css/style.css">
+
+</head>
+
+<body class="h-100 d-flex flex-column">
+
+  <main class="flex-shrink-0 container mt-5">
+    <nav class="navbar navbar-expand-lg navbar-themed">
+
+  <a class="navbar-brand" href="/"><h5><b>Haziq's Page</b></h5></a>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+    <i class="fas fa-1x fa-bars text-themed"></i>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav ml-auto"><a class="nav-item nav-link active" href="/projects/">Projects</a>
+
+      <a class="nav-item nav-link " href="/blog/">Blog</a>
+
+      <a class="nav-item nav-link " href="/about/">About</a>
+
+      
+
+      <span id="theme-toggler" class="nav-item nav-link" role="button" onclick="toggleTheme()"></span>
+    </div>
+  </div>
+
+</nav>
+    <div class="col-lg-10 mx-auto mt-5 markdown-body">
+  <p><img src="https://newss.statistics.gov.my/newss-portalx/img/header_en.jpg" alt="jpg" /></p>
+
+<p>This project is done to practice data wrangling (or data munging). The truth is that data cannot always be used as it is and needs preparation in a way so that it can be used. Some cleaning and wrangling needs to be done before we can do analysis on them. In this project, we will make use of the the Death Statistics 2019 data obtained from <a href="https://newss.statistics.gov.my/newss-portalx/ep/epFreeDownloadContentSearch.seam?contentId=148840&amp;actionMethod=ep%2FepFreeDownloadContentSearch.xhtml%3AcontentAction.doDisplayContent&amp;cid=162492">Department of Statistics Malaysia</a>. Also included is a simple visualization to give some insights about the data. All of these process are made using Python.</p>
+
+<h1 id="1-questions">1. Questions</h1>
+
+<p>This analysis will try to answer the following questions:</p>
+<ul>
+  <li>Which gender live longer, men or women?</li>
+  <li>What is the leasing cause of death in Malaysia?</li>
+  <li>Which state has the highest death and death rate?</li>
+</ul>
+
+<h1 id="2-measurement-priorities">2. Measurement Priorities</h1>
+
+<ul>
+  <li>Count of deaths of each gender by each age group.</li>
+  <li>The death cause with the most count of casualty.</li>
+  <li>The count of death cases in each state in Malaysia.</li>
+</ul>
+
+<h1 id="3-data-collection">3. Data Collection</h1>
+
+<ul>
+  <li>Source
+    <ul>
+      <li>The data is obtained from the Department of Statistics Malaysia Website.</li>
+    </ul>
+  </li>
+  <li>Storage
+    <ul>
+      <li>The cleaned data will be stored in a CSV file.</li>
+    </ul>
+  </li>
+</ul>
+
+<h5 id="github-link-for-project"><a href="https://github.com/ameerhaziq20/Malaysia-s-Death-Cause-Analysis-2019">Github link for project</a></h5>
+<hr />
+<p>Data is obtained from:</p>
+
+<p><a href="https://newss.statistics.gov.my/newss-portalx/ep/epFreeDownloadContentSearch.seam?contentId=148840&amp;actionMethod=ep%2FepFreeDownloadContentSearch.xhtml%3AcontentAction.doDisplayContent&amp;cid=162492">JADUAL PENERBITAN PERANGKAAN SEBAB KEMATIAN, MALAYSIA, 2020</a></p>
+
+<p>Statistics on Causes of Death, Malaysia, 2020 presents statistics on major causes of death by classification for 2019. The Department of Statistics Malaysia (DOSM) uses the International Statistical Classification of Diseases and Related Health Problems, 10th Revision (ICD-10) published by the World Health Organization (2010 ) as reference material for coding the cause of death.</p>
+
+<h1 id="import-data">Import Data</h1>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="n">pd</span>
+<span class="n">xls</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">ExcelFile</span><span class="p">(</span><span class="s">'dataset\death_cause_malaysia_2020.xlsx'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h1 id="data-cleaning">Data Cleaning</h1>
+
+<h2 id="table-11-deaths-number-and-rate-by-state-and-sex-malaysia-2019">Table 1.1: Deaths (number and rate) by state and sex, Malaysia, 2019</h2>
+
+<h3 id="preview-table">Preview table</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_gen</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">read_excel</span><span class="p">(</span><span class="n">xls</span><span class="p">,</span><span class="n">sheet_name</span><span class="o">=</span><span class="s">"1.1"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_gen</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Jadual 1.1: Kematian (bilangan dan kadar) mengikut negeri dan jantina, Malaysia, 2019</th>
+      <th>Unnamed: 1</th>
+      <th>Unnamed: 2</th>
+      <th>Unnamed: 3</th>
+      <th>Unnamed: 4</th>
+      <th>Unnamed: 5</th>
+      <th>Unnamed: 6</th>
+      <th>Unnamed: 7</th>
+      <th>Unnamed: 8</th>
+      <th>Unnamed: 9</th>
+      <th>Unnamed: 10</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Table 1.1: Deaths (number and rate) by state a...</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>Kematian</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>Kadar kematian kasar</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>Deaths</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>Crude death rate</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>Jumlah</td>
+      <td>Lelaki</td>
+      <td>Perempuan</td>
+      <td>NaN</td>
+      <td>Jumlah</td>
+      <td>Lelaki</td>
+      <td>Perempuan</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>Total</td>
+      <td>Male</td>
+      <td>Female</td>
+      <td>NaN</td>
+      <td>Total</td>
+      <td>Male</td>
+      <td>Female</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>MALAYSIA</td>
+      <td>NaN</td>
+      <td>173746</td>
+      <td>99681</td>
+      <td>74065</td>
+      <td>NaN</td>
+      <td>5.342242</td>
+      <td>5.945819</td>
+      <td>4.700105</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>NaN</td>
+      <td>Johor</td>
+      <td>21776</td>
+      <td>12743</td>
+      <td>9033</td>
+      <td>NaN</td>
+      <td>5.789692</td>
+      <td>6.453459</td>
+      <td>5.056066</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>NaN</td>
+      <td>Kedah</td>
+      <td>14292</td>
+      <td>8027</td>
+      <td>6265</td>
+      <td>NaN</td>
+      <td>6.574828</td>
+      <td>7.287441</td>
+      <td>5.842794</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>NaN</td>
+      <td>Kelantan</td>
+      <td>11389</td>
+      <td>6436</td>
+      <td>4953</td>
+      <td>NaN</td>
+      <td>6.045617</td>
+      <td>6.759489</td>
+      <td>5.316083</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>NaN</td>
+      <td>Melaka</td>
+      <td>5542</td>
+      <td>3084</td>
+      <td>2458</td>
+      <td>NaN</td>
+      <td>5.96941</td>
+      <td>6.619759</td>
+      <td>5.314342</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>NaN</td>
+      <td>Negeri Sembilan</td>
+      <td>7157</td>
+      <td>4097</td>
+      <td>3060</td>
+      <td>NaN</td>
+      <td>6.355022</td>
+      <td>7.056639</td>
+      <td>5.608422</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>NaN</td>
+      <td>Pahang</td>
+      <td>9165</td>
+      <td>5381</td>
+      <td>3784</td>
+      <td>NaN</td>
+      <td>5.483302</td>
+      <td>6.067542</td>
+      <td>4.822913</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>NaN</td>
+      <td>Perak</td>
+      <td>18712</td>
+      <td>10554</td>
+      <td>8158</td>
+      <td>NaN</td>
+      <td>7.458543</td>
+      <td>8.322346</td>
+      <td>6.575591</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>NaN</td>
+      <td>Perlis</td>
+      <td>1994</td>
+      <td>1124</td>
+      <td>870</td>
+      <td>NaN</td>
+      <td>7.84891</td>
+      <td>8.886218</td>
+      <td>6.82032</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>NaN</td>
+      <td>Pulau Pinang</td>
+      <td>10879</td>
+      <td>6101</td>
+      <td>4778</td>
+      <td>NaN</td>
+      <td>6.150355</td>
+      <td>6.862011</td>
+      <td>5.431132</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>NaN</td>
+      <td>Sabah</td>
+      <td>14493</td>
+      <td>8439</td>
+      <td>6054</td>
+      <td>NaN</td>
+      <td>3.711919</td>
+      <td>4.142434</td>
+      <td>3.242217</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>NaN</td>
+      <td>Sarawak</td>
+      <td>13990</td>
+      <td>7888</td>
+      <td>6102</td>
+      <td>NaN</td>
+      <td>4.985706</td>
+      <td>5.401526</td>
+      <td>4.534463</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>NaN</td>
+      <td>Selangor</td>
+      <td>27700</td>
+      <td>16142</td>
+      <td>11558</td>
+      <td>NaN</td>
+      <td>4.257525</td>
+      <td>4.782697</td>
+      <td>3.69142</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>NaN</td>
+      <td>Terengganu</td>
+      <td>7334</td>
+      <td>4201</td>
+      <td>3133</td>
+      <td>NaN</td>
+      <td>5.893177</td>
+      <td>6.634565</td>
+      <td>5.125219</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>NaN</td>
+      <td>W.P. Kuala Lumpur</td>
+      <td>8819</td>
+      <td>5168</td>
+      <td>3651</td>
+      <td>NaN</td>
+      <td>4.94744</td>
+      <td>5.646853</td>
+      <td>4.209432</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>22</th>
+      <td>NaN</td>
+      <td>W.P. Labuan</td>
+      <td>296</td>
+      <td>182</td>
+      <td>114</td>
+      <td>NaN</td>
+      <td>2.981166</td>
+      <td>3.637308</td>
+      <td>2.31458</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>23</th>
+      <td>NaN</td>
+      <td>W.P. Putrajaya</td>
+      <td>208</td>
+      <td>114</td>
+      <td>94</td>
+      <td>NaN</td>
+      <td>2.006715</td>
+      <td>2.347853</td>
+      <td>1.706082</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>24</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>25</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>26</th>
+      <td>Kadar adalah bagi setiap 1,000 penduduk</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>27</th>
+      <td>The rates are per 1,000 population</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<h3 id="remove-unwanted-rows-and-columns">Remove unwanted rows and columns</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_gen</span> <span class="o">=</span> <span class="n">df_gen</span><span class="p">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">8</span><span class="p">:</span> <span class="p">,</span> <span class="p">:]</span>
+<span class="n">df_gen</span> <span class="o">=</span> <span class="n">df_gen</span><span class="p">.</span><span class="n">iloc</span><span class="p">[:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span>
+<span class="n">df_gen</span> <span class="o">=</span> <span class="n">df_gen</span><span class="p">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">1</span><span class="p">:]</span>
+<span class="n">df_gen</span> <span class="o">=</span> <span class="n">df_gen</span><span class="p">.</span><span class="n">iloc</span><span class="p">[:,:</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_gen</span><span class="p">.</span><span class="n">drop</span><span class="p">(</span><span class="s">'Unnamed: 5'</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">inplace</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_gen</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Unnamed: 1</th>
+      <th>Unnamed: 2</th>
+      <th>Unnamed: 3</th>
+      <th>Unnamed: 4</th>
+      <th>Unnamed: 6</th>
+      <th>Unnamed: 7</th>
+      <th>Unnamed: 8</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>8</th>
+      <td>Johor</td>
+      <td>21776</td>
+      <td>12743</td>
+      <td>9033</td>
+      <td>5.789692</td>
+      <td>6.453459</td>
+      <td>5.056066</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>Kedah</td>
+      <td>14292</td>
+      <td>8027</td>
+      <td>6265</td>
+      <td>6.574828</td>
+      <td>7.287441</td>
+      <td>5.842794</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>Kelantan</td>
+      <td>11389</td>
+      <td>6436</td>
+      <td>4953</td>
+      <td>6.045617</td>
+      <td>6.759489</td>
+      <td>5.316083</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>Melaka</td>
+      <td>5542</td>
+      <td>3084</td>
+      <td>2458</td>
+      <td>5.96941</td>
+      <td>6.619759</td>
+      <td>5.314342</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>Negeri Sembilan</td>
+      <td>7157</td>
+      <td>4097</td>
+      <td>3060</td>
+      <td>6.355022</td>
+      <td>7.056639</td>
+      <td>5.608422</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>Pahang</td>
+      <td>9165</td>
+      <td>5381</td>
+      <td>3784</td>
+      <td>5.483302</td>
+      <td>6.067542</td>
+      <td>4.822913</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>Perak</td>
+      <td>18712</td>
+      <td>10554</td>
+      <td>8158</td>
+      <td>7.458543</td>
+      <td>8.322346</td>
+      <td>6.575591</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>Perlis</td>
+      <td>1994</td>
+      <td>1124</td>
+      <td>870</td>
+      <td>7.84891</td>
+      <td>8.886218</td>
+      <td>6.82032</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>Pulau Pinang</td>
+      <td>10879</td>
+      <td>6101</td>
+      <td>4778</td>
+      <td>6.150355</td>
+      <td>6.862011</td>
+      <td>5.431132</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>Sabah</td>
+      <td>14493</td>
+      <td>8439</td>
+      <td>6054</td>
+      <td>3.711919</td>
+      <td>4.142434</td>
+      <td>3.242217</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>Sarawak</td>
+      <td>13990</td>
+      <td>7888</td>
+      <td>6102</td>
+      <td>4.985706</td>
+      <td>5.401526</td>
+      <td>4.534463</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>Selangor</td>
+      <td>27700</td>
+      <td>16142</td>
+      <td>11558</td>
+      <td>4.257525</td>
+      <td>4.782697</td>
+      <td>3.69142</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>Terengganu</td>
+      <td>7334</td>
+      <td>4201</td>
+      <td>3133</td>
+      <td>5.893177</td>
+      <td>6.634565</td>
+      <td>5.125219</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>W.P. Kuala Lumpur</td>
+      <td>8819</td>
+      <td>5168</td>
+      <td>3651</td>
+      <td>4.94744</td>
+      <td>5.646853</td>
+      <td>4.209432</td>
+    </tr>
+    <tr>
+      <th>22</th>
+      <td>W.P. Labuan</td>
+      <td>296</td>
+      <td>182</td>
+      <td>114</td>
+      <td>2.981166</td>
+      <td>3.637308</td>
+      <td>2.31458</td>
+    </tr>
+    <tr>
+      <th>23</th>
+      <td>W.P. Putrajaya</td>
+      <td>208</td>
+      <td>114</td>
+      <td>94</td>
+      <td>2.006715</td>
+      <td>2.347853</td>
+      <td>1.706082</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<h3 id="rename-columns">Rename Columns</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">dict</span> <span class="o">=</span> <span class="p">{</span><span class="s">'Unnamed: 1'</span><span class="p">:</span> <span class="s">'state_death'</span><span class="p">,</span>
+        <span class="s">'Unnamed: 2'</span><span class="p">:</span> <span class="s">'total_death'</span><span class="p">,</span>
+        <span class="s">'Unnamed: 3'</span><span class="p">:</span> <span class="s">'male_death'</span><span class="p">,</span>
+        <span class="s">'Unnamed: 4'</span><span class="p">:</span> <span class="s">'female_death'</span><span class="p">,</span>
+        <span class="s">'Unnamed: 6'</span><span class="p">:</span> <span class="s">'total_death_rate'</span><span class="p">,</span>
+        <span class="s">'Unnamed: 7'</span><span class="p">:</span> <span class="s">'male_death_rate'</span><span class="p">,</span>
+        <span class="s">'Unnamed: 8'</span><span class="p">:</span> <span class="s">'female_death_rate'</span><span class="p">,</span>
+
+       <span class="p">}</span>
+
+<span class="n">df_gen</span><span class="p">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="nb">dict</span><span class="p">,</span>
+          <span class="n">inplace</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="reset-index">Reset Index</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_gen</span><span class="p">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span><span class="n">inplace</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_gen</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>state_death</th>
+      <th>total_death</th>
+      <th>male_death</th>
+      <th>female_death</th>
+      <th>total_death_rate</th>
+      <th>male_death_rate</th>
+      <th>female_death_rate</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Johor</td>
+      <td>21776</td>
+      <td>12743</td>
+      <td>9033</td>
+      <td>5.789692</td>
+      <td>6.453459</td>
+      <td>5.056066</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Kedah</td>
+      <td>14292</td>
+      <td>8027</td>
+      <td>6265</td>
+      <td>6.574828</td>
+      <td>7.287441</td>
+      <td>5.842794</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Kelantan</td>
+      <td>11389</td>
+      <td>6436</td>
+      <td>4953</td>
+      <td>6.045617</td>
+      <td>6.759489</td>
+      <td>5.316083</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Melaka</td>
+      <td>5542</td>
+      <td>3084</td>
+      <td>2458</td>
+      <td>5.96941</td>
+      <td>6.619759</td>
+      <td>5.314342</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Negeri Sembilan</td>
+      <td>7157</td>
+      <td>4097</td>
+      <td>3060</td>
+      <td>6.355022</td>
+      <td>7.056639</td>
+      <td>5.608422</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>Pahang</td>
+      <td>9165</td>
+      <td>5381</td>
+      <td>3784</td>
+      <td>5.483302</td>
+      <td>6.067542</td>
+      <td>4.822913</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>Perak</td>
+      <td>18712</td>
+      <td>10554</td>
+      <td>8158</td>
+      <td>7.458543</td>
+      <td>8.322346</td>
+      <td>6.575591</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>Perlis</td>
+      <td>1994</td>
+      <td>1124</td>
+      <td>870</td>
+      <td>7.84891</td>
+      <td>8.886218</td>
+      <td>6.82032</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>Pulau Pinang</td>
+      <td>10879</td>
+      <td>6101</td>
+      <td>4778</td>
+      <td>6.150355</td>
+      <td>6.862011</td>
+      <td>5.431132</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>Sabah</td>
+      <td>14493</td>
+      <td>8439</td>
+      <td>6054</td>
+      <td>3.711919</td>
+      <td>4.142434</td>
+      <td>3.242217</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>Sarawak</td>
+      <td>13990</td>
+      <td>7888</td>
+      <td>6102</td>
+      <td>4.985706</td>
+      <td>5.401526</td>
+      <td>4.534463</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>Selangor</td>
+      <td>27700</td>
+      <td>16142</td>
+      <td>11558</td>
+      <td>4.257525</td>
+      <td>4.782697</td>
+      <td>3.69142</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>Terengganu</td>
+      <td>7334</td>
+      <td>4201</td>
+      <td>3133</td>
+      <td>5.893177</td>
+      <td>6.634565</td>
+      <td>5.125219</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>W.P. Kuala Lumpur</td>
+      <td>8819</td>
+      <td>5168</td>
+      <td>3651</td>
+      <td>4.94744</td>
+      <td>5.646853</td>
+      <td>4.209432</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>W.P. Labuan</td>
+      <td>296</td>
+      <td>182</td>
+      <td>114</td>
+      <td>2.981166</td>
+      <td>3.637308</td>
+      <td>2.31458</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>W.P. Putrajaya</td>
+      <td>208</td>
+      <td>114</td>
+      <td>94</td>
+      <td>2.006715</td>
+      <td>2.347853</td>
+      <td>1.706082</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<h3 id="convert-to-appropriate-data-types">Convert to appropriate data types</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">cols</span> <span class="o">=</span> <span class="n">df_gen</span><span class="p">.</span><span class="n">columns</span><span class="p">.</span><span class="n">drop</span><span class="p">(</span><span class="s">'state_death'</span><span class="p">)</span>
+<span class="n">df_gen</span><span class="p">[</span><span class="n">cols</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_gen</span><span class="p">[</span><span class="n">cols</span><span class="p">].</span><span class="nb">apply</span><span class="p">(</span><span class="n">pd</span><span class="p">.</span><span class="n">to_numeric</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s">'coerce'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_gen</span><span class="p">.</span><span class="n">dtypes</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>state_death           object
+total_death            int64
+male_death             int64
+female_death           int64
+total_death_rate     float64
+male_death_rate      float64
+female_death_rate    float64
+dtype: object
+</code></pre></div></div>
+
+<h3 id="export-cleaned-table">Export cleaned table</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_gen</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>state_death</th>
+      <th>total_death</th>
+      <th>male_death</th>
+      <th>female_death</th>
+      <th>total_death_rate</th>
+      <th>male_death_rate</th>
+      <th>female_death_rate</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Johor</td>
+      <td>21776</td>
+      <td>12743</td>
+      <td>9033</td>
+      <td>5.789692</td>
+      <td>6.453459</td>
+      <td>5.056066</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Kedah</td>
+      <td>14292</td>
+      <td>8027</td>
+      <td>6265</td>
+      <td>6.574828</td>
+      <td>7.287441</td>
+      <td>5.842794</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Kelantan</td>
+      <td>11389</td>
+      <td>6436</td>
+      <td>4953</td>
+      <td>6.045617</td>
+      <td>6.759489</td>
+      <td>5.316083</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Melaka</td>
+      <td>5542</td>
+      <td>3084</td>
+      <td>2458</td>
+      <td>5.969410</td>
+      <td>6.619759</td>
+      <td>5.314342</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Negeri Sembilan</td>
+      <td>7157</td>
+      <td>4097</td>
+      <td>3060</td>
+      <td>6.355022</td>
+      <td>7.056639</td>
+      <td>5.608422</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>Pahang</td>
+      <td>9165</td>
+      <td>5381</td>
+      <td>3784</td>
+      <td>5.483302</td>
+      <td>6.067542</td>
+      <td>4.822913</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>Perak</td>
+      <td>18712</td>
+      <td>10554</td>
+      <td>8158</td>
+      <td>7.458543</td>
+      <td>8.322346</td>
+      <td>6.575591</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>Perlis</td>
+      <td>1994</td>
+      <td>1124</td>
+      <td>870</td>
+      <td>7.848910</td>
+      <td>8.886218</td>
+      <td>6.820320</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>Pulau Pinang</td>
+      <td>10879</td>
+      <td>6101</td>
+      <td>4778</td>
+      <td>6.150355</td>
+      <td>6.862011</td>
+      <td>5.431132</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>Sabah</td>
+      <td>14493</td>
+      <td>8439</td>
+      <td>6054</td>
+      <td>3.711919</td>
+      <td>4.142434</td>
+      <td>3.242217</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>Sarawak</td>
+      <td>13990</td>
+      <td>7888</td>
+      <td>6102</td>
+      <td>4.985706</td>
+      <td>5.401526</td>
+      <td>4.534463</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>Selangor</td>
+      <td>27700</td>
+      <td>16142</td>
+      <td>11558</td>
+      <td>4.257525</td>
+      <td>4.782697</td>
+      <td>3.691420</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>Terengganu</td>
+      <td>7334</td>
+      <td>4201</td>
+      <td>3133</td>
+      <td>5.893177</td>
+      <td>6.634565</td>
+      <td>5.125219</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>W.P. Kuala Lumpur</td>
+      <td>8819</td>
+      <td>5168</td>
+      <td>3651</td>
+      <td>4.947440</td>
+      <td>5.646853</td>
+      <td>4.209432</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>W.P. Labuan</td>
+      <td>296</td>
+      <td>182</td>
+      <td>114</td>
+      <td>2.981166</td>
+      <td>3.637308</td>
+      <td>2.314580</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>W.P. Putrajaya</td>
+      <td>208</td>
+      <td>114</td>
+      <td>94</td>
+      <td>2.006715</td>
+      <td>2.347853</td>
+      <td>1.706082</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_gen</span><span class="p">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s">'cleaned_data/death_rate_by_state_and_sex_2019.csv'</span><span class="p">,</span><span class="n">index</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h2 id="table-13-deaths-by-age-group-and-sex-malaysia-2019">Table 1.3: Deaths by age group and sex, Malaysia, 2019</h2>
+
+<h3 id="preview-table-1">Preview table</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">read_excel</span><span class="p">(</span><span class="n">xls</span><span class="p">,</span><span class="n">sheet_name</span><span class="o">=</span><span class="s">"1.3"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Jadual 1.3: Kematian mengikut kumpulan umur dan jantina, Malaysia, 2019</th>
+      <th>Unnamed: 1</th>
+      <th>Unnamed: 2</th>
+      <th>Unnamed: 3</th>
+      <th>Unnamed: 4</th>
+      <th>Unnamed: 5</th>
+      <th>Unnamed: 6</th>
+      <th>Unnamed: 7</th>
+      <th>Unnamed: 8</th>
+      <th>Unnamed: 9</th>
+      <th>Unnamed: 10</th>
+      <th>Unnamed: 11</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Table 1.3: Deaths by age group and sex, Malays...</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Kumpulan umur</td>
+      <td>Jumlah</td>
+      <td>Lelaki</td>
+      <td>Perempuan</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Age group</td>
+      <td>Total</td>
+      <td>Male</td>
+      <td>Female</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>Jumlah/Total</td>
+      <td>173746</td>
+      <td>99681</td>
+      <td>74065</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>Kurang 1 tahun/Under 1 year</td>
+      <td>3117</td>
+      <td>1711</td>
+      <td>1406</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>Kurang 1 hari/Under 1 day</td>
+      <td>652</td>
+      <td>351</td>
+      <td>301</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>1 hari hingga &lt; 1 minggu/1 day to &lt; 1 week</td>
+      <td>842</td>
+      <td>467</td>
+      <td>375</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>1 minggu hingga &lt; 4 minggu/1 week to &lt; 4 weeks</td>
+      <td>486</td>
+      <td>267</td>
+      <td>219</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>4 minggu hingga &lt; 3 bulan/4 weeks to &lt; 3 months</td>
+      <td>459</td>
+      <td>248</td>
+      <td>211</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>3 bulan hingga &lt; 6 bulan/3 months to &lt; 6 months</td>
+      <td>349</td>
+      <td>195</td>
+      <td>154</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>6 bulan hingga &lt; 9 bulan/6 months to &lt; 9 months</td>
+      <td>203</td>
+      <td>120</td>
+      <td>83</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>9 bulan hingga &lt; 12 bulan/9 months to &lt; 12 mon...</td>
+      <td>126</td>
+      <td>63</td>
+      <td>63</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>1 tahun/1 year</td>
+      <td>167</td>
+      <td>87</td>
+      <td>80</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>2 tahun/2 years</td>
+      <td>233</td>
+      <td>135</td>
+      <td>98</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>3 tahun/3 years</td>
+      <td>133</td>
+      <td>68</td>
+      <td>65</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>4 tahun/4 years</td>
+      <td>115</td>
+      <td>71</td>
+      <td>44</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>0-4</td>
+      <td>3765</td>
+      <td>2072</td>
+      <td>1693</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>5-9</td>
+      <td>596</td>
+      <td>352</td>
+      <td>244</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>22</th>
+      <td>10-14</td>
+      <td>656</td>
+      <td>384</td>
+      <td>272</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>23</th>
+      <td>15-19</td>
+      <td>1591</td>
+      <td>1215</td>
+      <td>376</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>24</th>
+      <td>20-24</td>
+      <td>2136</td>
+      <td>1615</td>
+      <td>521</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>25</th>
+      <td>25-29</td>
+      <td>2423</td>
+      <td>1718</td>
+      <td>705</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>26</th>
+      <td>30-34</td>
+      <td>3017</td>
+      <td>2081</td>
+      <td>936</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>27</th>
+      <td>35-39</td>
+      <td>4144</td>
+      <td>2803</td>
+      <td>1341</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>28</th>
+      <td>40-44</td>
+      <td>5591</td>
+      <td>3778</td>
+      <td>1813</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>29</th>
+      <td>45-49</td>
+      <td>7436</td>
+      <td>4944</td>
+      <td>2492</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>30</th>
+      <td>50-54</td>
+      <td>10717</td>
+      <td>6919</td>
+      <td>3798</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>31</th>
+      <td>55-59</td>
+      <td>14572</td>
+      <td>9334</td>
+      <td>5238</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>32</th>
+      <td>60-64</td>
+      <td>18046</td>
+      <td>11275</td>
+      <td>6771</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>33</th>
+      <td>65-69</td>
+      <td>19539</td>
+      <td>11855</td>
+      <td>7684</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>34</th>
+      <td>70-74</td>
+      <td>20351</td>
+      <td>11901</td>
+      <td>8450</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>35</th>
+      <td>75-79</td>
+      <td>19672</td>
+      <td>10737</td>
+      <td>8935</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>36</th>
+      <td>80-84</td>
+      <td>19479</td>
+      <td>9201</td>
+      <td>10278</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>37</th>
+      <td>85 dan lebih/85 and over</td>
+      <td>20015</td>
+      <td>7497</td>
+      <td>12518</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<h3 id="remove-unwanted-rows-and-columns-1">Remove unwanted rows and columns</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">8</span><span class="p">:</span> <span class="p">,</span> <span class="p">:]</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df</span><span class="p">.</span><span class="n">head</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Jadual 1.3: Kematian mengikut kumpulan umur dan jantina, Malaysia, 2019</th>
+      <th>Unnamed: 1</th>
+      <th>Unnamed: 2</th>
+      <th>Unnamed: 3</th>
+      <th>Unnamed: 4</th>
+      <th>Unnamed: 5</th>
+      <th>Unnamed: 6</th>
+      <th>Unnamed: 7</th>
+      <th>Unnamed: 8</th>
+      <th>Unnamed: 9</th>
+      <th>Unnamed: 10</th>
+      <th>Unnamed: 11</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>8</th>
+      <td>Kurang 1 tahun/Under 1 year</td>
+      <td>3117</td>
+      <td>1711</td>
+      <td>1406</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>Kurang 1 hari/Under 1 day</td>
+      <td>652</td>
+      <td>351</td>
+      <td>301</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>1 hari hingga &lt; 1 minggu/1 day to &lt; 1 week</td>
+      <td>842</td>
+      <td>467</td>
+      <td>375</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>1 minggu hingga &lt; 4 minggu/1 week to &lt; 4 weeks</td>
+      <td>486</td>
+      <td>267</td>
+      <td>219</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>4 minggu hingga &lt; 3 bulan/4 weeks to &lt; 3 months</td>
+      <td>459</td>
+      <td>248</td>
+      <td>211</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">.</span><span class="n">iloc</span><span class="p">[:,:</span><span class="o">-</span><span class="mi">8</span><span class="p">]</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">dict</span> <span class="o">=</span> <span class="p">{</span><span class="s">'Jadual 1.3: Kematian mengikut kumpulan umur dan jantina, Malaysia, 2019'</span><span class="p">:</span> <span class="s">'age_group'</span><span class="p">,</span>
+        <span class="s">'Unnamed: 1'</span><span class="p">:</span> <span class="s">'total_death_group'</span><span class="p">,</span>
+        <span class="s">'Unnamed: 2'</span><span class="p">:</span> <span class="s">'male_death_age'</span><span class="p">,</span>
+        <span class="s">'Unnamed: 3'</span><span class="p">:</span> <span class="s">'female_death_age'</span><span class="p">,</span>
+        <span class="p">}</span>
+
+<span class="n">df</span><span class="p">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="nb">dict</span><span class="p">,</span>
+          <span class="n">inplace</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df</span><span class="p">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df</span><span class="p">.</span><span class="n">head</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>age_group</th>
+      <th>total_death_group</th>
+      <th>male_death_age</th>
+      <th>female_death_age</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Kurang 1 tahun/Under 1 year</td>
+      <td>3117</td>
+      <td>1711</td>
+      <td>1406</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Kurang 1 hari/Under 1 day</td>
+      <td>652</td>
+      <td>351</td>
+      <td>301</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1 hari hingga &lt; 1 minggu/1 day to &lt; 1 week</td>
+      <td>842</td>
+      <td>467</td>
+      <td>375</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1 minggu hingga &lt; 4 minggu/1 week to &lt; 4 weeks</td>
+      <td>486</td>
+      <td>267</td>
+      <td>219</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>4 minggu hingga &lt; 3 bulan/4 weeks to &lt; 3 months</td>
+      <td>459</td>
+      <td>248</td>
+      <td>211</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df</span><span class="p">[</span><span class="s">'age_group'</span><span class="p">]</span><span class="o">=</span><span class="n">df</span><span class="p">.</span><span class="n">age_group</span><span class="p">.</span><span class="nb">str</span><span class="p">.</span><span class="n">replace</span><span class="p">(</span><span class="s">".*/"</span><span class="p">,</span> <span class="s">''</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;ipython-input-219-bda0008f5b22&gt;:1: FutureWarning: The default value of regex will change from True to False in a future version.
+  df['age_group']=df.age_group.str.replace(".*/", '')
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df</span><span class="p">.</span><span class="n">head</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>age_group</th>
+      <th>total_death_group</th>
+      <th>male_death_age</th>
+      <th>female_death_age</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Under 1 year</td>
+      <td>3117</td>
+      <td>1711</td>
+      <td>1406</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Under 1 day</td>
+      <td>652</td>
+      <td>351</td>
+      <td>301</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1 day to &lt; 1 week</td>
+      <td>842</td>
+      <td>467</td>
+      <td>375</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1 week to &lt; 4 weeks</td>
+      <td>486</td>
+      <td>267</td>
+      <td>219</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>4 weeks to &lt; 3 months</td>
+      <td>459</td>
+      <td>248</td>
+      <td>211</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df</span><span class="p">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s">'cleaned_data/death_rate_by_age_group_and_sex_2019.csv'</span><span class="p">,</span><span class="n">index</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h2 id="table-16-ten-principal-causes-of-death-medically-certified-and-non-medically-certified-by-sex-malaysia-2019">Table 1.6: Ten principal causes of death (medically certified and non-medically certified) by sex, Malaysia, 2019</h2>
+
+<h3 id="preview-table-2">Preview table</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">read_excel</span><span class="p">(</span><span class="n">xls</span><span class="p">,</span><span class="n">sheet_name</span><span class="o">=</span><span class="sa">r</span><span class="s">"1.6(1)"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Jadual 1.6: Sepuluh sebab kematian utama (disahkan dan tidak disahkan secara perubatan)</th>
+      <th>Unnamed: 1</th>
+      <th>Unnamed: 2</th>
+      <th>Unnamed: 3</th>
+      <th>Unnamed: 4</th>
+      <th>Unnamed: 5</th>
+      <th>Unnamed: 6</th>
+      <th>Unnamed: 7</th>
+      <th>Unnamed: 8</th>
+      <th>Unnamed: 9</th>
+      <th>Unnamed: 10</th>
+      <th>Unnamed: 11</th>
+      <th>Unnamed: 12</th>
+      <th>Unnamed: 13</th>
+      <th>Unnamed: 14</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>NaN</td>
+      <td>mengikut jantina, Malaysia, 2019</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Table 1.6: Ten principal causes of death (medi...</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Jumlah/Total</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>NaN</td>
+      <td>Disahkan secara perubatan</td>
+      <td>Bil.</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>NaN</td>
+      <td>Medically certified</td>
+      <td>No.</td>
+      <td>%</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>1.</td>
+      <td>Ischaemic heart diseases</td>
+      <td>16325</td>
+      <td>14.954564</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>2.</td>
+      <td>Pneumonia</td>
+      <td>13356</td>
+      <td>12.234803</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>3.</td>
+      <td>Cerebrovascular diseases</td>
+      <td>8691</td>
+      <td>7.961416</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>4.</td>
+      <td>Transport accidents</td>
+      <td>4198</td>
+      <td>3.84559</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>5.</td>
+      <td>Malignant neoplasm of trachea, bronchus and lung</td>
+      <td>2602</td>
+      <td>2.38357</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>6.</td>
+      <td>Chronic lower respiratory diseases</td>
+      <td>2312</td>
+      <td>2.117914</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>7.</td>
+      <td>Diabetes mellitus</td>
+      <td>2008</td>
+      <td>1.839434</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>8.</td>
+      <td>Malignant neoplasm of colon, rectum and anus</td>
+      <td>1873</td>
+      <td>1.715767</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>9.</td>
+      <td>Malignant neoplasm of breast</td>
+      <td>1869</td>
+      <td>1.712103</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>10.</td>
+      <td>Diseases of the liver</td>
+      <td>1601</td>
+      <td>1.466601</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>NaN</td>
+      <td>Keseluruhan sebab                           ...</td>
+      <td>109164</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>NaN</td>
+      <td>Tidak disahkan secara perubatan</td>
+      <td>Bil.</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>NaN</td>
+      <td>Non-medically certified</td>
+      <td>No.</td>
+      <td>%</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>22</th>
+      <td>1.</td>
+      <td>Sakit tua 65 tahun dan lebih                  ...</td>
+      <td>30665</td>
+      <td>47.482271</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>23</th>
+      <td>2.</td>
+      <td>Darah tinggi                                  ...</td>
+      <td>2393</td>
+      <td>3.705367</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>24</th>
+      <td>3.</td>
+      <td>Kencing manis                                 ...</td>
+      <td>1997</td>
+      <td>3.092193</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>25</th>
+      <td>4.</td>
+      <td>Penyakit serebrovaskular                      ...</td>
+      <td>1708</td>
+      <td>2.6447</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>26</th>
+      <td>5.</td>
+      <td>Lelah                                         ...</td>
+      <td>1076</td>
+      <td>1.66455</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>27</th>
+      <td>6.</td>
+      <td>Penyakit jantung iskemia                      ...</td>
+      <td>1023</td>
+      <td>1.584033</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>28</th>
+      <td>7.</td>
+      <td>Barah trakea, bronkus dan paru-paru           ...</td>
+      <td>742</td>
+      <td>1.148927</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>29</th>
+      <td>8.</td>
+      <td>Barah kolon, rektum dan dubur                 ...</td>
+      <td>715</td>
+      <td>1.10712</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>30</th>
+      <td>9.</td>
+      <td>Barah hati                                    ...</td>
+      <td>533</td>
+      <td>0.825307</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>31</th>
+      <td>10.</td>
+      <td>Barah payu dara                               ...</td>
+      <td>524</td>
+      <td>0.811372</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>32</th>
+      <td>NaN</td>
+      <td>Keseluruhan sebab                           ...</td>
+      <td>64582</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<h3 id="remove-unwanted-rows-and-columns-2">Remove unwanted rows and columns</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">1</span><span class="p">:]</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">.</span><span class="n">iloc</span><span class="p">[:,:</span><span class="o">-</span><span class="mi">11</span><span class="p">]</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">7</span><span class="p">:</span> <span class="p">,</span> <span class="p">:]</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Unnamed: 1</th>
+      <th>Unnamed: 2</th>
+      <th>Unnamed: 3</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>7</th>
+      <td>Ischaemic heart diseases</td>
+      <td>16325</td>
+      <td>14.954564</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>Pneumonia</td>
+      <td>13356</td>
+      <td>12.234803</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>Cerebrovascular diseases</td>
+      <td>8691</td>
+      <td>7.961416</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>Transport accidents</td>
+      <td>4198</td>
+      <td>3.84559</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>Malignant neoplasm of trachea, bronchus and lung</td>
+      <td>2602</td>
+      <td>2.38357</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>Chronic lower respiratory diseases</td>
+      <td>2312</td>
+      <td>2.117914</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>Diabetes mellitus</td>
+      <td>2008</td>
+      <td>1.839434</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>Malignant neoplasm of colon, rectum and anus</td>
+      <td>1873</td>
+      <td>1.715767</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>Malignant neoplasm of breast</td>
+      <td>1869</td>
+      <td>1.712103</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>Diseases of the liver</td>
+      <td>1601</td>
+      <td>1.466601</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>Keseluruhan sebab                           ...</td>
+      <td>109164</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>Tidak disahkan secara perubatan</td>
+      <td>Bil.</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>Non-medically certified</td>
+      <td>No.</td>
+      <td>%</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>22</th>
+      <td>Sakit tua 65 tahun dan lebih                  ...</td>
+      <td>30665</td>
+      <td>47.482271</td>
+    </tr>
+    <tr>
+      <th>23</th>
+      <td>Darah tinggi                                  ...</td>
+      <td>2393</td>
+      <td>3.705367</td>
+    </tr>
+    <tr>
+      <th>24</th>
+      <td>Kencing manis                                 ...</td>
+      <td>1997</td>
+      <td>3.092193</td>
+    </tr>
+    <tr>
+      <th>25</th>
+      <td>Penyakit serebrovaskular                      ...</td>
+      <td>1708</td>
+      <td>2.6447</td>
+    </tr>
+    <tr>
+      <th>26</th>
+      <td>Lelah                                         ...</td>
+      <td>1076</td>
+      <td>1.66455</td>
+    </tr>
+    <tr>
+      <th>27</th>
+      <td>Penyakit jantung iskemia                      ...</td>
+      <td>1023</td>
+      <td>1.584033</td>
+    </tr>
+    <tr>
+      <th>28</th>
+      <td>Barah trakea, bronkus dan paru-paru           ...</td>
+      <td>742</td>
+      <td>1.148927</td>
+    </tr>
+    <tr>
+      <th>29</th>
+      <td>Barah kolon, rektum dan dubur                 ...</td>
+      <td>715</td>
+      <td>1.10712</td>
+    </tr>
+    <tr>
+      <th>30</th>
+      <td>Barah hati                                    ...</td>
+      <td>533</td>
+      <td>0.825307</td>
+    </tr>
+    <tr>
+      <th>31</th>
+      <td>Barah payu dara                               ...</td>
+      <td>524</td>
+      <td>0.811372</td>
+    </tr>
+    <tr>
+      <th>32</th>
+      <td>Keseluruhan sebab                           ...</td>
+      <td>64582</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<h3 id="rename-columns-1">Rename Columns</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">dict</span> <span class="o">=</span> <span class="p">{</span><span class="s">'Unnamed: 1'</span><span class="p">:</span> <span class="s">'death_cause'</span><span class="p">,</span>
+        <span class="s">'Unnamed: 2'</span><span class="p">:</span> <span class="s">'death_count'</span><span class="p">,</span>
+        <span class="s">'Unnamed: 3'</span><span class="p">:</span> <span class="s">'percentage'</span><span class="p">,</span>
+       <span class="p">}</span>
+
+<span class="n">df</span><span class="p">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="nb">dict</span><span class="p">,</span>
+          <span class="n">inplace</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="split-tables">Split tables</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_med</span> <span class="o">=</span> <span class="n">df</span><span class="p">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">10</span> <span class="p">,</span> <span class="p">:]</span>
+<span class="n">df_xmed</span> <span class="o">=</span> <span class="n">df</span><span class="p">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">15</span><span class="p">:</span><span class="mi">25</span> <span class="p">,</span> <span class="p">:]</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>death_cause</th>
+      <th>death_count</th>
+      <th>percentage</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>7</th>
+      <td>Ischaemic heart diseases</td>
+      <td>16325</td>
+      <td>14.954564</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>Pneumonia</td>
+      <td>13356</td>
+      <td>12.234803</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>Cerebrovascular diseases</td>
+      <td>8691</td>
+      <td>7.961416</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>Transport accidents</td>
+      <td>4198</td>
+      <td>3.84559</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>Malignant neoplasm of trachea, bronchus and lung</td>
+      <td>2602</td>
+      <td>2.38357</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>Chronic lower respiratory diseases</td>
+      <td>2312</td>
+      <td>2.117914</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>Diabetes mellitus</td>
+      <td>2008</td>
+      <td>1.839434</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>Malignant neoplasm of colon, rectum and anus</td>
+      <td>1873</td>
+      <td>1.715767</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>Malignant neoplasm of breast</td>
+      <td>1869</td>
+      <td>1.712103</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>Diseases of the liver</td>
+      <td>1601</td>
+      <td>1.466601</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>Keseluruhan sebab                           ...</td>
+      <td>109164</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>Tidak disahkan secara perubatan</td>
+      <td>Bil.</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>Non-medically certified</td>
+      <td>No.</td>
+      <td>%</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>22</th>
+      <td>Sakit tua 65 tahun dan lebih                  ...</td>
+      <td>30665</td>
+      <td>47.482271</td>
+    </tr>
+    <tr>
+      <th>23</th>
+      <td>Darah tinggi                                  ...</td>
+      <td>2393</td>
+      <td>3.705367</td>
+    </tr>
+    <tr>
+      <th>24</th>
+      <td>Kencing manis                                 ...</td>
+      <td>1997</td>
+      <td>3.092193</td>
+    </tr>
+    <tr>
+      <th>25</th>
+      <td>Penyakit serebrovaskular                      ...</td>
+      <td>1708</td>
+      <td>2.6447</td>
+    </tr>
+    <tr>
+      <th>26</th>
+      <td>Lelah                                         ...</td>
+      <td>1076</td>
+      <td>1.66455</td>
+    </tr>
+    <tr>
+      <th>27</th>
+      <td>Penyakit jantung iskemia                      ...</td>
+      <td>1023</td>
+      <td>1.584033</td>
+    </tr>
+    <tr>
+      <th>28</th>
+      <td>Barah trakea, bronkus dan paru-paru           ...</td>
+      <td>742</td>
+      <td>1.148927</td>
+    </tr>
+    <tr>
+      <th>29</th>
+      <td>Barah kolon, rektum dan dubur                 ...</td>
+      <td>715</td>
+      <td>1.10712</td>
+    </tr>
+    <tr>
+      <th>30</th>
+      <td>Barah hati                                    ...</td>
+      <td>533</td>
+      <td>0.825307</td>
+    </tr>
+    <tr>
+      <th>31</th>
+      <td>Barah payu dara                               ...</td>
+      <td>524</td>
+      <td>0.811372</td>
+    </tr>
+    <tr>
+      <th>32</th>
+      <td>Keseluruhan sebab                           ...</td>
+      <td>64582</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<h3 id="certification-label">Certification Label</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_med</span><span class="p">[</span><span class="s">'certification'</span><span class="p">]</span> <span class="o">=</span> <span class="s">'medical'</span>
+<span class="n">df_xmed</span><span class="p">[</span><span class="s">'certification'</span><span class="p">]</span> <span class="o">=</span> <span class="s">'non-medical'</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;ipython-input-231-738d62170e63&gt;:1: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  df_med['certification'] = 'medical'
+&lt;ipython-input-231-738d62170e63&gt;:2: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  df_xmed['certification'] = 'non-medical'
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_xmed</span><span class="p">[</span><span class="s">'death_cause'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_xmed</span><span class="p">.</span><span class="n">death_cause</span><span class="p">.</span><span class="nb">str</span><span class="p">.</span><span class="n">replace</span><span class="p">(</span><span class="s">'  +'</span><span class="p">,</span> <span class="s">'/'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;ipython-input-232-58ca563d90ad&gt;:1: FutureWarning: The default value of regex will change from True to False in a future version.
+  df_xmed['death_cause'] = df_xmed.death_cause.str.replace('  +', '/')
+&lt;ipython-input-232-58ca563d90ad&gt;:1: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  df_xmed['death_cause'] = df_xmed.death_cause.str.replace('  +', '/')
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_xmed</span><span class="p">[</span><span class="s">'death_cause'</span><span class="p">]</span><span class="o">=</span><span class="n">df_xmed</span><span class="p">.</span><span class="n">death_cause</span><span class="p">.</span><span class="nb">str</span><span class="p">.</span><span class="n">replace</span><span class="p">(</span><span class="s">".*/"</span><span class="p">,</span> <span class="s">''</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;ipython-input-233-d35e3569a3bb&gt;:1: FutureWarning: The default value of regex will change from True to False in a future version.
+  df_xmed['death_cause']=df_xmed.death_cause.str.replace(".*/", '')
+&lt;ipython-input-233-d35e3569a3bb&gt;:1: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  df_xmed['death_cause']=df_xmed.death_cause.str.replace(".*/", '')
+</code></pre></div></div>
+
+<h3 id="combine-dataframes">Combine DataFrames</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df</span> <span class="o">=</span> <span class="n">df_med</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">df_xmed</span><span class="p">,</span><span class="n">ignore_index</span> <span class="o">=</span> <span class="bp">True</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="reset-index-1">Reset Index</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df</span><span class="p">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span><span class="n">inplace</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>death_cause</th>
+      <th>death_count</th>
+      <th>percentage</th>
+      <th>certification</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Ischaemic heart diseases</td>
+      <td>16325</td>
+      <td>14.954564</td>
+      <td>medical</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Pneumonia</td>
+      <td>13356</td>
+      <td>12.234803</td>
+      <td>medical</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Cerebrovascular diseases</td>
+      <td>8691</td>
+      <td>7.961416</td>
+      <td>medical</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Transport accidents</td>
+      <td>4198</td>
+      <td>3.84559</td>
+      <td>medical</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Malignant neoplasm of trachea, bronchus and lung</td>
+      <td>2602</td>
+      <td>2.38357</td>
+      <td>medical</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>Chronic lower respiratory diseases</td>
+      <td>2312</td>
+      <td>2.117914</td>
+      <td>medical</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>Diabetes mellitus</td>
+      <td>2008</td>
+      <td>1.839434</td>
+      <td>medical</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>Malignant neoplasm of colon, rectum and anus</td>
+      <td>1873</td>
+      <td>1.715767</td>
+      <td>medical</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>Malignant neoplasm of breast</td>
+      <td>1869</td>
+      <td>1.712103</td>
+      <td>medical</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>Diseases of the liver</td>
+      <td>1601</td>
+      <td>1.466601</td>
+      <td>medical</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>Old age 65 years and over</td>
+      <td>30665</td>
+      <td>47.482271</td>
+      <td>non-medical</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>Hypertension</td>
+      <td>2393</td>
+      <td>3.705367</td>
+      <td>non-medical</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>Diabetes mellitus</td>
+      <td>1997</td>
+      <td>3.092193</td>
+      <td>non-medical</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>Cerebrovascular diseases</td>
+      <td>1708</td>
+      <td>2.6447</td>
+      <td>non-medical</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>Asthma</td>
+      <td>1076</td>
+      <td>1.66455</td>
+      <td>non-medical</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>Ischaemic heart diseases</td>
+      <td>1023</td>
+      <td>1.584033</td>
+      <td>non-medical</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>Trachea, bronchus and lung cancer</td>
+      <td>742</td>
+      <td>1.148927</td>
+      <td>non-medical</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>Colon, rectum and anus cancer</td>
+      <td>715</td>
+      <td>1.10712</td>
+      <td>non-medical</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>Liver cancer</td>
+      <td>533</td>
+      <td>0.825307</td>
+      <td>non-medical</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>Breast cancer</td>
+      <td>524</td>
+      <td>0.811372</td>
+      <td>non-medical</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<h3 id="export-cleaned-table-1">Export Cleaned Table</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df</span><span class="p">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s">'cleaned_data/death_causes_2019.csv'</span><span class="p">,</span><span class="n">index</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h1 id="visualization">Visualization</h1>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="n">sns</span>
+</code></pre></div></div>
+
+<h2 id="death-by-gender-in-2019">Death by gender in 2019</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s">'cleaned_data/death_rate_by_age_group_and_sex_2019.csv'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df</span><span class="p">.</span><span class="n">head</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>age_group</th>
+      <th>total_death_group</th>
+      <th>male_death_age</th>
+      <th>female_death_age</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Under 1 year</td>
+      <td>3117</td>
+      <td>1711</td>
+      <td>1406</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Under 1 day</td>
+      <td>652</td>
+      <td>351</td>
+      <td>301</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1 day to &lt; 1 week</td>
+      <td>842</td>
+      <td>467</td>
+      <td>375</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1 week to &lt; 4 weeks</td>
+      <td>486</td>
+      <td>267</td>
+      <td>219</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>4 weeks to &lt; 3 months</td>
+      <td>459</td>
+      <td>248</td>
+      <td>211</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="n">sns</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">5</span><span class="p">),</span><span class="n">facecolor</span><span class="o">=</span><span class="s">'1'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">title</span><span class="p">(</span><span class="s">"Death by age group in Malaysia"</span><span class="p">)</span>
+
+
+<span class="n">sns</span><span class="p">.</span><span class="n">barplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">df</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s">'age_group'</span><span class="p">,</span><span class="n">y</span><span class="o">=</span><span class="s">'total_death_group'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">rotation</span><span class="o">=</span><span class="mi">90</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><img src="output_69_0.png" alt="png" /></p>
+
+<p><strong>Description</strong>: From the graph, we can see the distribution of total death count by age group in Malaysia. From the graph, we can see that people in Malaysia mostly died at the age 70-74 which is nearly 20k deaths.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">5</span><span class="p">),</span><span class="n">facecolor</span><span class="o">=</span><span class="s">'1'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">title</span><span class="p">(</span><span class="s">"Male Death Age in Malaysia"</span><span class="p">)</span>
+
+
+<span class="n">sns</span><span class="p">.</span><span class="n">barplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">df</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s">'age_group'</span><span class="p">,</span><span class="n">y</span><span class="o">=</span><span class="s">'male_death_age'</span><span class="p">,</span><span class="n">palette</span><span class="o">=</span><span class="s">'mako'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">rotation</span><span class="o">=</span><span class="mi">90</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><img src="output_71_0.png" alt="png" /></p>
+
+<p><strong>Description</strong>: From the graph, we can see the distribution of death count of males by age group in Malaysia. From the graph, we can see that men in Malaysia mostly died at the age 70-74 which is nearly 12k deaths.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">5</span><span class="p">),</span><span class="n">facecolor</span><span class="o">=</span><span class="s">'1'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">title</span><span class="p">(</span><span class="s">"Female Death Age in Malaysia"</span><span class="p">)</span>
+
+
+<span class="n">sns</span><span class="p">.</span><span class="n">barplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">df</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s">'age_group'</span><span class="p">,</span><span class="n">y</span><span class="o">=</span><span class="s">'female_death_age'</span><span class="p">,</span><span class="n">palette</span><span class="o">=</span><span class="s">'plasma'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">rotation</span><span class="o">=</span><span class="mi">90</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><img src="output_73_0.png" alt="png" /></p>
+
+<p><strong>Description</strong>: From the graph, we can see the distribution of death count of females by age group in Malaysia. From the graph, we can see that women in Malaysia mostly died at the age 85 and over which is more than 12k deaths.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">max_male_age</span> <span class="o">=</span> <span class="n">df</span><span class="p">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="p">.</span><span class="n">male_death_age</span> <span class="o">==</span> <span class="n">df</span><span class="p">.</span><span class="n">male_death_age</span><span class="p">.</span><span class="nb">max</span><span class="p">(),</span> <span class="s">'age_group'</span><span class="p">].</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">max_female_age</span> <span class="o">=</span> <span class="n">df</span><span class="p">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="p">.</span><span class="n">female_death_age</span> <span class="o">==</span> <span class="n">df</span><span class="p">.</span><span class="n">female_death_age</span><span class="p">.</span><span class="nb">max</span><span class="p">(),</span> <span class="s">'age_group'</span><span class="p">].</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="k">print</span><span class="p">(</span><span class="s">'Most male in Malaysia died between '</span><span class="o">+</span><span class="n">max_male_age</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s">'Most female in Malaysia died between '</span><span class="o">+</span><span class="n">max_female_age</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Most male in Malaysia died between 70-74 
+Most female in Malaysia died between 85 and over
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df</span><span class="p">[</span><span class="s">'male_death_sum'</span><span class="p">]</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s">'male_death_age'</span><span class="p">].</span><span class="nb">sum</span><span class="p">()</span>
+<span class="n">df</span><span class="p">[</span><span class="s">'female_death_sum'</span><span class="p">]</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s">'female_death_age'</span><span class="p">].</span><span class="nb">sum</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">5</span><span class="p">),</span><span class="n">facecolor</span><span class="o">=</span><span class="s">'1'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">title</span><span class="p">(</span><span class="s">"Death age by gender in Malaysia"</span><span class="p">)</span>
+<span class="n">sns</span><span class="p">.</span><span class="n">barplot</span><span class="p">(</span><span class="s">'age_group'</span><span class="p">,</span> <span class="s">'value'</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s">'variable'</span><span class="p">,</span> <span class="n">palette</span><span class="o">=</span><span class="s">'mako'</span><span class="p">,</span>
+             <span class="n">data</span><span class="o">=</span><span class="n">pd</span><span class="p">.</span><span class="n">melt</span><span class="p">(</span><span class="n">df</span><span class="p">[[</span><span class="s">'male_death_age'</span><span class="p">,</span><span class="s">'female_death_age'</span><span class="p">,</span><span class="s">'age_group'</span><span class="p">]],</span> <span class="s">'age_group'</span><span class="p">))</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">rotation</span><span class="o">=</span><span class="mi">90</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>C:\Users\Haziq\Anaconda3\lib\site-packages\seaborn\_decorators.py:36: FutureWarning: Pass the following variables as keyword args: x, y. From version 0.12, the only valid positional argument will be `data`, and passing other arguments without an explicit keyword will result in an error or misinterpretation.
+  warnings.warn(
+</code></pre></div></div>
+
+<p><img src="output_77_1.png" alt="png" /></p>
+
+<p><strong>Description</strong>: From the graph, we can see the comparison of death count of females and males by age group in Malaysia. From the graph, we can see that more men died and live shorter in comparison women in Malaysia.</p>
+
+<h2 id="death-by-gender-in-2019-1">Death by gender in 2019</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s">'cleaned_data/death_causes_2019.csv'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df</span><span class="p">.</span><span class="n">tail</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>death_cause</th>
+      <th>death_count</th>
+      <th>percentage</th>
+      <th>certification</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>15</th>
+      <td>Ischaemic heart diseases</td>
+      <td>1023</td>
+      <td>1.584033</td>
+      <td>non-medical</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>Trachea, bronchus and lung cancer</td>
+      <td>742</td>
+      <td>1.148927</td>
+      <td>non-medical</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>Colon, rectum and anus cancer</td>
+      <td>715</td>
+      <td>1.107120</td>
+      <td>non-medical</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>Liver cancer</td>
+      <td>533</td>
+      <td>0.825307</td>
+      <td>non-medical</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>Breast cancer</td>
+      <td>524</td>
+      <td>0.811372</td>
+      <td>non-medical</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">5</span><span class="p">),</span><span class="n">facecolor</span><span class="o">=</span><span class="s">'1'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">title</span><span class="p">(</span><span class="s">"Death causes by medical certification in Malaysia"</span><span class="p">)</span>
+<span class="n">sns</span><span class="p">.</span><span class="n">barplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">df</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s">'death_count'</span><span class="p">,</span><span class="n">y</span><span class="o">=</span><span class="s">'death_cause'</span><span class="p">,</span><span class="n">hue</span><span class="o">=</span><span class="s">'certification'</span><span class="p">,</span><span class="n">palette</span><span class="o">=</span><span class="s">'mako'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">rotation</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><img src="output_82_0.png" alt="png" /></p>
+
+<p><strong>Description</strong>: The bar chart shows the major cause of death in Malaysia, grouped into medical and non-medical certified cases. Here, we can see that most of the medically certified death is caused by isochaemic heart diseases. Old age 65 years and over is the most non-medically certified death in Malaysia.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_med</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s">'certification'</span><span class="p">]</span><span class="o">==</span><span class="s">'medical'</span><span class="p">]</span>
+<span class="n">df_nmed</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s">'certification'</span><span class="p">]</span><span class="o">==</span><span class="s">'non-medical'</span><span class="p">]</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_nmed</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>death_cause</th>
+      <th>death_count</th>
+      <th>percentage</th>
+      <th>certification</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>10</th>
+      <td>Old age 65 years and over</td>
+      <td>30665</td>
+      <td>47.482271</td>
+      <td>non-medical</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>Hypertension</td>
+      <td>2393</td>
+      <td>3.705367</td>
+      <td>non-medical</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>Diabetes mellitus</td>
+      <td>1997</td>
+      <td>3.092193</td>
+      <td>non-medical</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>Cerebrovascular diseases</td>
+      <td>1708</td>
+      <td>2.644700</td>
+      <td>non-medical</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>Asthma</td>
+      <td>1076</td>
+      <td>1.664550</td>
+      <td>non-medical</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>Ischaemic heart diseases</td>
+      <td>1023</td>
+      <td>1.584033</td>
+      <td>non-medical</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>Trachea, bronchus and lung cancer</td>
+      <td>742</td>
+      <td>1.148927</td>
+      <td>non-medical</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>Colon, rectum and anus cancer</td>
+      <td>715</td>
+      <td>1.107120</td>
+      <td>non-medical</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>Liver cancer</td>
+      <td>533</td>
+      <td>0.825307</td>
+      <td>non-medical</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>Breast cancer</td>
+      <td>524</td>
+      <td>0.811372</td>
+      <td>non-medical</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">squarify</span>
+
+<span class="n">df_med</span><span class="p">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s">'death_count'</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">26</span><span class="p">,</span><span class="mi">8</span><span class="p">))</span>
+<span class="n">squarify</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">sizes</span><span class="o">=</span><span class="n">df_med</span><span class="p">[</span><span class="s">'death_count'</span><span class="p">],</span> 
+                <span class="n">label</span><span class="o">=</span><span class="n">df_med</span><span class="p">[</span><span class="s">'death_cause'</span><span class="p">][:</span><span class="mi">10</span><span class="p">],</span> 
+                <span class="n">alpha</span><span class="o">=</span><span class="p">.</span><span class="mi">8</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">axis</span><span class="p">(</span><span class="s">'off'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;ipython-input-253-49e775037926&gt;:3: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  df_med.sort_values('death_count', ascending=False, inplace=True)
+</code></pre></div></div>
+
+<p><img src="output_86_1.png" alt="png" /></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">squarify</span>
+
+<span class="n">df_nmed</span><span class="p">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s">'death_count'</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">26</span><span class="p">,</span><span class="mi">8</span><span class="p">))</span>
+<span class="n">squarify</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">sizes</span><span class="o">=</span><span class="n">df_nmed</span><span class="p">[</span><span class="s">'death_count'</span><span class="p">],</span> 
+                <span class="n">label</span><span class="o">=</span><span class="n">df_nmed</span><span class="p">[</span><span class="s">'death_cause'</span><span class="p">][:</span><span class="mi">10</span><span class="p">],</span> 
+                <span class="n">alpha</span><span class="o">=</span><span class="p">.</span><span class="mi">8</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">axis</span><span class="p">(</span><span class="s">'off'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;ipython-input-254-61ce348f60b8&gt;:3: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  df_nmed.sort_values('death_count', ascending=False, inplace=True)
+</code></pre></div></div>
+
+<p><img src="output_87_1.png" alt="png" /></p>
+
+<h2 id="death-by-state-in-2019">Death by state in 2019</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s">'cleaned_data/death_rate_by_state_and_sex_2019.csv'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df</span><span class="p">.</span><span class="n">head</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>state_death</th>
+      <th>total_death</th>
+      <th>male_death</th>
+      <th>female_death</th>
+      <th>total_death_rate</th>
+      <th>male_death_rate</th>
+      <th>female_death_rate</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Johor</td>
+      <td>21776</td>
+      <td>12743</td>
+      <td>9033</td>
+      <td>5.789692</td>
+      <td>6.453459</td>
+      <td>5.056066</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Kedah</td>
+      <td>14292</td>
+      <td>8027</td>
+      <td>6265</td>
+      <td>6.574828</td>
+      <td>7.287441</td>
+      <td>5.842794</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Kelantan</td>
+      <td>11389</td>
+      <td>6436</td>
+      <td>4953</td>
+      <td>6.045617</td>
+      <td>6.759489</td>
+      <td>5.316083</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Melaka</td>
+      <td>5542</td>
+      <td>3084</td>
+      <td>2458</td>
+      <td>5.969410</td>
+      <td>6.619759</td>
+      <td>5.314342</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Negeri Sembilan</td>
+      <td>7157</td>
+      <td>4097</td>
+      <td>3060</td>
+      <td>6.355022</td>
+      <td>7.056639</td>
+      <td>5.608422</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">5</span><span class="p">),</span><span class="n">facecolor</span><span class="o">=</span><span class="s">'1'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">title</span><span class="p">(</span><span class="sa">r</span><span class="s">"Death age by state and gender in Malaysia (2019)"</span><span class="p">)</span>
+<span class="n">sns</span><span class="p">.</span><span class="n">barplot</span><span class="p">(</span><span class="s">'state_death'</span><span class="p">,</span> <span class="s">'value'</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s">'variable'</span><span class="p">,</span> <span class="n">palette</span><span class="o">=</span><span class="s">'mako'</span><span class="p">,</span>
+             <span class="n">data</span><span class="o">=</span><span class="n">pd</span><span class="p">.</span><span class="n">melt</span><span class="p">(</span><span class="n">df</span><span class="p">[[</span><span class="s">'male_death'</span><span class="p">,</span><span class="s">'female_death'</span><span class="p">,</span><span class="s">'state_death'</span><span class="p">]],</span> <span class="s">'state_death'</span><span class="p">))</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">rotation</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>C:\Users\Haziq\Anaconda3\lib\site-packages\seaborn\_decorators.py:36: FutureWarning: Pass the following variables as keyword args: x, y. From version 0.12, the only valid positional argument will be `data`, and passing other arguments without an explicit keyword will result in an error or misinterpretation.
+  warnings.warn(
+</code></pre></div></div>
+
+<p><img src="output_91_1.png" alt="png" /></p>
+
+<p><strong>Description</strong>: From the chart, we can se that Selangor recorded the most death cases in Malaysia.In contrast, W.P. Putrajaya recorded the least death case. Overall, we can see that all of the states recorded more death for men than women.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">5</span><span class="p">),</span><span class="n">facecolor</span><span class="o">=</span><span class="s">'1'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">title</span><span class="p">(</span><span class="sa">r</span><span class="s">"Death rate per 1000 people by state and gender in Malaysia (2019)"</span><span class="p">)</span>
+
+<span class="n">sns</span><span class="p">.</span><span class="n">barplot</span><span class="p">(</span><span class="s">'state_death'</span><span class="p">,</span> <span class="s">'value'</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s">'variable'</span><span class="p">,</span> <span class="n">palette</span><span class="o">=</span><span class="s">'mako'</span><span class="p">,</span>
+             <span class="n">data</span><span class="o">=</span><span class="n">pd</span><span class="p">.</span><span class="n">melt</span><span class="p">(</span><span class="n">df</span><span class="p">[[</span><span class="s">'male_death_rate'</span><span class="p">,</span><span class="s">'female_death_rate'</span><span class="p">,</span><span class="s">'total_death_rate'</span><span class="p">,</span><span class="s">'state_death'</span><span class="p">]],</span> <span class="s">'state_death'</span><span class="p">))</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">rotation</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>C:\Users\Haziq\Anaconda3\lib\site-packages\seaborn\_decorators.py:36: FutureWarning: Pass the following variables as keyword args: x, y. From version 0.12, the only valid positional argument will be `data`, and passing other arguments without an explicit keyword will result in an error or misinterpretation.
+  warnings.warn(
+</code></pre></div></div>
+
+<p><img src="output_93_1.png" alt="png" /></p>
+
+<p><strong>Description</strong>: The bar chart shows the death rate per 1000 people by state and gender in Malaysia. Here, we can see that Perlis recorded the highest total death rate for both gender in Malaysia. In contrast, W.P. Putrajaya have the lowest death rate for both genders. For all of the states, we can see that men have a higher death rate than women.</p>
+
+</div>
+  </main>
+
+  <footer class="mt-auto py-3 text-center">
+
+  <small class="text-muted mb-2">
+    <i class="fas fa-code"></i> with <i class="fas fa-heart"></i>
+    by <strong>Ameer Haziq Basharuddin</strong>
+  </small>
+
+  <div class="container-fluid justify-content-center"><a class="social mx-1"  href="mailto:ameerhaziq.work@gmail.com"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#db4437'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fas fa-envelope fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.github.com/ameerhaziq20"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#333333'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-github fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.instagram.com/emyrbreezy"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#405de6'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-instagram fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.linkedin.com/in/ameer-haziq-basharuddin-89593520a/"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#007bb5'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-linkedin-in fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.twitter.com/frisk__y"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#1da1f2'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-twitter fa-1x"></i>
+    </a>
+
+</div><small id="attribution">
+    theme <a href="https://github.com/YoussefRaafatNasry/portfolYOU">portfolYOU</a>
+  </small>
+  
+</footer>
+
+  
+  <!-- GitHub Buttons -->
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+
+<!-- jQuery CDN -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<!-- Popper.js CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"></script>
+
+<!-- Bootstrap JS CDN -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<!-- wow.js CDN & Activation -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.js"></script>
+<script> new WOW().init(); </script>
+
+<!-- Initialize all tooltips -->
+<script>
+$(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+})
+</script>
+
+
+</body>
+
+</html>
