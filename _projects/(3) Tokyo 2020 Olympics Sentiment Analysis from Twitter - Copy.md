@@ -1,6 +1,6 @@
 ---
 name: Tokyo 2020 Olympics Sentiment Analysis from Twitter using Tweepy
-tools: [Python, Jupyter Notebook, Pandas, nltk, scikit-learn,Tweepy]
+tools: [Python, Pandas, nltk, scikit-learn, Tweepy, Matplotlib, Seaborn]
 image: https://cdn-japantimes.com/wp-content/uploads/2021/01/np_file_63428.jpeg
 description: Find out the the worlds reaction on the 2020 Summer Olympics Tokyo.
 ---

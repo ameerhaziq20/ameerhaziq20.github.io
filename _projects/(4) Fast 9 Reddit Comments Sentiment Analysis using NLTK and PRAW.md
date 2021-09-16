@@ -1,6 +1,6 @@
 ---
 name: Fast 9 Reddit Comments Sentiment Analysis using NLTK and PRAW
-tools: [Python, Jupyter Notebook, Pandas, nltk, PRAW]
+tools: [Python, Pandas, nltk, PRAW, Matplotlib, Seaborn]
 image: https://i.ytimg.com/vi/bMw-BlfIb30/maxresdefault.jpg
 description: Let's see how Redditors respond to the Fast & Furious 9 movie.
 ---

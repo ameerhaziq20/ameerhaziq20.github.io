@@ -1,11 +1,11 @@
 ---
 name: Death cause Analysis Malaysia
-tools: [Python, Jupyter Notebook, Pandas, Squarify, Seaborn, Matplotlib]
-image: https://as1.ftcdn.net/v2/jpg/01/10/01/64/1000_F_110016461_S7tMarEmC4T5JBN4lTd72bpbvnsXtiaC.jpg
+tools: [Python, Pandas, Squarify, Seaborn, Matplotlib]
+image: https://i.pinimg.com/736x/e9/c2/96/e9c296fc18499a211e82fa48f4b76439.jpg
 description: Data wrangling practice project using Python and Pandas.
 ---
 
-![jpg](https://newss.statistics.gov.my/newss-portalx/img/header_en.jpg)
+![jpg](https://thumbs.dreamstime.com/b/hospital-room-interior-intensive-therapy-patient-ward-medical-tools-row-nursing-care-bed-empty-no-people-modern-clinic-139834092.jpg)
 
 This project is done to practice data wrangling (or data munging). The truth is that data cannot always be used as it is and needs preparation in a way so that it can be used. Some cleaning and wrangling needs to be done before we can do analysis on them. In this project, we will make use of the the Death Statistics 2019 data obtained from [Department of Statistics Malaysia](https://newss.statistics.gov.my/newss-portalx/ep/epFreeDownloadContentSearch.seam?contentId=148840&actionMethod=ep%2FepFreeDownloadContentSearch.xhtml%3AcontentAction.doDisplayContent&cid=162492). Also included is a simple visualization to give some insights about the data. All of these process are made using Python.
 

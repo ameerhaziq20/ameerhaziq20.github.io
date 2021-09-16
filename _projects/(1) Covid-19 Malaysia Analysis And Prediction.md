@@ -18,8 +18,6 @@ This analysis will try to answer the following questions:
 
 # 2. Measurement Priorities
 
-## What To Measure:
-
 * Correlation between each factor in the dataset using correlation matrix.
 * The difference in the count of new cases and in the states.
 * Percentage of fully vaccinated individuals angainst the total population.
