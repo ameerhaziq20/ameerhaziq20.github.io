@@ -536,7 +536,7 @@ plt.show()
 
 
     
-![png](output_15_1.png)
+![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(2)%20Telecom%20Churn%20Analysis%20and%20Prediction/output_15_1.png)
     
 
 
@@ -739,7 +739,7 @@ plt.show()
 
 
     
-![png](output_20_0.png)
+![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(2)%20Telecom%20Churn%20Analysis%20and%20Prediction/output_20_0.png)
     
 
 
@@ -762,7 +762,7 @@ plt.show()
 
 
     
-![png](output_23_0.png)
+![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(2)%20Telecom%20Churn%20Analysis%20and%20Prediction/output_23_0.png)
     
 
 
@@ -801,7 +801,7 @@ for p in ax.patches:
 
 
     
-![png](output_26_1.png)
+![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(2)%20Telecom%20Churn%20Analysis%20and%20Prediction/output_26_1.png)
     
 
 
@@ -823,7 +823,7 @@ plt.show()
 
 
     
-![png](output_30_0.png)
+![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(2)%20Telecom%20Churn%20Analysis%20and%20Prediction/output_30_0.png)
     
 
 
@@ -840,7 +840,7 @@ plt.show()
 
 
     
-![png](output_33_0.png)
+![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(2)%20Telecom%20Churn%20Analysis%20and%20Prediction/output_33_0.png)
     
 
 
@@ -858,7 +858,7 @@ plt.show()
 
 
     
-![png](output_35_0.png)
+![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(2)%20Telecom%20Churn%20Analysis%20and%20Prediction/output_35_0.png)
     
 
 
@@ -912,7 +912,7 @@ for i, item in enumerate(services):
 
 
     
-![png](output_40_0.png)
+![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(2)%20Telecom%20Churn%20Analysis%20and%20Prediction/output_40_0.png)
     
 
 
@@ -928,7 +928,7 @@ plt.show()
 
 
     
-![png](output_42_0.png)
+![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(2)%20Telecom%20Churn%20Analysis%20and%20Prediction/output_42_0.png)
     
 
 
@@ -974,7 +974,7 @@ for i in ax.patches:
 
 
     
-![png](output_46_0.png)
+![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(2)%20Telecom%20Churn%20Analysis%20and%20Prediction/output_46_0.png)
     
 
 
@@ -994,7 +994,7 @@ plt.show()
 
 
     
-![png](output_50_0.png)
+![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(2)%20Telecom%20Churn%20Analysis%20and%20Prediction/output_50_0.png)
     
 
 
@@ -1033,7 +1033,7 @@ for p in ax.patches:
 
 
     
-![png](output_53_0.png)
+![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(2)%20Telecom%20Churn%20Analysis%20and%20Prediction/output_53_0.png)
     
 
 
@@ -1071,7 +1071,7 @@ for p in ax.patches:
 
 
     
-![png](output_56_0.png)
+![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(2)%20Telecom%20Churn%20Analysis%20and%20Prediction/output_56_0.png)
     
 
 
@@ -1099,7 +1099,7 @@ plt.show()
 
 
     
-![png](output_59_0.png)
+![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(2)%20Telecom%20Churn%20Analysis%20and%20Prediction/output_59_0.png)
     
 
 
@@ -1127,7 +1127,7 @@ plt.show()
 
 
     
-![png](output_62_0.png)
+![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(2)%20Telecom%20Churn%20Analysis%20and%20Prediction/output_62_0.png)
     
 
 
@@ -1290,7 +1290,7 @@ plt.show()
 
 
     
-![png](output_78_0.png)
+![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(2)%20Telecom%20Churn%20Analysis%20and%20Prediction/output_78_0.png)
     
 
 
@@ -1345,7 +1345,7 @@ plt.show()
 
 
     
-![png](output_81_0.png)
+![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(2)%20Telecom%20Churn%20Analysis%20and%20Prediction/output_81_0.png)
     
 
 
@@ -1370,7 +1370,7 @@ plt.show()
 
 
     
-![png](output_83_1.png)
+![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(2)%20Telecom%20Churn%20Analysis%20and%20Prediction/output_83_1.png)
     
 
 
