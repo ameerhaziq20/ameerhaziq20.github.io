@@ -3554,7 +3554,7 @@ plt.show()
 
 
     
-![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(5)%20Death%20cause%20Analysis%20Malaysia%202019/output_69_0.png)
+![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/Death%20cause%20Analysis%20Malaysia%202019/output_69_0.png)
     
 
 
@@ -3573,7 +3573,7 @@ plt.show()
 
 
     
-![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(5)%20Death%20cause%20Analysis%20Malaysia%202019/output_71_0.png)
+![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/Death%20cause%20Analysis%20Malaysia%202019/output_71_0.png)
     
 
 
@@ -3592,7 +3592,7 @@ plt.show()
 
 
     
-![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(5)%20Death%20cause%20Analysis%20Malaysia%202019/output_73_0.png)
+![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/Death%20cause%20Analysis%20Malaysia%202019/output_73_0.png)
     
 
 
@@ -3633,7 +3633,7 @@ plt.show()
 
 
     
-![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(5)%20Death%20cause%20Analysis%20Malaysia%202019/output_77_1.png)
+![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/Death%20cause%20Analysis%20Malaysia%202019/output_77_1.png)
     
 
 
@@ -3731,7 +3731,7 @@ plt.show()
 
 
     
-![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(5)%20Death%20cause%20Analysis%20Malaysia%202019/output_82_0.png)
+![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/Death%20cause%20Analysis%20Malaysia%202019/output_82_0.png)
     
 
 
@@ -3875,7 +3875,7 @@ plt.show()
 
 
     
-![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(5)%20Death%20cause%20Analysis%20Malaysia%202019/output_86_1.png)
+![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/Death%20cause%20Analysis%20Malaysia%202019/output_86_1.png)
     
 
 
@@ -3902,7 +3902,7 @@ plt.show()
 
 
     
-![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(5)%20Death%20cause%20Analysis%20Malaysia%202019/output_87_1.png)
+![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/Death%20cause%20Analysis%20Malaysia%202019/output_87_1.png)
     
 
 
@@ -4021,7 +4021,7 @@ plt.show()
 
 
     
-![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(5)%20Death%20cause%20Analysis%20Malaysia%202019/output_91_1.png)
+![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/Death%20cause%20Analysis%20Malaysia%202019/output_91_1.png)
     
 
 
@@ -4044,7 +4044,7 @@ plt.show()
 
 
     
-![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(5)%20Death%20cause%20Analysis%20Malaysia%202019/output_93_1.png)
+![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/Death%20cause%20Analysis%20Malaysia%202019/output_93_1.png)
     
 
 

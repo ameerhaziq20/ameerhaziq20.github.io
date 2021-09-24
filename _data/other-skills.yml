@@ -1,11 +1,11 @@
-- name: Adobe Photoshop
-  percentage: 95
+- name: Data Cleaning/Wrangling
+  percentage: 75
   color: info
 
-- name: Adobe Illustrator
-  percentage: 80
+- name: Web Scraping
+  percentage: 60
   color: success
   
-- name: FL Studio
-  percentage: 95
+- name: Creating Dashboards
+  percentage: 70
   color: blue

@@ -279,7 +279,7 @@ plt.show()
 
 
     
-![png](output_12_0.png)
+![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/Formula%201%20Race%20Data%20Analysis%20with%20SQL%20%2B%20Python/output_12_0.png)
     
 
 
@@ -405,7 +405,7 @@ plt.show()
 
 
     
-![png](output_18_0.png)
+![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/Formula%201%20Race%20Data%20Analysis%20with%20SQL%20%2B%20Python/output_18_0.png)
     
 
 
@@ -528,7 +528,7 @@ plt.show()
 
 
     
-![png](output_24_0.png)
+![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/Formula%201%20Race%20Data%20Analysis%20with%20SQL%20%2B%20Python/output_24_0.png)
     
 
 
@@ -654,7 +654,7 @@ plt.show()
 
 
     
-![png](output_30_0.png)
+![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/Formula%201%20Race%20Data%20Analysis%20with%20SQL%20%2B%20Python/output_30_0.png)
     
 
 
@@ -763,7 +763,7 @@ plt.show()
 
 
     
-![png](output_36_0.png)
+![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/Formula%201%20Race%20Data%20Analysis%20with%20SQL%20%2B%20Python/output_36_0.png)
     
 
 
@@ -882,7 +882,7 @@ plt.show()
 
 
     
-![png](output_43_0.png)
+![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/Formula%201%20Race%20Data%20Analysis%20with%20SQL%20%2B%20Python/output_43_0.png)
     
 
 
@@ -1142,7 +1142,7 @@ circular_plot(df_team_orgin_date,'team_age_years','name',title)
 
 
     
-![png](output_51_0.png)
+![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/Formula%201%20Race%20Data%20Analysis%20with%20SQL%20%2B%20Python/output_51_0.png)
     
 
 
@@ -1249,7 +1249,7 @@ plt.show()
 
 
     
-![png](output_56_0.png)
+![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/Formula%201%20Race%20Data%20Analysis%20with%20SQL%20%2B%20Python/output_56_0.png)
     
 
 
@@ -1364,7 +1364,7 @@ plt.show()
 
 
     
-![png](output_62_0.png)
+![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/Formula%201%20Race%20Data%20Analysis%20with%20SQL%20%2B%20Python/output_62_0.png)
     
 
 
@@ -1508,7 +1508,7 @@ plt.show()
 
 
     
-![png](output_68_0.png)
+![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/Formula%201%20Race%20Data%20Analysis%20with%20SQL%20%2B%20Python/output_68_0.png)
     
 
 
@@ -2218,7 +2218,7 @@ plt.show()
 
 
     
-![png](output_88_0.png)
+![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/Formula%201%20Race%20Data%20Analysis%20with%20SQL%20%2B%20Python/output_88_0.png)
     
 
 

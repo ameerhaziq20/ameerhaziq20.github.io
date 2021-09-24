@@ -814,7 +814,7 @@ plt.show()
 
 
     
-![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(1)%20Covid-19%20Malaysia%20Analysis%20And%20Prediction/output_37_0.png)
+![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/Covid-19%20Malaysia%20Analysis%20And%20Prediction/output_37_0.png)
     
 
 
@@ -844,7 +844,7 @@ plt.show()
 
 
     
-![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(1)%20Covid-19%20Malaysia%20Analysis%20And%20Prediction/output_40_0.png)
+![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/Covid-19%20Malaysia%20Analysis%20And%20Prediction/output_40_0.png)
     
 
 
@@ -881,7 +881,7 @@ plt.show()
 
 
     
-![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(1)%20Covid-19%20Malaysia%20Analysis%20And%20Prediction/output_42_0.png)
+![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/Covid-19%20Malaysia%20Analysis%20And%20Prediction/output_42_0.png)
     
 
 
@@ -1472,7 +1472,7 @@ plt.show()
 
 
     
-![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(1)%20Covid-19%20Malaysia%20Analysis%20And%20Prediction/output_64_0.png)
+![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/Covid-19%20Malaysia%20Analysis%20And%20Prediction/output_64_0.png)
     
 
 
@@ -1503,7 +1503,7 @@ plt.show()
 
 
     
-![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(1)%20Covid-19%20Malaysia%20Analysis%20And%20Prediction/output_67_0.png)
+![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/Covid-19%20Malaysia%20Analysis%20And%20Prediction/output_67_0.png)
     
 
 
@@ -1669,7 +1669,7 @@ plt.show()
 
 
     
-![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(1)%20Covid-19%20Malaysia%20Analysis%20And%20Prediction/output_80_0.png)
+![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/Covid-19%20Malaysia%20Analysis%20And%20Prediction/output_80_0.png)
     
 
 
@@ -1724,7 +1724,7 @@ plt.show()
 
 
     
-![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(1)%20Covid-19%20Malaysia%20Analysis%20And%20Prediction/output_92_0.png)
+![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/Covid-19%20Malaysia%20Analysis%20And%20Prediction/output_92_0.png)
     
 
 
@@ -2477,7 +2477,7 @@ plot1 = m.plot(forecast)
 
 
     
-![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(1)%20Covid-19%20Malaysia%20Analysis%20And%20Prediction/output_116_0.png)
+![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/Covid-19%20Malaysia%20Analysis%20And%20Prediction/output_116_0.png)
     
 
 
@@ -2492,7 +2492,7 @@ plt2 = m.plot_components(forecast)
 
 
     
-![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/(1)%20Covid-19%20Malaysia%20Analysis%20And%20Prediction/output_118_0.png)
+![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/Covid-19%20Malaysia%20Analysis%20And%20Prediction/output_118_0.png)
     
 
 

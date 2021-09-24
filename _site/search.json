@@ -13,7 +13,7 @@
       "category" : "",
       "tags"     : "React, JavaScript, Web Development",
       "url"      : "/blog/learn-react-js",
-      "date"     : "2019-02-15 00:00:00 +0800"
+      "date"     : "2021-02-15 00:00:00 +0800"
     } ,
   
     {
@@ -21,7 +21,7 @@
       "category" : "",
       "tags"     : "Software Development, Clean Code",
       "url"      : "/blog/clean-coding",
-      "date"     : "2018-12-10 00:00:00 +0800"
+      "date"     : "2020-12-10 00:00:00 +0800"
     } ,
   
     {
@@ -29,7 +29,7 @@
       "category" : "",
       "tags"     : "Version Control",
       "url"      : "/blog/what-is-version-control",
-      "date"     : "2018-02-09 00:00:00 +0800"
+      "date"     : "2020-02-09 00:00:00 +0800"
     } ,
   
     {
@@ -37,7 +37,7 @@
       "category" : "",
       "tags"     : "GitHub, Workflow",
       "url"      : "/blog/github-flow",
-      "date"     : "2017-01-01 00:00:00 +0800"
+      "date"     : "2020-01-01 00:00:00 +0800"
     } 
   
 ]

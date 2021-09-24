@@ -1,14 +1,14 @@
 - name: Python
-  percentage: 80
+  percentage: 85
   color: danger
 
 - name: SQL
-  percentage: 60
-  color:
+  percentage: 80
+  color: 
 
 - name: Kotlin
   percentage: 60
-  color: green
+  color: success
 
 - name: C
   percentage: 70
