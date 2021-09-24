@@ -1,0 +1,2153 @@
+<!DOCTYPE html>
+
+<!--
+  portfolYOU Jekyll theme by Youssef Raafat
+  Free for personal and commercial use under the MIT license
+  https://github.com/YoussefRaafatNasry/portfolYOU
+-->
+
+<html lang="en" class="h-100">
+
+<head>
+
+  
+  
+
+  
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Formula 1 Race Data Analysis with SQL + Python">
+  <meta property="og:description" content="SQL data extraction and tranformation project with Python visualization.">
+
+  <title>Formula 1 Race Data Analysis with SQL + Python</title>
+  <meta name="description" content="SQL data extraction and tranformation project with Python visualization.">
+
+  <link rel="shortcut icon" type="image/x-icon" href="/assets/favicon.ico">
+
+  <!-- Theme style -->
+  <script src="/assets/js/theme.js"></script>
+
+  <!-- Font Awesome CDN -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.10.0/css/all.css">
+
+  <!-- Bootstrap CSS CDN -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
+
+  <!-- Animate CSS CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.css">
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="/assets/css/style.css">
+
+</head>
+
+<body class="h-100 d-flex flex-column">
+
+  <main class="flex-shrink-0 container mt-5">
+    <nav class="navbar navbar-expand-lg navbar-themed">
+
+  <a class="navbar-brand" href="/"><h5><b>Haziq's Portfolio</b></h5></a>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+    <i class="fas fa-1x fa-bars text-themed"></i>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav ml-auto"><a class="nav-item nav-link active" href="/projects/">Projects</a>
+
+      <a class="nav-item nav-link " href="/blog/">Blog</a>
+
+      <a class="nav-item nav-link " href="/about/">About</a>
+
+      
+
+      <span id="theme-toggler" class="nav-item nav-link" role="button" onclick="toggleTheme()"></span>
+    </div>
+  </div>
+
+</nav>
+    <div class="col-lg-10 mx-auto mt-5 markdown-body">
+  <p><img src="https://pbs.twimg.com/media/D4Q5Gu9WAAEDDZ8.jpg" alt="jpg" /></p>
+
+<p>I’ve always been a big fan of Formula 1 especially for its technological advancements shown by each team as time progresses. For starters, here is a brief introduction of Formula 1.</p>
+
+<p><strong>Championships</strong> - There are two different titles in F1, the World Driver’s Championship (WDC), which goes to the driver with the most individual points at the end of the season, and the World Constructor’s Championship (WCC), which goes to the team with the most points between their two drivers. Every team fields 2 cars in every race. There are generally ~18 races or so, but the amount changes frequently as races are added or dropped.</p>
+
+<p><strong>Scoring</strong> - Scoring is based purely off of where you finish the race. It used to be that only the top 6 placing drivers scored, then it was changed to 8, and more recently it was changed to 10. 1st place is worth 25 points, then 18, 15, 12, 10, 8, 6, 4, 2, and 1 respectively.</p>
+
+<p>This project will be using SQL queries and data visualiztion with Python for data analysis. we will be using SQL for extracting and trandforming the data before doing visualization with python.</p>
+
+<h1 id="1-questions">1. Questions</h1>
+
+<p>This analysis will try to answer the following questions:</p>
+
+<p><strong>Drivers</strong></p>
+<ol>
+  <li>Which driver had the most F1 World Driver’s Champion title?</li>
+  <li>Which driver had obtained the most pole position?</li>
+  <li>Which driver had the most points throughout their career?</li>
+  <li>How many F1 drivers that actually won at least one race?</li>
+  <li>What are the nationality of most F1 drivers?</li>
+</ol>
+
+<p><strong>Constructors</strong></p>
+<ol>
+  <li>Who are the all time winning teams since 1950?</li>
+  <li>Which teams are the earliest to participate in F1?</li>
+  <li>What are the F1 constructors nationality?</li>
+  <li>Who are the winning teams since the Hybrid era?</li>
+  <li>How are the performance of the 2021 teams before?</li>
+</ol>
+
+<p><strong>F1 circuits and races</strong></p>
+<ol>
+  <li>Where are most of the F1 tracks located?</li>
+  <li>What are the the fastest lap time for each Grand Prix?</li>
+  <li>How many F1 races are there for each season?</li>
+</ol>
+
+<h1 id="2-measurement-priorities">2. Measurement Priorities</h1>
+
+<p>For Drivers:</p>
+
+<ul>
+  <li>Drivers with the maximum total points for each year.</li>
+  <li>Count of drivers where located at grid position 1.</li>
+  <li>Sum of points by each drivers for all year.</li>
+  <li>Count of drivers where wins are more than 1.</li>
+  <li>Sum of drivers nationality count.</li>
+</ul>
+
+<p>For Constructors:</p>
+
+<ul>
+  <li>Total race wins count for each teams.</li>
+  <li>First race date by each team.</li>
+  <li>Count of teams nationality.</li>
+  <li>Total race wins for teams that participate in 2014 and onwards.</li>
+  <li>Sum of points for each year for teams participating in the 2021 F1 season.</li>
+</ul>
+
+<p>For F1 circuits and races:</p>
+
+<ul>
+  <li>Geolocation of the F1 circuits.</li>
+  <li>Minimum lap time for each Grand Prix</li>
+  <li>Count of race for each year.</li>
+</ul>
+
+<h1 id="3-data-collection">3. Data Collection</h1>
+
+<ul>
+  <li>Source
+    <ul>
+      <li>The data is obtained from the Kaggle.</li>
+    </ul>
+  </li>
+  <li>Storage
+    <ul>
+      <li>Data is loaded into local database thorugh Microsoft SQL Database.</li>
+    </ul>
+  </li>
+</ul>
+
+<h5 id="github-link-for-project"><a href="https://github.com/ameerhaziq20/Malaysia-s-Death-Cause-Analysis-2019">Github link for project</a></h5>
+<hr />
+<p><strong>Notebook Contents:</strong></p>
+<ul>
+  <li><a href="#connect_to_database">Connect to database</a></li>
+  <li><a href="#drivers">Drivers</a>
+    <ol>
+      <li><a href="#world_champion_title">Which driver had the most F1 World Driver’s Champion title?</a></li>
+      <li><a href="#most_pole">Which driver had obtained the most pole position?</a></li>
+      <li><a href="#driver_most_points">Which driver had the most points throughout their career?</a></li>
+      <li><a href="#driver_won_once">How many F1 drivers that actually won at least one race?</a></li>
+      <li><a href="#driver_nationality">What are the nationality of most F1 drivers?</a></li>
+    </ol>
+  </li>
+  <li><a href="#constructors">Constructors</a>
+    <ol>
+      <li><a href="#all_time_win_team">Who are the all time winning teams since 1950?</a></li>
+      <li><a href="#earliest_teams">Which teams are the earliest to participate in F1?</a></li>
+      <li><a href="#constructors_nationality">What are the F1 constructors nationality?</a></li>
+      <li><a href="#winning_hybrid">Who are the winning teams since the Hybrid era?</a></li>
+      <li><a href="#2021_team_perf">How are the performance of the 2021 teams before?</a></li>
+    </ol>
+  </li>
+  <li><a href="#circuits_race">F1 circuits and races</a>
+    <ol>
+      <li><a href="#tracks_location">Where are most of the F1 tracks located?</a></li>
+      <li><a href="#fastest_lap_time_gp">What are the the fastest lap time for each Grand Prix?</a></li>
+      <li><a href="#season_race_count">How many F1 races are there for each season?</a></li>
+    </ol>
+  </li>
+</ul>
+
+<p><a id="connect_to_database"></a></p>
+<h1 id="connect-to-database">Connect to database</h1>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># import libraries
+</span><span class="kn">import</span> <span class="nn">sqlalchemy</span>
+<span class="kn">import</span> <span class="nn">pyodbc</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="n">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+
+<span class="n">pyodbc</span><span class="p">.</span><span class="n">drivers</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>['SQL Server',
+ 'Microsoft Access Driver (*.mdb, *.accdb)',
+ 'Microsoft Excel Driver (*.xls, *.xlsx, *.xlsm, *.xlsb)',
+ 'Microsoft Access Text Driver (*.txt, *.csv)',
+ 'SQL Server Native Client 11.0',
+ 'SQL Server Native Client RDA 11.0',
+ 'ODBC Driver 17 for SQL Server']
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">%</span><span class="n">load_ext</span> <span class="n">sql</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>The sql extension is already loaded. To reload it, use:
+  %reload_ext sql
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">%</span><span class="n">sql</span> <span class="n">mssql</span><span class="o">+</span><span class="n">pyodbc</span><span class="p">:</span><span class="o">//@</span><span class="n">DESKTOP</span><span class="o">-</span><span class="mi">8</span><span class="n">RI327A</span>\<span class="n">SQLEXPRESS</span><span class="o">/</span><span class="n">F1</span><span class="err">?</span><span class="n">driver</span><span class="o">=</span><span class="n">SQL</span><span class="o">+</span><span class="n">Server</span>
+</code></pre></div></div>
+
+<h1 id="extract-transform-and-visualization">Extract, transform, and visualization</h1>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#overall styling
+</span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="n">sns</span>
+<span class="kn">import</span> <span class="nn">altair</span> <span class="k">as</span> <span class="n">alt</span>
+
+<span class="n">sns</span><span class="p">.</span><span class="n">set_style</span><span class="p">(</span><span class="s">"darkgrid"</span><span class="p">)</span>
+<span class="n">palette</span> <span class="o">=</span> <span class="p">[</span><span class="s">'#004146'</span><span class="p">,</span><span class="s">'#018076'</span><span class="p">,</span><span class="s">'#03BFB5'</span><span class="p">,</span><span class="s">'#949398'</span><span class="p">]</span>
+<span class="n">seq_palette_m</span> <span class="o">=</span> <span class="s">'viridis'</span>
+<span class="n">seq_palette_h</span> <span class="o">=</span>  <span class="n">sns</span><span class="p">.</span><span class="n">dark_palette</span><span class="p">(</span><span class="s">"#e76f51"</span><span class="p">)</span>
+<span class="n">b_figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">14</span><span class="p">,</span><span class="mi">8</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><a id="drivers"></a></p>
+<h2 id="drivers">Drivers</h2>
+
+<p><a id="world_champion_title"></a></p>
+<h3 id="1-which-driver-had-the-most-f1-world-drivers-champion-title">1. Which driver had the most F1 World Driver’s Champion title?</h3>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">%%</span><span class="k">sql</span> <span class="n">world_title</span> <span class="o">&lt;&lt;</span>
+
+<span class="k">WITH</span> <span class="n">cte</span> <span class="k">as</span> <span class="p">(</span>
+      <span class="k">SELECT</span> <span class="n">CONCAT</span><span class="p">(</span><span class="n">forename</span><span class="p">,</span> <span class="s1">' '</span><span class="p">,</span> <span class="n">surname</span><span class="p">)</span> <span class="k">AS</span> <span class="n">driver_name</span><span class="p">,</span>
+             <span class="nb">year</span><span class="p">,</span> <span class="k">SUM</span><span class="p">(</span><span class="n">points</span><span class="p">)</span> <span class="k">as</span> <span class="n">race_points</span><span class="p">,</span>
+             <span class="n">RANK</span><span class="p">()</span> <span class="n">OVER</span> <span class="p">(</span><span class="n">PARTITION</span> <span class="k">BY</span> <span class="nb">year</span> <span class="k">ORDER</span> <span class="k">BY</span> <span class="k">SUM</span><span class="p">(</span><span class="n">points</span><span class="p">)</span> <span class="k">DESC</span><span class="p">)</span> <span class="k">as</span> <span class="n">seqnum</span>
+      <span class="k">FROM</span> <span class="n">results</span> <span class="n">r</span> <span class="k">JOIN</span> 
+           <span class="n">constructors</span> <span class="k">c</span>
+           <span class="k">ON</span> <span class="n">r</span><span class="p">.</span><span class="n">constructorId</span> <span class="o">=</span> <span class="k">c</span><span class="p">.</span><span class="n">constructorId</span> <span class="k">JOIN</span>
+           <span class="n">drivers</span> <span class="n">d</span>
+           <span class="k">ON</span> <span class="n">r</span><span class="p">.</span><span class="n">driverId</span> <span class="o">=</span> <span class="n">d</span><span class="p">.</span><span class="n">driverId</span> <span class="k">JOIN</span>
+           <span class="n">races</span> <span class="n">rc</span>
+           <span class="k">ON</span> <span class="n">r</span><span class="p">.</span><span class="n">raceId</span> <span class="o">=</span> <span class="n">rc</span><span class="p">.</span><span class="n">raceId</span>
+      <span class="k">GROUP</span> <span class="k">BY</span> <span class="n">CONCAT</span><span class="p">(</span><span class="n">forename</span><span class="p">,</span> <span class="s1">' '</span><span class="p">,</span> <span class="n">surname</span><span class="p">),</span> <span class="nb">year</span>
+     <span class="p">)</span>
+<span class="k">SELECT</span> <span class="o">*</span>
+<span class="k">FROM</span> <span class="n">cte</span>
+<span class="k">WHERE</span> <span class="n">seqnum</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">AND</span> <span class="nb">year</span><span class="o">&lt;=</span><span class="mi">2020</span><span class="p">;</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> * mssql+pyodbc://@DESKTOP-8RI327A\SQLEXPRESS/F1?driver=SQL+Server
+Done.
+Returning data to local variable world_title
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_world_title</span> <span class="o">=</span> <span class="n">world_title</span><span class="p">.</span><span class="n">DataFrame</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_world_title</span><span class="p">.</span><span class="n">tail</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>driver_name</th>
+      <th>year</th>
+      <th>race_points</th>
+      <th>seqnum</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>66</th>
+      <td>Nico Rosberg</td>
+      <td>2016</td>
+      <td>385.0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>67</th>
+      <td>Lewis Hamilton</td>
+      <td>2017</td>
+      <td>363.0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>68</th>
+      <td>Lewis Hamilton</td>
+      <td>2018</td>
+      <td>408.0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>69</th>
+      <td>Lewis Hamilton</td>
+      <td>2019</td>
+      <td>413.0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>70</th>
+      <td>Lewis Hamilton</td>
+      <td>2020</td>
+      <td>347.0</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">b_figsize</span><span class="p">)</span>
+<span class="n">sns</span><span class="p">.</span><span class="n">countplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">df_world_title</span><span class="p">,</span><span class="n">x</span><span class="o">=</span><span class="s">'driver_name'</span><span class="p">,</span>
+              <span class="n">order</span><span class="o">=</span><span class="n">df_world_title</span><span class="p">[</span><span class="s">'driver_name'</span><span class="p">].</span><span class="n">value_counts</span><span class="p">().</span><span class="n">index</span><span class="p">,</span>
+            <span class="n">palette</span><span class="o">=</span><span class="n">seq_palette_m</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">title</span><span class="p">(</span><span class="s">"World Driver's Championship title count"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">"Driver name"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">"Count of titles"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">rotation</span><span class="o">=</span><span class="mi">90</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><img src="output_12_0.png" alt="png" /></p>
+
+<p><strong>Description:</strong> Since the 2021 season is stil on going, we will only consider the data up untill 2020. Here we can see that Lewis Hamilton and Michael Schumacher won the most World Driver Championship title. So far, only 32 driver’s had won the title.</p>
+
+<p><a id="most_pole"></a></p>
+<h3 id="2-which-driver-had-obtained-the-most-pole-position">2. Which driver had obtained the most pole position?</h3>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">%%</span><span class="k">sql</span> <span class="n">pole_position</span> <span class="o">&lt;&lt;</span>
+
+<span class="k">WITH</span> <span class="n">cte</span> <span class="k">AS</span><span class="p">(</span>
+
+<span class="k">SELECT</span> <span class="n">grid</span><span class="p">,</span>
+<span class="n">CONCAT</span><span class="p">(</span><span class="n">forename</span><span class="p">,</span><span class="s1">' '</span><span class="p">,</span><span class="n">surname</span> <span class="p">)</span> <span class="k">AS</span> <span class="n">driver_name</span><span class="p">,</span>
+<span class="k">COUNT</span><span class="p">(</span><span class="n">driverRef</span><span class="p">)</span> <span class="n">OVER</span><span class="p">(</span><span class="n">PARTITION</span> <span class="k">BY</span> <span class="n">driverRef</span><span class="p">)</span> <span class="k">AS</span> <span class="n">pole_count</span>
+<span class="k">FROM</span>
+    <span class="n">results</span> <span class="k">AS</span> <span class="n">r</span>
+    <span class="k">INNER</span> <span class="k">JOIN</span> <span class="n">races</span> <span class="k">AS</span> <span class="n">rc</span>
+    <span class="k">ON</span> <span class="n">r</span><span class="p">.</span><span class="n">raceId</span> <span class="o">=</span> <span class="n">rc</span><span class="p">.</span><span class="n">raceId</span>
+    
+    <span class="k">INNER</span> <span class="k">JOIN</span> <span class="n">constructors</span> <span class="k">AS</span> <span class="k">c</span>
+    <span class="k">ON</span> <span class="n">r</span><span class="p">.</span><span class="n">constructorId</span> <span class="o">=</span> <span class="k">c</span><span class="p">.</span><span class="n">constructorId</span>
+    
+    <span class="k">INNER</span> <span class="k">JOIN</span> <span class="n">drivers</span> <span class="k">AS</span> <span class="n">d</span>
+    <span class="k">ON</span> <span class="n">r</span><span class="p">.</span><span class="n">driverId</span> <span class="o">=</span> <span class="n">d</span><span class="p">.</span><span class="n">driverId</span>
+        
+<span class="k">WHERE</span> <span class="n">grid</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="k">SELECT</span> <span class="n">TOP</span> <span class="mi">10</span> <span class="n">driver_name</span><span class="p">,</span><span class="k">MAX</span><span class="p">(</span><span class="n">pole_count</span><span class="p">)</span> <span class="k">AS</span> <span class="n">pole</span>
+
+<span class="k">FROM</span> <span class="n">cte</span>
+<span class="k">GROUP</span> <span class="k">BY</span> <span class="n">driver_name</span>
+<span class="k">ORDER</span> <span class="k">BY</span> <span class="n">pole</span> <span class="k">DESC</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> * mssql+pyodbc://@DESKTOP-8RI327A\SQLEXPRESS/F1?driver=SQL+Server
+Done.
+Returning data to local variable pole_position
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_pole_position</span> <span class="o">=</span> <span class="n">pole_position</span><span class="p">.</span><span class="n">DataFrame</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_pole_position</span><span class="p">.</span><span class="n">head</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>driver_name</th>
+      <th>pole</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Lewis Hamilton</td>
+      <td>100</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Michael Schumacher</td>
+      <td>68</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Ayrton Senna</td>
+      <td>65</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Sebastian Vettel</td>
+      <td>57</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Jim Clark</td>
+      <td>34</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">b_figsize</span><span class="p">)</span>
+<span class="n">sns</span><span class="p">.</span><span class="n">barplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">df_pole_position</span><span class="p">,</span>
+            <span class="n">x</span><span class="o">=</span><span class="s">'driver_name'</span><span class="p">,</span>
+            <span class="n">y</span><span class="o">=</span><span class="s">'pole'</span><span class="p">,</span>
+            <span class="n">palette</span><span class="o">=</span><span class="n">seq_palette_m</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">title</span><span class="p">(</span><span class="s">"Count of pole position obtained by drivers"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">"Driver name"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">"Count of pole positions"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">rotation</span><span class="o">=</span><span class="mi">45</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><img src="output_18_0.png" alt="png" /></p>
+
+<p><strong>Description:</strong> From the chart we can see that Lewis Hamilton had obtained 100 pole position. Considering that Lewis Hamilton entered F1 later than most of the drivers in this chart, he still manage to secure a lot of pole position in a short window of time.</p>
+
+<p><a id="driver_most_points"></a></p>
+<h3 id="3-which-driver-had-the-most-points-throughout-their-career">3. Which driver had the most points throughout their career?</h3>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">%%</span><span class="k">sql</span> <span class="n">f1_drivers_points</span> <span class="o">&lt;&lt;</span>
+
+<span class="k">SELECT</span> <span class="n">TOP</span> <span class="mi">10</span> <span class="n">driver_name</span><span class="p">,</span> <span class="k">SUM</span><span class="p">(</span><span class="n">driver_points</span><span class="p">)</span> <span class="k">AS</span> <span class="n">total_points</span>
+<span class="k">FROM</span>
+    <span class="p">(</span><span class="k">SELECT</span>
+
+        <span class="p">(</span><span class="k">CONVERT</span><span class="p">(</span><span class="nb">DECIMAL</span><span class="p">,</span> <span class="n">points</span><span class="p">))</span> <span class="k">AS</span> <span class="n">driver_points</span><span class="p">,</span>
+        <span class="n">concat</span><span class="p">(</span><span class="n">forename</span><span class="p">,</span> <span class="s1">' '</span><span class="p">,</span> <span class="n">surname</span><span class="p">)</span> <span class="k">AS</span> <span class="n">driver_name</span>
+
+    <span class="k">FROM</span> 
+        <span class="n">results</span> <span class="k">AS</span> <span class="n">r</span>
+
+        <span class="k">INNER</span> <span class="k">JOIN</span> <span class="n">constructors</span> <span class="k">AS</span> <span class="k">c</span>
+        <span class="k">ON</span> <span class="n">r</span><span class="p">.</span><span class="n">constructorId</span> <span class="o">=</span> <span class="k">c</span><span class="p">.</span><span class="n">constructorId</span>
+
+        <span class="k">INNER</span> <span class="k">JOIN</span> <span class="n">drivers</span> <span class="k">AS</span> <span class="n">d</span>
+        <span class="k">ON</span> <span class="n">r</span><span class="p">.</span><span class="n">driverId</span> <span class="o">=</span> <span class="n">d</span><span class="p">.</span><span class="n">driverId</span>
+
+        <span class="k">INNER</span> <span class="k">JOIN</span> <span class="n">races</span> <span class="k">AS</span> <span class="n">rc</span>
+        <span class="k">ON</span> <span class="n">r</span><span class="p">.</span><span class="n">raceId</span> <span class="o">=</span> <span class="n">rc</span><span class="p">.</span><span class="n">raceId</span>
+
+        <span class="k">WHERE</span> <span class="n">points</span> <span class="o">&gt;=</span> <span class="s1">'1'</span><span class="p">)</span> <span class="k">AS</span> <span class="n">subquery</span>
+    
+<span class="k">GROUP</span> <span class="k">BY</span> <span class="n">driver_name</span>
+<span class="k">ORDER</span> <span class="k">BY</span> <span class="n">total_points</span> <span class="k">DESC</span><span class="p">;</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> * mssql+pyodbc://@DESKTOP-8RI327A\SQLEXPRESS/F1?driver=SQL+Server
+Done.
+Returning data to local variable f1_drivers_points
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_f1_drivers_points</span> <span class="o">=</span> <span class="n">f1_drivers_points</span><span class="p">.</span><span class="n">DataFrame</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_f1_drivers_points</span><span class="p">.</span><span class="n">head</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>driver_name</th>
+      <th>total_points</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Lewis Hamilton</td>
+      <td>3928</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Sebastian Vettel</td>
+      <td>3048</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Fernando Alonso</td>
+      <td>1919</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Kimi Räikkönen</td>
+      <td>1864</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Valtteri Bottas</td>
+      <td>1604</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">b_figsize</span><span class="p">)</span>
+<span class="n">sns</span><span class="p">.</span><span class="n">barplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">df_f1_drivers_points</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s">'driver_name'</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s">'total_points'</span><span class="p">,</span><span class="n">palette</span><span class="o">=</span><span class="s">'viridis'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">title</span><span class="p">(</span><span class="s">"Total points of F1 Drivers"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">"Driver name"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">"Total points"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">rotation</span><span class="o">=</span><span class="mi">45</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><img src="output_24_0.png" alt="png" /></p>
+
+<p><strong>Description:</strong> In terms of total points, we can see that Lewis Hamilton had the most points in F1 history. Up to this point we can see that Lewis Hamilton had a great F1 career.</p>
+
+<p>One interesting point that we can see here is that the drivers in this chart are mostly the drivers that are competing in the later seasons of F1. Could it possibly that the drivers are able to obtain more points during the later season in comparison to the earlier F1 season? We’ll discuss that further in the “F1 circuits and races” section.</p>
+
+<p><a id="driver_won_once"></a></p>
+<h3 id="4-how-many-f1-drivers-that-actually-won-at-least-one-race">4. How many F1 drivers that actually won at least one race?</h3>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">%%</span><span class="k">sql</span> <span class="n">f1_drivers_win_count</span> <span class="o">&lt;&lt;</span>
+
+<span class="k">Select</span> <span class="n">driver_name</span><span class="p">,</span> <span class="k">COUNT</span><span class="p">(</span><span class="n">driver_name</span><span class="p">)</span> <span class="k">AS</span> <span class="n">frequency</span>
+<span class="k">FROM</span>
+    <span class="p">(</span><span class="k">SELECT</span>
+        <span class="n">concat</span><span class="p">(</span><span class="n">forename</span><span class="p">,</span> <span class="s1">' '</span><span class="p">,</span> <span class="n">surname</span><span class="p">)</span> <span class="k">AS</span> <span class="n">driver_name</span>
+
+    <span class="k">FROM</span> 
+        <span class="n">results</span> <span class="k">AS</span> <span class="n">r</span>
+
+        <span class="k">INNER</span> <span class="k">JOIN</span> <span class="n">constructors</span> <span class="k">AS</span> <span class="k">c</span>
+        <span class="k">ON</span> <span class="n">r</span><span class="p">.</span><span class="n">constructorId</span> <span class="o">=</span> <span class="k">c</span><span class="p">.</span><span class="n">constructorId</span>
+
+        <span class="k">INNER</span> <span class="k">JOIN</span> <span class="n">drivers</span> <span class="k">AS</span> <span class="n">d</span>
+        <span class="k">ON</span> <span class="n">r</span><span class="p">.</span><span class="n">driverId</span> <span class="o">=</span> <span class="n">d</span><span class="p">.</span><span class="n">driverId</span>
+
+        <span class="k">INNER</span> <span class="k">JOIN</span> <span class="n">races</span> <span class="k">AS</span> <span class="n">rc</span>
+        <span class="k">ON</span> <span class="n">r</span><span class="p">.</span><span class="n">raceId</span> <span class="o">=</span> <span class="n">rc</span><span class="p">.</span><span class="n">raceId</span>
+
+        <span class="k">WHERE</span> <span class="n">positionText</span> <span class="o">=</span> <span class="s1">'1'</span><span class="p">)</span> <span class="k">AS</span> <span class="n">subquery</span>
+
+<span class="k">GROUP</span> <span class="k">BY</span> <span class="n">driver_name</span>
+<span class="k">ORDER</span> <span class="k">BY</span> <span class="n">frequency</span> <span class="k">DESC</span><span class="p">;</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> * mssql+pyodbc://@DESKTOP-8RI327A\SQLEXPRESS/F1?driver=SQL+Server
+Done.
+Returning data to local variable f1_drivers_win_count
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_f1_drivers_win_count</span>  <span class="o">=</span> <span class="n">f1_drivers_win_count</span><span class="p">.</span><span class="n">DataFrame</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_f1_drivers_win_count</span><span class="p">.</span><span class="n">tail</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>driver_name</th>
+      <th>frequency</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>105</th>
+      <td>Vittorio Brambilla</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>106</th>
+      <td>Sam Hanks</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>107</th>
+      <td>Richie Ginther</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>108</th>
+      <td>Robert Kubica</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>109</th>
+      <td>Rodger Ward</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">20</span><span class="p">))</span>
+<span class="n">sns</span><span class="p">.</span><span class="n">barplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">df_f1_drivers_win_count</span><span class="p">,</span>
+            <span class="n">x</span><span class="o">=</span><span class="s">'frequency'</span><span class="p">,</span>
+            <span class="n">y</span><span class="o">=</span><span class="s">'driver_name'</span><span class="p">,</span>
+            <span class="n">palette</span><span class="o">=</span><span class="n">seq_palette_m</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="p">.</span><span class="n">title</span><span class="p">(</span><span class="s">'Driver wins since 1950'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">'Driver names'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">'Count of race wins'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><img src="output_30_0.png" alt="png" /></p>
+
+<p><strong>Description:</strong> From the data, we can see that there are 110 drivers that at least obtain 1 race win (1st position) in each of those races. From the frequency of wins, Lewis Hamilton is having nearly 100 wins (96 to be exact) which is the highest total wins since 1950.</p>
+
+<p><a id="driver_nationality"></a></p>
+<h3 id="5-what-are-the-nationality-of-most-f1-drivers">5. What are the nationality of most F1 drivers?</h3>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">%%</span><span class="k">sql</span> <span class="n">f1_drivers_nationality</span> <span class="o">&lt;&lt;</span>
+
+
+<span class="k">SELECT</span>
+    <span class="n">nationality</span><span class="p">,</span> <span class="k">COUNT</span><span class="p">(</span><span class="n">nationality</span><span class="p">)</span> <span class="k">AS</span> <span class="n">frequency</span>
+
+<span class="k">FROM</span> 
+    <span class="n">drivers</span>
+    
+<span class="k">GROUP</span> <span class="k">BY</span> <span class="n">nationality</span>
+<span class="k">ORDER</span> <span class="k">BY</span> <span class="n">frequency</span> <span class="k">DESC</span><span class="p">;</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> * mssql+pyodbc://@DESKTOP-8RI327A\SQLEXPRESS/F1?driver=SQL+Server
+Done.
+Returning data to local variable f1_drivers_nationality
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_f1_drivers_nationality</span> <span class="o">=</span><span class="n">f1_drivers_nationality</span><span class="p">.</span><span class="n">DataFrame</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_f1_drivers_nationality</span><span class="p">.</span><span class="n">head</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>nationality</th>
+      <th>frequency</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>British</td>
+      <td>165</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>American</td>
+      <td>157</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Italian</td>
+      <td>99</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>French</td>
+      <td>73</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>German</td>
+      <td>50</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">b_figsize</span><span class="p">)</span>
+<span class="n">sns</span><span class="p">.</span><span class="n">barplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">df_f1_drivers_nationality</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s">'nationality'</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s">'frequency'</span><span class="p">,</span><span class="n">palette</span><span class="o">=</span><span class="s">'viridis'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">title</span><span class="p">(</span><span class="s">"Count of driver's nationality"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">"Nationality"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">"Count of drivers"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">rotation</span><span class="o">=</span><span class="mi">90</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><img src="output_36_0.png" alt="png" /></p>
+
+<p><strong>Description:</strong> Most of the Formula 1 drivers are British, which is quite as expected since most of the teams are based in UK. American drivers also come quite close in terms of total drivers but in terms of total teams. This shows that there is a possibility that the American drivers driver in teams that aren’t American teams.</p>
+
+<p><a id="constructors"></a></p>
+<h2 id="constructors">Constructors</h2>
+
+<p><a id="all_time_win_team"></a></p>
+<h3 id="1-who-are-the-all-time-winning-teams-since-1950">1. Who are the all time winning teams since 1950?</h3>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">%%</span><span class="k">sql</span> <span class="n">win_all_time</span> <span class="o">&lt;&lt;</span>
+
+<span class="k">SELECT</span> <span class="n">name</span><span class="p">,</span><span class="k">SUM</span><span class="p">(</span><span class="n">wins</span><span class="p">)</span> <span class="k">AS</span> <span class="n">total_wins</span>
+<span class="k">FROM</span> 
+    <span class="n">constructor_standings</span> <span class="k">AS</span> <span class="n">cs</span>
+    
+    <span class="k">INNER</span> <span class="k">JOIN</span> <span class="n">constructors</span> <span class="k">AS</span> <span class="k">c</span>
+    <span class="k">ON</span> <span class="n">cs</span><span class="p">.</span><span class="n">constructorId</span> <span class="o">=</span> <span class="k">c</span><span class="p">.</span><span class="n">constructorId</span>
+    
+    <span class="k">INNER</span> <span class="k">JOIN</span> <span class="n">races</span> <span class="k">AS</span> <span class="n">r</span>
+    <span class="k">ON</span> <span class="n">cs</span><span class="p">.</span><span class="n">raceId</span> <span class="o">=</span> <span class="n">r</span><span class="p">.</span><span class="n">raceId</span>
+    
+    <span class="k">WHERE</span> <span class="n">wins</span><span class="o">&gt;=</span><span class="mi">1</span>
+    <span class="k">GROUP</span> <span class="k">BY</span> <span class="n">name</span>
+    <span class="k">ORDER</span> <span class="k">BY</span> <span class="n">total_wins</span> <span class="k">DESC</span><span class="p">;</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> * mssql+pyodbc://@DESKTOP-8RI327A\SQLEXPRESS/F1?driver=SQL+Server
+Done.
+Returning data to local variable win_all_time
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_win_all_time</span> <span class="o">=</span> <span class="n">win_all_time</span><span class="p">.</span><span class="n">DataFrame</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_win_all_time</span><span class="p">.</span><span class="n">head</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>name</th>
+      <th>total_wins</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Ferrari</td>
+      <td>1856</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>McLaren</td>
+      <td>1595</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Mercedes</td>
+      <td>1108</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Williams</td>
+      <td>934</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Red Bull</td>
+      <td>580</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
+<span class="n">sns</span><span class="p">.</span><span class="n">barplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">df_win_all_time</span><span class="p">,</span>
+            <span class="n">x</span><span class="o">=</span><span class="s">'total_wins'</span><span class="p">,</span>
+            <span class="n">y</span><span class="o">=</span><span class="s">'name'</span><span class="p">,</span>
+            <span class="n">palette</span><span class="o">=</span><span class="n">seq_palette_m</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">title</span><span class="p">(</span><span class="s">'Number of wins by constructors since 1950'</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="p">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">"Count of race wins"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">"Constructor names"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><img src="output_43_0.png" alt="png" /></p>
+
+<p><a id="earliest_team"></a></p>
+<h3 id="2-which-teams-are-the-earliest-to-participate-in-f1">2. Which teams are the earliest to participate in F1?</h3>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">%%</span><span class="k">sql</span> <span class="n">team_orgin_date</span> <span class="o">&lt;&lt;</span>
+
+<span class="k">SELECT</span> <span class="n">name</span><span class="p">,</span> <span class="k">MAX</span><span class="p">(</span><span class="n">DATEDIFF</span><span class="p">(</span><span class="nb">year</span><span class="p">,</span> <span class="nb">date</span><span class="p">,</span><span class="k">CURRENT_TIMESTAMP</span><span class="p">))</span> <span class="k">AS</span> <span class="n">team_age_years</span><span class="p">,</span> <span class="k">MIN</span><span class="p">(</span><span class="nb">date</span><span class="p">)</span> <span class="k">AS</span> <span class="n">first_race</span>
+
+<span class="k">FROM</span> 
+    <span class="n">constructor_standings</span> <span class="k">AS</span> <span class="n">cs</span>
+    
+    <span class="k">INNER</span> <span class="k">JOIN</span> <span class="n">constructors</span> <span class="k">AS</span> <span class="k">c</span>
+    <span class="k">ON</span> <span class="n">cs</span><span class="p">.</span><span class="n">constructorId</span> <span class="o">=</span> <span class="k">c</span><span class="p">.</span><span class="n">constructorId</span>
+    
+    <span class="k">INNER</span> <span class="k">JOIN</span> <span class="n">races</span> <span class="k">AS</span> <span class="n">r</span>
+    <span class="k">ON</span> <span class="n">cs</span><span class="p">.</span><span class="n">raceId</span> <span class="o">=</span> <span class="n">r</span><span class="p">.</span><span class="n">raceId</span>
+    
+    <span class="k">GROUP</span> <span class="k">BY</span> <span class="n">name</span>
+    <span class="k">ORDER</span> <span class="k">BY</span> <span class="n">team_age_years</span> <span class="k">DESC</span><span class="p">;</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> * mssql+pyodbc://@DESKTOP-8RI327A\SQLEXPRESS/F1?driver=SQL+Server
+Done.
+Returning data to local variable team_orgin_date
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_team_orgin_date</span> <span class="o">=</span> <span class="n">team_orgin_date</span><span class="p">.</span><span class="n">DataFrame</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_team_orgin_date</span><span class="p">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>name</th>
+      <th>team_age_years</th>
+      <th>first_race</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Maserati</td>
+      <td>63</td>
+      <td>1958-01-19 00:00:00.0000000</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Ferrari</td>
+      <td>63</td>
+      <td>1958-01-19 00:00:00.0000000</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Team Lotus</td>
+      <td>63</td>
+      <td>1958-05-18 00:00:00.0000000</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>BRM</td>
+      <td>63</td>
+      <td>1958-05-18 00:00:00.0000000</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Connaught</td>
+      <td>63</td>
+      <td>1958-05-18 00:00:00.0000000</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<p><strong>Description:</strong> From the table, we can see that among the eraliest team to participate since the inaugural season is Maserati, Ferrari, and Cooper. The list also includes Team Lotus and BRM. Just out of curiosity, let’s see the teams that are recently created.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_team_orgin_date</span><span class="p">.</span><span class="n">tail</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>name</th>
+      <th>team_age_years</th>
+      <th>first_race</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>154</th>
+      <td>Manor Marussia</td>
+      <td>6</td>
+      <td>2015-03-29 00:00:00.0000000</td>
+    </tr>
+    <tr>
+      <th>155</th>
+      <td>Haas F1 Team</td>
+      <td>5</td>
+      <td>2016-03-20 00:00:00.0000000</td>
+    </tr>
+    <tr>
+      <th>156</th>
+      <td>Racing Point</td>
+      <td>2</td>
+      <td>2019-03-17 00:00:00.0000000</td>
+    </tr>
+    <tr>
+      <th>157</th>
+      <td>AlphaTauri</td>
+      <td>1</td>
+      <td>2020-07-05 00:00:00.0000000</td>
+    </tr>
+    <tr>
+      <th>158</th>
+      <td>Alpine F1 Team</td>
+      <td>0</td>
+      <td>2021-03-28 00:00:00.0000000</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<p><strong>Description:</strong> Alpine team seems to be the most recently created constructors team followed by AlphaTauri and Racing Point. 3 years before that, Haas F1 Team starts their first F1 debut with Manor Marussia on the year before it. Apparently, Manor Marussia is short-lived and no longer participating in F1. Next, let’s visualize all of the team age in one plot.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># import pandas for data wrangling
+</span>
+<span class="k">def</span> <span class="nf">circular_plot</span><span class="p">(</span><span class="n">dataframe</span><span class="p">,</span><span class="n">value</span><span class="p">,</span><span class="n">item</span><span class="p">,</span><span class="n">title</span><span class="p">):</span>
+    <span class="c1"># Build a dataset
+</span>
+    <span class="c1"># Reorder the dataframe
+</span>    <span class="n">df</span> <span class="o">=</span> <span class="n">dataframe</span>
+    
+    <span class="c1"># sort (I've sorted the data before so there's no need to sort again)
+</span>    <span class="c1"># df = dataframe.sort_values(by=[value])
+</span>
+    <span class="c1"># initialize the figure
+</span>    <span class="n">plt</span><span class="p">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">,</span> <span class="n">polar</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">ax</span><span class="p">.</span><span class="n">text</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">17</span><span class="p">,</span><span class="n">y</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">s</span><span class="o">=</span><span class="n">title</span><span class="p">,</span><span class="n">backgroundcolor</span><span class="o">=</span><span class="s">"#2FD0CB"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s">'white'</span><span class="p">,</span><span class="n">ha</span><span class="o">=</span><span class="s">'center'</span><span class="p">,</span><span class="n">size</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">axis</span><span class="p">(</span><span class="s">'off'</span><span class="p">)</span>
+
+    <span class="c1"># Constants = parameters controling the plot layout:
+</span>    <span class="n">upperLimit</span> <span class="o">=</span> <span class="mi">100</span>
+    <span class="n">lowerLimit</span> <span class="o">=</span> <span class="mi">30</span>
+    <span class="n">labelPadding</span> <span class="o">=</span> <span class="mi">4</span>
+
+    <span class="c1"># Compute max and min in the dataset
+</span>    <span class="nb">max</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">value</span><span class="p">].</span><span class="nb">max</span><span class="p">()</span>
+
+    <span class="c1"># Let's compute heights: they are a conversion of each item value in those new coordinates
+</span>    <span class="c1"># In our example, 0 in the dataset will be converted to the lowerLimit (10)
+</span>    <span class="c1"># The maximum will be converted to the upperLimit (100)
+</span>    <span class="n">slope</span> <span class="o">=</span> <span class="p">(</span><span class="nb">max</span> <span class="o">-</span> <span class="n">lowerLimit</span><span class="p">)</span> <span class="o">/</span> <span class="nb">max</span>
+    <span class="n">heights</span> <span class="o">=</span> <span class="n">slope</span> <span class="o">*</span> <span class="n">df</span><span class="p">[</span><span class="n">value</span><span class="p">]</span> <span class="o">+</span> <span class="n">lowerLimit</span>
+
+    <span class="c1"># Compute the width of each bar. In total we have 2*Pi = 360°
+</span>    <span class="n">width</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="p">.</span><span class="n">pi</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">.</span><span class="n">index</span><span class="p">)</span>
+
+    <span class="c1"># Compute the angle each bar is centered on:
+</span>    <span class="n">indexes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">.</span><span class="n">index</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+    <span class="n">angles</span> <span class="o">=</span> <span class="p">[</span><span class="n">element</span> <span class="o">*</span> <span class="n">width</span> <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">indexes</span><span class="p">]</span>
+    <span class="n">angles</span>
+
+    <span class="c1"># Draw bars
+</span>    <span class="n">bars</span> <span class="o">=</span> <span class="n">ax</span><span class="p">.</span><span class="n">bar</span><span class="p">(</span>
+        <span class="n">x</span><span class="o">=</span><span class="n">angles</span><span class="p">,</span> 
+        <span class="n">height</span><span class="o">=</span><span class="n">heights</span><span class="p">,</span> 
+        <span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span> 
+        <span class="n">bottom</span><span class="o">=</span><span class="n">lowerLimit</span><span class="p">,</span>
+        <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> 
+        <span class="n">edgecolor</span><span class="o">=</span><span class="s">"white"</span><span class="p">,</span>
+        <span class="n">color</span><span class="o">=</span><span class="s">"#61a4b2"</span><span class="p">,</span>
+    <span class="p">)</span>
+    
+
+    <span class="c1"># Add labels
+</span>    <span class="k">for</span> <span class="n">bar</span><span class="p">,</span> <span class="n">angle</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">label</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">bars</span><span class="p">,</span><span class="n">angles</span><span class="p">,</span> <span class="n">heights</span><span class="p">,</span> <span class="n">df</span><span class="p">[</span><span class="n">item</span><span class="p">]):</span>
+
+        <span class="c1"># Labels are rotated. Rotation must be specified in degrees :(
+</span>        <span class="n">rotation</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">rad2deg</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span>
+
+        <span class="c1"># Flip some labels upside down
+</span>        <span class="n">alignment</span> <span class="o">=</span> <span class="s">""</span>
+        <span class="k">if</span> <span class="n">angle</span> <span class="o">&gt;=</span> <span class="n">np</span><span class="p">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span> <span class="ow">and</span> <span class="n">angle</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="o">*</span><span class="n">np</span><span class="p">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span><span class="p">:</span>
+            <span class="n">alignment</span> <span class="o">=</span> <span class="s">"right"</span>
+            <span class="n">rotation</span> <span class="o">=</span> <span class="n">rotation</span> <span class="o">+</span> <span class="mi">180</span>
+        <span class="k">else</span><span class="p">:</span> 
+            <span class="n">alignment</span> <span class="o">=</span> <span class="s">"left"</span>
+
+        <span class="c1"># Finally add the labels
+</span>        <span class="n">ax</span><span class="p">.</span><span class="n">text</span><span class="p">(</span>
+            <span class="n">x</span><span class="o">=</span><span class="n">angle</span><span class="p">,</span> 
+            <span class="n">y</span><span class="o">=</span><span class="n">lowerLimit</span> <span class="o">+</span> <span class="n">bar</span><span class="p">.</span><span class="n">get_height</span><span class="p">()</span> <span class="o">+</span> <span class="n">labelPadding</span><span class="p">,</span> 
+            <span class="n">s</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> 
+            <span class="n">ha</span><span class="o">=</span><span class="n">alignment</span><span class="p">,</span> 
+            <span class="n">va</span><span class="o">=</span><span class="s">'center'</span><span class="p">,</span> 
+            <span class="n">rotation</span><span class="o">=</span><span class="n">rotation</span><span class="p">,</span> 
+            <span class="n">rotation_mode</span><span class="o">=</span><span class="s">"anchor"</span><span class="p">)</span> 
+        
+
+<span class="n">title</span> <span class="o">=</span> <span class="s">'F1 team age'</span>
+<span class="n">circular_plot</span><span class="p">(</span><span class="n">df_team_orgin_date</span><span class="p">,</span><span class="s">'team_age_years'</span><span class="p">,</span><span class="s">'name'</span><span class="p">,</span><span class="n">title</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><img src="output_51_0.png" alt="png" /></p>
+
+<p><a id="constructors_nationality"></a></p>
+<h3 id="3-what-are-the-f1-constructors-nationality">3. What are the F1 constructors nationality?</h3>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">%%</span><span class="k">sql</span> <span class="n">teams_nation</span> <span class="o">&lt;&lt;</span>
+
+<span class="k">SELECT</span> <span class="n">nationality</span><span class="p">,</span> <span class="k">COUNT</span><span class="p">(</span><span class="n">nationality</span><span class="p">)</span> <span class="k">AS</span> <span class="n">count_teams</span>
+
+<span class="k">FROM</span> 
+    <span class="n">constructors</span> <span class="k">AS</span> <span class="k">c</span>
+    
+    <span class="k">GROUP</span> <span class="k">BY</span> <span class="n">nationality</span>
+    <span class="k">ORDER</span> <span class="k">BY</span> <span class="n">count_teams</span> <span class="k">DESC</span><span class="p">;</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> * mssql+pyodbc://@DESKTOP-8RI327A\SQLEXPRESS/F1?driver=SQL+Server
+Done.
+Returning data to local variable teams_nation
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_teams_nation</span> <span class="o">=</span> <span class="n">teams_nation</span><span class="p">.</span><span class="n">DataFrame</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_teams_nation</span><span class="p">.</span><span class="n">head</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>nationality</th>
+      <th>count_teams</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>British</td>
+      <td>86</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>American</td>
+      <td>39</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Italian</td>
+      <td>29</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>French</td>
+      <td>13</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>German</td>
+      <td>10</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">b_figsize</span><span class="p">)</span>
+<span class="n">sns</span><span class="p">.</span><span class="n">barplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">df_teams_nation</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s">'nationality'</span><span class="p">,</span>
+            <span class="n">y</span><span class="o">=</span><span class="s">'count_teams'</span><span class="p">,</span>
+            <span class="n">palette</span><span class="o">=</span><span class="n">seq_palette_m</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">title</span><span class="p">(</span><span class="s">'Nationality of F1 Teams'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">"Nationality"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">"Count of constructors"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">rotation</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><img src="output_56_0.png" alt="png" /></p>
+
+<p><strong>Description:</strong> From the chart, we can see most of the team’s nationality is British which twice more than the count of American teams. <a href="https://www.bbc.com/sport/formula1/23048643">From this aricle by BBC</a>, it is mostly due to its history and heritage. The UK had lots of unused airfields for racing and testing. Similar to Silicon Valley, having a “motorsport valley” attracts a lot of engineers who live close to each other which leads to a high supply of quality workforce.</p>
+
+<p><a id="winning_hybrid"></a></p>
+<h3 id="4-who-are-the-winning-teams-since-the-hybrid-era">4. Who are the winning teams since the Hybrid era?</h3>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">%%</span><span class="k">sql</span> <span class="n">wins_hybrid</span> <span class="o">&lt;&lt;</span>
+
+<span class="k">SELECT</span> <span class="n">name</span><span class="p">,</span><span class="k">SUM</span><span class="p">(</span><span class="n">wins</span><span class="p">)</span> <span class="k">AS</span> <span class="n">total_wins</span>
+<span class="k">FROM</span> 
+    <span class="n">constructor_standings</span> <span class="k">AS</span> <span class="n">cs</span>
+    
+    <span class="k">INNER</span> <span class="k">JOIN</span> <span class="n">constructors</span> <span class="k">AS</span> <span class="k">c</span>
+    <span class="k">ON</span> <span class="n">cs</span><span class="p">.</span><span class="n">constructorId</span> <span class="o">=</span> <span class="k">c</span><span class="p">.</span><span class="n">constructorId</span>
+    
+    <span class="k">INNER</span> <span class="k">JOIN</span> <span class="n">races</span> <span class="k">AS</span> <span class="n">r</span>
+    <span class="k">ON</span> <span class="n">cs</span><span class="p">.</span><span class="n">raceId</span> <span class="o">=</span> <span class="n">r</span><span class="p">.</span><span class="n">raceId</span>
+    
+    <span class="k">WHERE</span> <span class="n">r</span><span class="p">.</span><span class="nb">year</span> <span class="o">&gt;=</span> <span class="s1">'2014'</span> <span class="k">AND</span> <span class="n">wins</span><span class="o">&gt;=</span><span class="mi">1</span>
+    <span class="k">GROUP</span> <span class="k">BY</span> <span class="n">name</span>
+    <span class="k">ORDER</span> <span class="k">BY</span> <span class="n">total_wins</span> <span class="k">DESC</span><span class="p">;</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> * mssql+pyodbc://@DESKTOP-8RI327A\SQLEXPRESS/F1?driver=SQL+Server
+Done.
+Returning data to local variable wins_hybrid
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_wins_hybrid</span> <span class="o">=</span> <span class="n">wins_hybrid</span><span class="p">.</span><span class="n">DataFrame</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_wins_hybrid</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>name</th>
+      <th>total_wins</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Mercedes</td>
+      <td>1054</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Ferrari</td>
+      <td>205</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Red Bull</td>
+      <td>166</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>AlphaTauri</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Racing Point</td>
+      <td>2</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">b_figsize</span><span class="p">)</span>
+<span class="n">sns</span><span class="p">.</span><span class="n">barplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">df_wins_hybrid</span><span class="p">,</span>
+            <span class="n">x</span><span class="o">=</span><span class="s">'name'</span><span class="p">,</span>
+            <span class="n">y</span><span class="o">=</span><span class="s">'total_wins'</span><span class="p">,</span>
+            <span class="n">palette</span><span class="o">=</span><span class="n">seq_palette_m</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">title</span><span class="p">(</span><span class="s">'Number of wins by team in the Hybrid era'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">"Constructor name"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">"Count of wins"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><img src="output_62_0.png" alt="png" /></p>
+
+<p><strong>Description:</strong> From the analysis, we can see that the Mercedes team had totaly dominated the F1 championship during the hybrid era which is from 2014 and onwards. Interestingly, as we can see from the plot, most of the races are won by these 5 teams since 2014.</p>
+
+<p><a id="2021_team_perf"></a></p>
+<h3 id="5-how-are-the-performance-of-the-2021-teams-before">5. How are the performance of the 2021 teams before?</h3>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">%%</span><span class="k">sql</span> <span class="n">performance_2021_c</span> <span class="o">&lt;&lt;</span>
+
+<span class="k">SELECT</span> <span class="n">name</span> <span class="k">AS</span> <span class="k">constructor</span><span class="p">,</span> <span class="nb">YEAR</span><span class="p">(</span><span class="k">CONVERT</span><span class="p">(</span><span class="nb">datetime</span><span class="p">,</span> <span class="nb">date</span><span class="p">))</span> <span class="k">AS</span> <span class="nb">year</span><span class="p">,</span> <span class="k">SUM</span><span class="p">(</span><span class="k">CAST</span><span class="p">(</span><span class="n">points</span> <span class="k">AS</span> <span class="nb">float</span><span class="p">))</span> <span class="n">total_points</span>
+
+<span class="k">FROM</span>
+
+    <span class="n">constructor_results</span> <span class="k">AS</span> <span class="n">cr</span>
+
+    <span class="k">INNER</span> <span class="k">JOIN</span> <span class="n">constructors</span> <span class="k">AS</span> <span class="k">c</span>
+    <span class="k">ON</span> <span class="n">cr</span><span class="p">.</span><span class="n">constructorId</span> <span class="o">=</span> <span class="k">c</span><span class="p">.</span><span class="n">constructorId</span>
+
+    <span class="k">INNER</span> <span class="k">JOIN</span> <span class="n">races</span> <span class="k">AS</span> <span class="n">r</span>
+    <span class="k">ON</span> <span class="n">cr</span><span class="p">.</span><span class="n">raceId</span> <span class="o">=</span> <span class="n">r</span><span class="p">.</span><span class="n">raceId</span>
+    
+    <span class="k">WHERE</span> <span class="n">name</span> <span class="k">IN</span>
+
+        <span class="p">(</span><span class="k">SELECT</span> <span class="k">DISTINCT</span> <span class="k">c</span><span class="p">.</span><span class="n">name</span>
+
+        <span class="k">FROM</span> 
+            <span class="n">constructor_results</span> <span class="k">AS</span> <span class="n">cr</span>
+
+            <span class="k">INNER</span> <span class="k">JOIN</span> <span class="n">constructors</span> <span class="k">AS</span> <span class="k">c</span>
+            <span class="k">ON</span> <span class="n">cr</span><span class="p">.</span><span class="n">constructorId</span> <span class="o">=</span> <span class="k">c</span><span class="p">.</span><span class="n">constructorId</span>
+
+            <span class="k">INNER</span> <span class="k">JOIN</span> <span class="n">races</span> <span class="k">AS</span> <span class="n">r</span>
+            <span class="k">ON</span> <span class="n">cr</span><span class="p">.</span><span class="n">raceId</span> <span class="o">=</span> <span class="n">r</span><span class="p">.</span><span class="n">raceId</span>
+
+           <span class="k">WHERE</span> <span class="nb">date</span> <span class="o">&gt;=</span> <span class="k">Convert</span><span class="p">(</span><span class="nb">datetime</span><span class="p">,</span> <span class="s1">'2020-12-31'</span> <span class="p">))</span>
+        
+<span class="k">GROUP</span> <span class="k">BY</span> <span class="nb">YEAR</span><span class="p">(</span><span class="k">CONVERT</span><span class="p">(</span><span class="nb">datetime</span><span class="p">,</span> <span class="nb">date</span><span class="p">)),</span><span class="n">name</span>
+<span class="k">ORDER</span> <span class="k">BY</span> <span class="nb">year</span><span class="p">;</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> * mssql+pyodbc://@DESKTOP-8RI327A\SQLEXPRESS/F1?driver=SQL+Server
+Done.
+Returning data to local variable performance_2021_c
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_performance_2021_c</span> <span class="o">=</span><span class="n">performance_2021_c</span><span class="p">.</span><span class="n">DataFrame</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_performance_2021_c</span><span class="p">.</span><span class="n">head</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>constructor</th>
+      <th>year</th>
+      <th>total_points</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Ferrari</td>
+      <td>1956</td>
+      <td>21.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Ferrari</td>
+      <td>1958</td>
+      <td>61.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Aston Martin</td>
+      <td>1959</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Ferrari</td>
+      <td>1959</td>
+      <td>38.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Aston Martin</td>
+      <td>1960</td>
+      <td>0.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">8</span><span class="p">))</span>
+
+<span class="n">sns</span><span class="p">.</span><span class="n">scatterplot</span><span class="p">(</span>
+    <span class="n">data</span><span class="o">=</span><span class="n">df_performance_2021_c</span><span class="p">,</span>
+    <span class="n">x</span><span class="o">=</span><span class="s">"year"</span><span class="p">,</span>
+    <span class="n">y</span><span class="o">=</span><span class="s">'total_points'</span><span class="p">,</span>
+    <span class="n">hue</span><span class="o">=</span><span class="s">"constructor"</span><span class="p">,</span>
+    <span class="n">size</span><span class="o">=</span><span class="s">'total_points'</span><span class="p">,</span>
+    <span class="n">sizes</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">500</span><span class="p">),</span>
+    <span class="n">alpha</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span>
+    <span class="n">palette</span><span class="o">=</span><span class="s">"hls"</span>
+<span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">title</span><span class="p">(</span><span class="s">"Performance of the 2021 teams throughout time"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">"Year"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">"Total race points"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><img src="output_68_0.png" alt="png" /></p>
+
+<p><strong>Description:</strong> From the plot, we can see that Ferarri are among the oldest team to compete in the 2021 followed by Aston Martin and Alfa Romeo. It seems like the last two aforementioned constructors haven’t score any significant points past 1970. This may be due to the teams hasn’t participated for a while and making their return at the 2020 season.</p>
+
+<p>We can also see that Red Bull had been winning a lot of points upon the year 2010 as well as the Mercedes team earliest obtained points. Even though they starts participating races in the later seasons, it seems like the team dominates the season beyond 2014 which is the start of the hybrid era.</p>
+
+<p>What’s even interesting is that Ferrari had a sudden drop of points nearing the 2020 season. <a href="https://www.autosport.com/f1/news/binotto-ferrari-performance-so-far-in-2021-is-a-relief/6494159/">From this article</a>, it seems like the Ferrari team’s car for that season is suffering from performance and design issues.</p>
+
+<p><a id="circuits_race"></a></p>
+<h2 id="f1-circuits-and-races">F1 circuits and races</h2>
+
+<p><a id="tracks_location"></a></p>
+<h3 id="1-where-are-most-of-the-f1-tracks-located">1. Where are most of the F1 tracks located?</h3>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">%%</span><span class="k">sql</span> <span class="n">circuit_map</span> <span class="o">&lt;&lt;</span>
+
+<span class="k">SELECT</span> 
+    <span class="n">name</span><span class="p">,</span>
+    <span class="k">location</span><span class="p">,</span>
+    <span class="n">country</span><span class="p">,</span>
+    <span class="n">lat</span><span class="p">,</span>
+    <span class="n">lng</span><span class="p">,</span>
+    <span class="k">CONVERT</span><span class="p">(</span><span class="nb">INT</span><span class="p">,</span><span class="n">alt</span><span class="p">)</span> <span class="k">as</span> <span class="n">alt</span>
+<span class="k">FROM</span>
+    <span class="n">circuits</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> * mssql+pyodbc://@DESKTOP-8RI327A\SQLEXPRESS/F1?driver=SQL+Server
+Done.
+Returning data to local variable circuit_map
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_circuit_map</span> <span class="o">=</span> <span class="n">circuit_map</span><span class="p">.</span><span class="n">DataFrame</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_circuit_map</span><span class="p">.</span><span class="n">dtypes</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>name         object
+location     object
+country      object
+lat         float64
+lng         float64
+alt           int64
+dtype: object
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">altair</span> <span class="k">as</span> <span class="n">alt</span>
+<span class="kn">from</span> <span class="nn">vega_datasets</span> <span class="kn">import</span> <span class="n">data</span>
+
+<span class="n">states</span> <span class="o">=</span> <span class="n">alt</span><span class="p">.</span><span class="n">topo_feature</span><span class="p">(</span><span class="n">data</span><span class="p">.</span><span class="n">world_110m</span><span class="p">.</span><span class="n">url</span><span class="p">,</span> <span class="s">'countries'</span><span class="p">)</span>
+<span class="n">circuits</span> <span class="o">=</span> <span class="n">df_circuit_map</span>
+
+<span class="n">background</span> <span class="o">=</span> <span class="n">alt</span><span class="p">.</span><span class="n">Chart</span><span class="p">(</span><span class="n">states</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s">'F1 Circuits location'</span><span class="p">).</span><span class="n">mark_geoshape</span><span class="p">(</span>
+    <span class="n">fill</span><span class="o">=</span><span class="s">'lightgray'</span><span class="p">,</span>
+    <span class="n">stroke</span><span class="o">=</span><span class="s">'white'</span>
+<span class="p">).</span><span class="n">project</span><span class="p">(</span><span class="s">'equalEarth'</span><span class="p">).</span><span class="n">properties</span><span class="p">(</span>
+    <span class="n">width</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
+    <span class="n">height</span><span class="o">=</span><span class="mi">300</span>
+<span class="p">)</span>
+
+<span class="n">points</span> <span class="o">=</span> <span class="n">alt</span><span class="p">.</span><span class="n">Chart</span><span class="p">(</span><span class="n">circuits</span><span class="p">).</span><span class="n">mark_circle</span><span class="p">().</span><span class="n">encode</span><span class="p">(</span>
+    <span class="n">longitude</span><span class="o">=</span><span class="s">'lng:Q'</span><span class="p">,</span>
+    <span class="n">latitude</span><span class="o">=</span><span class="s">'lat:Q'</span><span class="p">,</span>
+    <span class="n">size</span><span class="o">=</span><span class="n">alt</span><span class="p">.</span><span class="n">value</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span>
+    <span class="n">tooltip</span><span class="o">=</span><span class="p">(</span><span class="s">'name'</span><span class="p">,</span><span class="s">'country'</span><span class="p">,</span><span class="s">'location'</span><span class="p">),</span>
+    <span class="n">color</span><span class="o">=</span><span class="n">alt</span><span class="p">.</span><span class="n">Color</span><span class="p">(</span><span class="s">'alt'</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">alt</span><span class="p">.</span><span class="n">Scale</span><span class="p">(</span><span class="n">scheme</span><span class="o">=</span><span class="n">seq_palette_m</span><span class="p">))</span>
+<span class="p">)</span>
+
+<span class="n">background</span> <span class="o">+</span> <span class="n">points</span>
+</code></pre></div></div>
+
+<div id="altair-viz-498d53e6eb87414ebec8167486ae509e"></div>
+<script type="text/javascript">
+  (function(spec, embedOpt){
+    let outputDiv = document.currentScript.previousElementSibling;
+    if (outputDiv.id !== "altair-viz-498d53e6eb87414ebec8167486ae509e") {
+      outputDiv = document.getElementById("altair-viz-498d53e6eb87414ebec8167486ae509e");
+    }
+    const paths = {
+      "vega": "https://cdn.jsdelivr.net/npm//vega@5?noext",
+      "vega-lib": "https://cdn.jsdelivr.net/npm//vega-lib?noext",
+      "vega-lite": "https://cdn.jsdelivr.net/npm//vega-lite@4.8.1?noext",
+      "vega-embed": "https://cdn.jsdelivr.net/npm//vega-embed@6?noext",
+    };
+
+    function loadScript(lib) {
+      return new Promise(function(resolve, reject) {
+        var s = document.createElement('script');
+        s.src = paths[lib];
+        s.async = true;
+        s.onload = () => resolve(paths[lib]);
+        s.onerror = () => reject(`Error loading script: ${paths[lib]}`);
+        document.getElementsByTagName("head")[0].appendChild(s);
+      });
+    }
+
+    function showError(err) {
+      outputDiv.innerHTML = `<div class="error" style="color:red;">${err}</div>`;
+      throw err;
+    }
+
+    function displayChart(vegaEmbed) {
+      vegaEmbed(outputDiv, spec, embedOpt)
+        .catch(err => showError(`Javascript Error: ${err.message}<br>This usually means there's a typo in your chart specification. See the javascript console for the full traceback.`));
+    }
+
+    if(typeof define === "function" && define.amd) {
+      requirejs.config({paths});
+      require(["vega-embed"], displayChart, err => showError(`Error loading script: ${err.message}`));
+    } else if (typeof vegaEmbed === "function") {
+      displayChart(vegaEmbed);
+    } else {
+      loadScript("vega")
+        .then(() => loadScript("vega-lite"))
+        .then(() => loadScript("vega-embed"))
+        .catch(showError)
+        .then(() => displayChart(vegaEmbed));
+    }
+  })({"config": {"view": {"continuousWidth": 400, "continuousHeight": 300}}, "layer": [{"data": {"url": "https://cdn.jsdelivr.net/npm/vega-datasets@v1.29.0/data/world-110m.json", "format": {"feature": "countries", "type": "topojson"}}, "mark": {"type": "geoshape", "fill": "lightgray", "stroke": "white"}, "height": 300, "projection": {"type": "equalEarth"}, "title": "F1 Circuits location", "width": 500}, {"data": {"name": "data-fc15649da3660a7f0eeac96edbde2acc"}, "mark": "circle", "encoding": {"color": {"type": "quantitative", "field": "alt", "scale": {"scheme": "viridis"}}, "latitude": {"field": "lat", "type": "quantitative"}, "longitude": {"field": "lng", "type": "quantitative"}, "size": {"value": 100}, "tooltip": [{"type": "nominal", "field": "name"}, {"type": "nominal", "field": "country"}, {"type": "nominal", "field": "location"}]}}], "$schema": "https://vega.github.io/schema/vega-lite/v4.8.1.json", "datasets": {"data-fc15649da3660a7f0eeac96edbde2acc": [{"name": "Albert Park Grand Prix Circuit", "location": "Melbourne", "country": "Australia", "lat": -37.8497, "lng": 144.968, "alt": 10}, {"name": "Sepang International Circuit", "location": "Kuala Lumpur", "country": "Malaysia", "lat": 2.76083, "lng": 101.738, "alt": 18}, {"name": "Bahrain International Circuit", "location": "Sakhir", "country": "Bahrain", "lat": 26.0325, "lng": 50.5106, "alt": 7}, {"name": "Circuit de Barcelona-Catalunya", "location": "Montmel\u00f3", "country": "Spain", "lat": 41.57, "lng": 2.26111, "alt": 109}, {"name": "Istanbul Park", "location": "Istanbul", "country": "Turkey", "lat": 40.9517, "lng": 29.405, "alt": 130}, {"name": "Circuit de Monaco", "location": "Monte-Carlo", "country": "Monaco", "lat": 43.7347, "lng": 7.42056, "alt": 7}, {"name": "Circuit Gilles Villeneuve", "location": "Montreal", "country": "Canada", "lat": 45.5, "lng": -73.5228, "alt": 13}, {"name": "Circuit de Nevers Magny-Cours", "location": "Magny Cours", "country": "France", "lat": 46.8642, "lng": 3.16361, "alt": 228}, {"name": "Silverstone Circuit", "location": "Silverstone", "country": "UK", "lat": 52.0786, "lng": -1.01694, "alt": 153}, {"name": "Hockenheimring", "location": "Hockenheim", "country": "Germany", "lat": 49.3278, "lng": 8.56583, "alt": 103}, {"name": "Hungaroring", "location": "Budapest", "country": "Hungary", "lat": 47.5789, "lng": 19.2486, "alt": 264}, {"name": "Valencia Street Circuit", "location": "Valencia", "country": "Spain", "lat": 39.4589, "lng": -0.331667, "alt": 4}, {"name": "Circuit de Spa-Francorchamps", "location": "Spa", "country": "Belgium", "lat": 50.4372, "lng": 5.97139, "alt": 401}, {"name": "Autodromo Nazionale di Monza", "location": "Monza", "country": "Italy", "lat": 45.6156, "lng": 9.28111, "alt": 162}, {"name": "Marina Bay Street Circuit", "location": "Marina Bay", "country": "Singapore", "lat": 1.2914, "lng": 103.864, "alt": 18}, {"name": "Fuji Speedway", "location": "Oyama", "country": "Japan", "lat": 35.3717, "lng": 138.927, "alt": 583}, {"name": "Shanghai International Circuit", "location": "Shanghai", "country": "China", "lat": 31.3389, "lng": 121.22, "alt": 5}, {"name": "Aut\u00f3dromo Jos\u00e9 Carlos Pace", "location": "S\u00e3o Paulo", "country": "Brazil", "lat": -23.7036, "lng": -46.6997, "alt": 785}, {"name": "Indianapolis Motor Speedway", "location": "Indianapolis", "country": "USA", "lat": 39.795, "lng": -86.2347, "alt": 223}, {"name": "N\u00fcrburgring", "location": "N\u00fcrburg", "country": "Germany", "lat": 50.3356, "lng": 6.9475, "alt": 578}, {"name": "Autodromo Enzo e Dino Ferrari", "location": "Imola", "country": "Italy", "lat": 44.3439, "lng": 11.7167, "alt": 37}, {"name": "Suzuka Circuit", "location": "Suzuka", "country": "Japan", "lat": 34.8431, "lng": 136.541, "alt": 45}, {"name": "A1-Ring", "location": "Spielburg", "country": "Austria", "lat": 47.2197, "lng": 14.7647, "alt": 678}, {"name": "Yas Marina Circuit", "location": "Abu Dhabi", "country": "UAE", "lat": 24.4672, "lng": 54.6031, "alt": 3}, {"name": "Aut\u00f3dromo Juan y Oscar G\u00e1lvez", "location": "Buenos Aires", "country": "Argentina", "lat": -34.6943, "lng": -58.4593, "alt": 8}, {"name": "Circuito de Jerez", "location": "Jerez de la Frontera", "country": "Spain", "lat": 36.7083, "lng": -6.03417, "alt": 37}, {"name": "Aut\u00f3dromo do Estoril", "location": "Estoril", "country": "Portugal", "lat": 38.7506, "lng": -9.39417, "alt": 130}, {"name": "Okayama International Circuit", "location": "Okayama", "country": "Japan", "lat": 34.915, "lng": 134.221, "alt": 266}, {"name": "Adelaide Street Circuit", "location": "Adelaide", "country": "Australia", "lat": -34.9272, "lng": 138.617, "alt": 58}, {"name": "Kyalami", "location": "Midrand", "country": "South Africa", "lat": -25.9894, "lng": 28.0767, "alt": 1460}, {"name": "Donington Park", "location": "Castle Donington", "country": "UK", "lat": 52.8306, "lng": -1.37528, "alt": 88}, {"name": "Aut\u00f3dromo Hermanos Rodr\u00edguez", "location": "Mexico City", "country": "Mexico", "lat": 19.4042, "lng": -99.0907, "alt": 2227}, {"name": "Phoenix street circuit", "location": "Phoenix", "country": "USA", "lat": 33.4479, "lng": -112.075, "alt": 345}, {"name": "Circuit Paul Ricard", "location": "Le Castellet", "country": "France", "lat": 43.2506, "lng": 5.79167, "alt": 432}, {"name": "Korean International Circuit", "location": "Yeongam County", "country": "Korea", "lat": 34.7333, "lng": 126.417, "alt": 0}, {"name": "Aut\u00f3dromo Internacional Nelson Piquet", "location": "Rio de Janeiro", "country": "Brazil", "lat": -22.9756, "lng": -43.395, "alt": 1126}, {"name": "Detroit Street Circuit", "location": "Detroit", "country": "USA", "lat": 42.3298, "lng": -83.0401, "alt": 177}, {"name": "Brands Hatch", "location": "Kent", "country": "UK", "lat": 51.3569, "lng": 0.263056, "alt": 145}, {"name": "Circuit Park Zandvoort", "location": "Zandvoort", "country": "Netherlands", "lat": 52.3888, "lng": 4.54092, "alt": 6}, {"name": "Zolder", "location": "Heusden-Zolder", "country": "Belgium", "lat": 50.9894, "lng": 5.25694, "alt": 36}, {"name": "Dijon-Prenois", "location": "Dijon", "country": "France", "lat": 47.3625, "lng": 4.89913, "alt": 484}, {"name": "Fair Park", "location": "Dallas", "country": "USA", "lat": 32.7774, "lng": -96.7587, "alt": 139}, {"name": "Long Beach", "location": "California", "country": "USA", "lat": 33.7651, "lng": -118.189, "alt": 12}, {"name": "Las Vegas Street Circuit", "location": "Nevada", "country": "USA", "lat": 36.1162, "lng": -115.174, "alt": 639}, {"name": "Jarama", "location": "Madrid", "country": "Spain", "lat": 40.6171, "lng": -3.58558, "alt": 609}, {"name": "Watkins Glen", "location": "New York State", "country": "USA", "lat": 42.3369, "lng": -76.9272, "alt": 485}, {"name": "Scandinavian Raceway", "location": "Anderstorp", "country": "Sweden", "lat": 57.2653, "lng": 13.6042, "alt": 153}, {"name": "Mosport International Raceway", "location": "Ontario", "country": "Canada", "lat": 44.0481, "lng": -78.6756, "alt": 332}, {"name": "Montju\u00efc", "location": "Barcelona", "country": "Spain", "lat": 41.3664, "lng": 2.15167, "alt": 79}, {"name": "Nivelles-Baulers", "location": "Brussels", "country": "Belgium", "lat": 50.6211, "lng": 4.32694, "alt": 139}, {"name": "Charade Circuit", "location": "Clermont-Ferrand", "country": "France", "lat": 45.7472, "lng": 3.03889, "alt": 790}, {"name": "Circuit Mont-Tremblant", "location": "Quebec", "country": "Canada", "lat": 46.1877, "lng": -74.6099, "alt": 214}, {"name": "Rouen-Les-Essarts", "location": "Rouen", "country": "France", "lat": 49.3306, "lng": 1.00458, "alt": 81}, {"name": "Le Mans", "location": "Le Mans", "country": "France", "lat": 47.95, "lng": 0.224231, "alt": 67}, {"name": "Reims-Gueux", "location": "Reims", "country": "France", "lat": 49.2542, "lng": 3.93083, "alt": 88}, {"name": "Prince George Circuit", "location": "Eastern Cape Province", "country": "South Africa", "lat": -33.0486, "lng": 27.8736, "alt": 15}, {"name": "Zeltweg", "location": "Styria", "country": "Austria", "lat": 47.2039, "lng": 14.7478, "alt": 676}, {"name": "Aintree", "location": "Liverpool", "country": "UK", "lat": 53.4769, "lng": -2.94056, "alt": 20}, {"name": "Circuito da Boavista", "location": "Oporto", "country": "Portugal", "lat": 41.1705, "lng": -8.67325, "alt": 28}, {"name": "Riverside International Raceway", "location": "California", "country": "USA", "lat": 33.937, "lng": -117.273, "alt": 470}, {"name": "AVUS", "location": "Berlin", "country": "Germany", "lat": 52.4806, "lng": 13.2514, "alt": 53}, {"name": "Monsanto Park Circuit", "location": "Lisbon", "country": "Portugal", "lat": 38.7197, "lng": -9.20306, "alt": 158}, {"name": "Sebring International Raceway", "location": "Florida", "country": "USA", "lat": 27.4547, "lng": -81.3483, "alt": 18}, {"name": "Ain Diab", "location": "Casablanca", "country": "Morocco", "lat": 33.5786, "lng": -7.6875, "alt": 19}, {"name": "Pescara Circuit", "location": "Pescara", "country": "Italy", "lat": 42.475, "lng": 14.1508, "alt": 129}, {"name": "Circuit Bremgarten", "location": "Bern", "country": "Switzerland", "lat": 46.9589, "lng": 7.40194, "alt": 551}, {"name": "Circuit de Pedralbes", "location": "Barcelona", "country": "Spain", "lat": 41.3903, "lng": 2.11667, "alt": 85}, {"name": "Buddh International Circuit", "location": "Uttar Pradesh", "country": "India", "lat": 28.3487, "lng": 77.5331, "alt": 194}, {"name": "Circuit of the Americas", "location": "Austin", "country": "USA", "lat": 30.1328, "lng": -97.6411, "alt": 161}, {"name": "Red Bull Ring", "location": "Spielburg", "country": "Austria", "lat": 47.2197, "lng": 14.7647, "alt": 678}, {"name": "Sochi Autodrom", "location": "Sochi", "country": "Russia", "lat": 43.4057, "lng": 39.9578, "alt": 2}, {"name": "Port Imperial Street Circuit", "location": "New Jersey", "country": "USA", "lat": 40.7769, "lng": -74.0111, "alt": 4}, {"name": "Baku City Circuit", "location": "Baku", "country": "Azerbaijan", "lat": 40.3725, "lng": 49.8533, "alt": -7}, {"name": "Hanoi Street Circuit", "location": "Hanoi", "country": "Vietnam", "lat": 21.0166, "lng": 105.766, "alt": 9}, {"name": "Aut\u00f3dromo Internacional do Algarve", "location": "Portim\u00e3o", "country": "Portugal", "lat": 37.227, "lng": -8.6267, "alt": 108}, {"name": "Autodromo Internazionale del Mugello", "location": "Mugello", "country": "Italy", "lat": 43.9975, "lng": 11.3719, "alt": 255}, {"name": "Jeddah Street Circuit", "location": "Jeddah", "country": "Saudi Arabia", "lat": 21.5433, "lng": 39.1728, "alt": 15}]}}, {"mode": "vega-lite"});
+</script>
+
+<p><strong>Description:</strong> As we can see from the map, we can see that most of the F1 race tracks are mostly in the Europe and North America. In Asia, there are more track on the East in camparison to the South East. Most of the tracks are at sea level. The track that is very further from sea level which is the Autódromo Hermanos Rodríguez (Mexico city). Track altitudes are taken into consideration by teams since at lower pressures of high altitudes, air molecules spread out more so the air becomes less dense. This will greatly affect the aerodynamics of the car.</p>
+
+<p><a id="fastest_lap_time_gp"></a></p>
+<h3 id="2-what-are-the-the-fastest-lap-time-for-each-grand-prix">2. What are the the fastest lap time for each Grand Prix?</h3>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">%%</span><span class="k">sql</span> <span class="n">fastest_lap</span> <span class="o">&lt;&lt;</span>
+
+<span class="k">WITH</span> <span class="n">cte</span> <span class="k">as</span> <span class="p">(</span>
+      <span class="k">SELECT</span>
+    <span class="n">race_name</span><span class="p">,</span>
+    <span class="n">CONCAT</span><span class="p">(</span><span class="n">forename</span><span class="p">,</span> <span class="s1">' '</span><span class="p">,</span> <span class="n">surname</span><span class="p">)</span> <span class="k">AS</span> <span class="n">driver_name</span><span class="p">,</span>
+    <span class="k">MIN</span><span class="p">(</span><span class="n">l</span><span class="p">.</span><span class="n">milliseconds</span><span class="p">)</span> <span class="k">as</span> <span class="n">time_milli</span><span class="p">,</span>
+    <span class="n">RANK</span><span class="p">()</span> <span class="n">OVER</span> <span class="p">(</span><span class="n">PARTITION</span> <span class="k">BY</span> <span class="n">race_name</span> <span class="k">ORDER</span> <span class="k">BY</span> <span class="k">MIN</span><span class="p">(</span><span class="n">l</span><span class="p">.</span><span class="n">milliseconds</span><span class="p">))</span> <span class="k">as</span> <span class="n">seqnum</span>
+    <span class="k">FROM</span> 
+    
+        <span class="n">lap_times</span> <span class="k">AS</span> <span class="n">l</span>
+    
+        <span class="k">INNER</span> <span class="k">JOIN</span> <span class="n">races</span> <span class="k">AS</span> <span class="n">r</span>
+        <span class="k">ON</span> <span class="n">l</span><span class="p">.</span><span class="n">raceId</span> <span class="o">=</span> <span class="n">r</span><span class="p">.</span><span class="n">raceId</span>
+
+        <span class="k">INNER</span> <span class="k">JOIN</span> <span class="n">drivers</span> <span class="k">AS</span> <span class="n">d</span>
+        <span class="k">ON</span> <span class="n">l</span><span class="p">.</span><span class="n">driverId</span> <span class="o">=</span> <span class="n">d</span><span class="p">.</span><span class="n">driverId</span>
+    
+    <span class="k">GROUP</span> <span class="k">BY</span> <span class="n">race_name</span><span class="p">,</span> <span class="n">CONCAT</span><span class="p">(</span><span class="n">forename</span><span class="p">,</span> <span class="s1">' '</span><span class="p">,</span> <span class="n">surname</span><span class="p">)</span>
+
+     <span class="p">)</span>
+<span class="k">SELECT</span>
+
+<span class="n">race_name</span><span class="p">,</span>
+<span class="n">driver_name</span><span class="p">,</span>
+<span class="k">COUNT</span><span class="p">(</span><span class="n">driver_name</span><span class="p">)</span> <span class="n">OVER</span><span class="p">(</span><span class="n">PARTITION</span> <span class="k">BY</span> <span class="n">driver_name</span><span class="p">)</span> <span class="k">AS</span> <span class="n">driver_freq</span><span class="p">,</span>
+<span class="n">time_milli</span>
+
+<span class="k">FROM</span> <span class="n">cte</span>
+<span class="k">WHERE</span> <span class="n">seqnum</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="k">ORDER</span> <span class="k">BY</span> <span class="n">race_name</span><span class="p">;</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> * mssql+pyodbc://@DESKTOP-8RI327A\SQLEXPRESS/F1?driver=SQL+Server
+Done.
+Returning data to local variable fastest_lap
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_fastest_lap</span> <span class="o">=</span> <span class="n">fastest_lap</span><span class="p">.</span><span class="n">DataFrame</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_fastest_lap</span><span class="p">[</span><span class="s">'time_delta'</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">to_timedelta</span><span class="p">(</span><span class="n">df_fastest_lap</span><span class="p">[</span><span class="s">'time_milli'</span><span class="p">],</span> <span class="n">unit</span><span class="o">=</span><span class="s">'ms'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_fastest_lap</span><span class="p">.</span><span class="n">style</span><span class="p">.</span><span class="n">background_gradient</span><span class="p">(</span><span class="n">cmap</span><span class="o">=</span><span class="s">'PuBu'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<style type="text/css">
+#T_9c748_row0_col2,#T_9c748_row1_col2,#T_9c748_row7_col3,#T_9c748_row7_col4,#T_9c748_row10_col2,#T_9c748_row13_col2,#T_9c748_row25_col2,#T_9c748_row26_col2,#T_9c748_row27_col2,#T_9c748_row34_col2{
+            background-color:  #023858;
+            color:  #f1f1f1;
+        }#T_9c748_row0_col3,#T_9c748_row0_col4{
+            background-color:  #2685bb;
+            color:  #000000;
+        }#T_9c748_row1_col3,#T_9c748_row1_col4{
+            background-color:  #04588a;
+            color:  #f1f1f1;
+        }#T_9c748_row2_col2,#T_9c748_row5_col2,#T_9c748_row15_col2,#T_9c748_row20_col2,#T_9c748_row22_col2,#T_9c748_row28_col2,#T_9c748_row28_col3,#T_9c748_row28_col4,#T_9c748_row30_col2,#T_9c748_row31_col2,#T_9c748_row32_col2{
+            background-color:  #fff7fb;
+            color:  #000000;
+        }#T_9c748_row2_col3,#T_9c748_row2_col4{
+            background-color:  #2a88bc;
+            color:  #000000;
+        }#T_9c748_row3_col2,#T_9c748_row6_col2,#T_9c748_row9_col2,#T_9c748_row11_col2,#T_9c748_row17_col2,#T_9c748_row29_col2{
+            background-color:  #1379b5;
+            color:  #f1f1f1;
+        }#T_9c748_row3_col3,#T_9c748_row3_col4{
+            background-color:  #4e9ac6;
+            color:  #000000;
+        }#T_9c748_row4_col2,#T_9c748_row7_col2,#T_9c748_row8_col2,#T_9c748_row12_col2,#T_9c748_row14_col2,#T_9c748_row16_col2,#T_9c748_row19_col2,#T_9c748_row24_col2,#T_9c748_row33_col2,#T_9c748_row35_col2{
+            background-color:  #e8e4f0;
+            color:  #000000;
+        }#T_9c748_row4_col3,#T_9c748_row4_col4{
+            background-color:  #d8d7e9;
+            color:  #000000;
+        }#T_9c748_row5_col3,#T_9c748_row5_col4{
+            background-color:  #034369;
+            color:  #f1f1f1;
+        }#T_9c748_row6_col3,#T_9c748_row6_col4{
+            background-color:  #187cb6;
+            color:  #000000;
+        }#T_9c748_row8_col3,#T_9c748_row8_col4,#T_9c748_row35_col3,#T_9c748_row35_col4{
+            background-color:  #bfc9e1;
+            color:  #000000;
+        }#T_9c748_row9_col3,#T_9c748_row9_col4,#T_9c748_row22_col3,#T_9c748_row22_col4,#T_9c748_row24_col3,#T_9c748_row24_col4,#T_9c748_row26_col3,#T_9c748_row26_col4,#T_9c748_row34_col3,#T_9c748_row34_col4{
+            background-color:  #80aed2;
+            color:  #000000;
+        }#T_9c748_row10_col3,#T_9c748_row10_col4{
+            background-color:  #d3d4e7;
+            color:  #000000;
+        }#T_9c748_row11_col3,#T_9c748_row11_col4{
+            background-color:  #0872b1;
+            color:  #f1f1f1;
+        }#T_9c748_row12_col3,#T_9c748_row12_col4{
+            background-color:  #2987bc;
+            color:  #000000;
+        }#T_9c748_row13_col3,#T_9c748_row13_col4{
+            background-color:  #9ab8d8;
+            color:  #000000;
+        }#T_9c748_row14_col3,#T_9c748_row14_col4,#T_9c748_row20_col3,#T_9c748_row20_col4{
+            background-color:  #83afd3;
+            color:  #000000;
+        }#T_9c748_row15_col3,#T_9c748_row15_col4{
+            background-color:  #9ebad9;
+            color:  #000000;
+        }#T_9c748_row16_col3,#T_9c748_row16_col4{
+            background-color:  #a8bedc;
+            color:  #000000;
+        }#T_9c748_row17_col3,#T_9c748_row17_col4{
+            background-color:  #94b6d7;
+            color:  #000000;
+        }#T_9c748_row18_col2,#T_9c748_row21_col2,#T_9c748_row23_col2{
+            background-color:  #c4cbe3;
+            color:  #000000;
+        }#T_9c748_row18_col3,#T_9c748_row18_col4{
+            background-color:  #2f8bbe;
+            color:  #000000;
+        }#T_9c748_row19_col3,#T_9c748_row19_col4{
+            background-color:  #6ba5cd;
+            color:  #000000;
+        }#T_9c748_row21_col3,#T_9c748_row21_col4{
+            background-color:  #045687;
+            color:  #f1f1f1;
+        }#T_9c748_row23_col3,#T_9c748_row23_col4{
+            background-color:  #056ba7;
+            color:  #f1f1f1;
+        }#T_9c748_row25_col3,#T_9c748_row25_col4{
+            background-color:  #adc1dd;
+            color:  #000000;
+        }#T_9c748_row27_col3,#T_9c748_row27_col4{
+            background-color:  #05659f;
+            color:  #f1f1f1;
+        }#T_9c748_row29_col3,#T_9c748_row29_col4{
+            background-color:  #73a9cf;
+            color:  #000000;
+        }#T_9c748_row30_col3,#T_9c748_row30_col4{
+            background-color:  #034973;
+            color:  #f1f1f1;
+        }#T_9c748_row31_col3,#T_9c748_row31_col4{
+            background-color:  #99b8d8;
+            color:  #000000;
+        }#T_9c748_row32_col3,#T_9c748_row32_col4{
+            background-color:  #dad9ea;
+            color:  #000000;
+        }#T_9c748_row33_col3,#T_9c748_row33_col4{
+            background-color:  #4697c4;
+            color:  #000000;
+        }</style>
+<table id="T_9c748_"><thead>    <tr>        <th class="blank level0"></th>        <th class="col_heading level0 col0">race_name</th>        <th class="col_heading level0 col1">driver_name</th>        <th class="col_heading level0 col2">driver_freq</th>        <th class="col_heading level0 col3">time_milli</th>        <th class="col_heading level0 col4">time_delta</th>    </tr></thead><tbody>
+                <tr>
+                        <th id="T_9c748_level0_row0" class="row_heading level0 row0">0</th>
+                        <td id="T_9c748_row0_col0" class="data row0 col0">70th Anniversary Grand Prix</td>
+                        <td id="T_9c748_row0_col1" class="data row0 col1">Lewis Hamilton</td>
+                        <td id="T_9c748_row0_col2" class="data row0 col2">8</td>
+                        <td id="T_9c748_row0_col3" class="data row0 col3">88451</td>
+                        <td id="T_9c748_row0_col4" class="data row0 col4">0 days 00:01:28.451000</td>
+            </tr>
+            <tr>
+                        <th id="T_9c748_level0_row1" class="row_heading level0 row1">1</th>
+                        <td id="T_9c748_row1_col0" class="data row1 col0">Abu Dhabi Grand Prix</td>
+                        <td id="T_9c748_row1_col1" class="data row1 col1">Lewis Hamilton</td>
+                        <td id="T_9c748_row1_col2" class="data row1 col2">8</td>
+                        <td id="T_9c748_row1_col3" class="data row1 col3">99283</td>
+                        <td id="T_9c748_row1_col4" class="data row1 col4">0 days 00:01:39.283000</td>
+            </tr>
+            <tr>
+                        <th id="T_9c748_level0_row2" class="row_heading level0 row2">2</th>
+                        <td id="T_9c748_row2_col0" class="data row2 col0">Argentine Grand Prix</td>
+                        <td id="T_9c748_row2_col1" class="data row2 col1">Gerhard Berger</td>
+                        <td id="T_9c748_row2_col2" class="data row2 col2">1</td>
+                        <td id="T_9c748_row2_col3" class="data row2 col3">87981</td>
+                        <td id="T_9c748_row2_col4" class="data row2 col4">0 days 00:01:27.981000</td>
+            </tr>
+            <tr>
+                        <th id="T_9c748_level0_row3" class="row_heading level0 row3">3</th>
+                        <td id="T_9c748_row3_col0" class="data row3 col0">Australian Grand Prix</td>
+                        <td id="T_9c748_row3_col1" class="data row3 col1">Michael Schumacher</td>
+                        <td id="T_9c748_row3_col2" class="data row3 col2">6</td>
+                        <td id="T_9c748_row3_col3" class="data row3 col3">84125</td>
+                        <td id="T_9c748_row3_col4" class="data row3 col4">0 days 00:01:24.125000</td>
+            </tr>
+            <tr>
+                        <th id="T_9c748_level0_row4" class="row_heading level0 row4">4</th>
+                        <td id="T_9c748_row4_col0" class="data row4 col0">Austrian Grand Prix</td>
+                        <td id="T_9c748_row4_col1" class="data row4 col1">Max Verstappen</td>
+                        <td id="T_9c748_row4_col2" class="data row4 col2">2</td>
+                        <td id="T_9c748_row4_col3" class="data row4 col3">66200</td>
+                        <td id="T_9c748_row4_col4" class="data row4 col4">0 days 00:01:06.200000</td>
+            </tr>
+            <tr>
+                        <th id="T_9c748_level0_row5" class="row_heading level0 row5">5</th>
+                        <td id="T_9c748_row5_col0" class="data row5 col0">Azerbaijan Grand Prix</td>
+                        <td id="T_9c748_row5_col1" class="data row5 col1">Charles Leclerc</td>
+                        <td id="T_9c748_row5_col2" class="data row5 col2">1</td>
+                        <td id="T_9c748_row5_col3" class="data row5 col3">103009</td>
+                        <td id="T_9c748_row5_col4" class="data row5 col4">0 days 00:01:43.009000</td>
+            </tr>
+            <tr>
+                        <th id="T_9c748_level0_row6" class="row_heading level0 row6">6</th>
+                        <td id="T_9c748_row6_col0" class="data row6 col0">Bahrain Grand Prix</td>
+                        <td id="T_9c748_row6_col1" class="data row6 col1">Michael Schumacher</td>
+                        <td id="T_9c748_row6_col2" class="data row6 col2">6</td>
+                        <td id="T_9c748_row6_col3" class="data row6 col3">90252</td>
+                        <td id="T_9c748_row6_col4" class="data row6 col4">0 days 00:01:30.252000</td>
+            </tr>
+            <tr>
+                        <th id="T_9c748_level0_row7" class="row_heading level0 row7">7</th>
+                        <td id="T_9c748_row7_col0" class="data row7 col0">Belgian Grand Prix</td>
+                        <td id="T_9c748_row7_col1" class="data row7 col1">Kimi Räikkönen</td>
+                        <td id="T_9c748_row7_col2" class="data row7 col2">2</td>
+                        <td id="T_9c748_row7_col3" class="data row7 col3">105108</td>
+                        <td id="T_9c748_row7_col4" class="data row7 col4">0 days 00:01:45.108000</td>
+            </tr>
+            <tr>
+                        <th id="T_9c748_level0_row8" class="row_heading level0 row8">8</th>
+                        <td id="T_9c748_row8_col0" class="data row8 col0">Brazilian Grand Prix</td>
+                        <td id="T_9c748_row8_col1" class="data row8 col1">Valtteri Bottas</td>
+                        <td id="T_9c748_row8_col2" class="data row8 col2">2</td>
+                        <td id="T_9c748_row8_col3" class="data row8 col3">70540</td>
+                        <td id="T_9c748_row8_col4" class="data row8 col4">0 days 00:01:10.540000</td>
+            </tr>
+            <tr>
+                        <th id="T_9c748_level0_row9" class="row_heading level0 row9">9</th>
+                        <td id="T_9c748_row9_col0" class="data row9 col0">British Grand Prix</td>
+                        <td id="T_9c748_row9_col1" class="data row9 col1">Michael Schumacher</td>
+                        <td id="T_9c748_row9_col2" class="data row9 col2">6</td>
+                        <td id="T_9c748_row9_col3" class="data row9 col3">78739</td>
+                        <td id="T_9c748_row9_col4" class="data row9 col4">0 days 00:01:18.739000</td>
+            </tr>
+            <tr>
+                        <th id="T_9c748_level0_row10" class="row_heading level0 row10">10</th>
+                        <td id="T_9c748_row10_col0" class="data row10 col0">Canadian Grand Prix</td>
+                        <td id="T_9c748_row10_col1" class="data row10 col1">Lewis Hamilton</td>
+                        <td id="T_9c748_row10_col2" class="data row10 col2">8</td>
+                        <td id="T_9c748_row10_col3" class="data row10 col3">67058</td>
+                        <td id="T_9c748_row10_col4" class="data row10 col4">0 days 00:01:07.058000</td>
+            </tr>
+            <tr>
+                        <th id="T_9c748_level0_row11" class="row_heading level0 row11">11</th>
+                        <td id="T_9c748_row11_col0" class="data row11 col0">Chinese Grand Prix</td>
+                        <td id="T_9c748_row11_col1" class="data row11 col1">Michael Schumacher</td>
+                        <td id="T_9c748_row11_col2" class="data row11 col2">6</td>
+                        <td id="T_9c748_row11_col3" class="data row11 col3">92238</td>
+                        <td id="T_9c748_row11_col4" class="data row11 col4">0 days 00:01:32.238000</td>
+            </tr>
+            <tr>
+                        <th id="T_9c748_level0_row12" class="row_heading level0 row12">12</th>
+                        <td id="T_9c748_row12_col0" class="data row12 col0">Eifel Grand Prix</td>
+                        <td id="T_9c748_row12_col1" class="data row12 col1">Max Verstappen</td>
+                        <td id="T_9c748_row12_col2" class="data row12 col2">2</td>
+                        <td id="T_9c748_row12_col3" class="data row12 col3">88139</td>
+                        <td id="T_9c748_row12_col4" class="data row12 col4">0 days 00:01:28.139000</td>
+            </tr>
+            <tr>
+                        <th id="T_9c748_level0_row13" class="row_heading level0 row13">13</th>
+                        <td id="T_9c748_row13_col0" class="data row13 col0">Emilia Romagna Grand Prix</td>
+                        <td id="T_9c748_row13_col1" class="data row13 col1">Lewis Hamilton</td>
+                        <td id="T_9c748_row13_col2" class="data row13 col2">8</td>
+                        <td id="T_9c748_row13_col3" class="data row13 col3">75484</td>
+                        <td id="T_9c748_row13_col4" class="data row13 col4">0 days 00:01:15.484000</td>
+            </tr>
+            <tr>
+                        <th id="T_9c748_level0_row14" class="row_heading level0 row14">14</th>
+                        <td id="T_9c748_row14_col0" class="data row14 col0">European Grand Prix</td>
+                        <td id="T_9c748_row14_col1" class="data row14 col1">Juan Pablo Montoya</td>
+                        <td id="T_9c748_row14_col2" class="data row14 col2">2</td>
+                        <td id="T_9c748_row14_col3" class="data row14 col3">78354</td>
+                        <td id="T_9c748_row14_col4" class="data row14 col4">0 days 00:01:18.354000</td>
+            </tr>
+            <tr>
+                        <th id="T_9c748_level0_row15" class="row_heading level0 row15">15</th>
+                        <td id="T_9c748_row15_col0" class="data row15 col0">French Grand Prix</td>
+                        <td id="T_9c748_row15_col1" class="data row15 col1">David Coulthard</td>
+                        <td id="T_9c748_row15_col2" class="data row15 col2">1</td>
+                        <td id="T_9c748_row15_col3" class="data row15 col3">75045</td>
+                        <td id="T_9c748_row15_col4" class="data row15 col4">0 days 00:01:15.045000</td>
+            </tr>
+            <tr>
+                        <th id="T_9c748_level0_row16" class="row_heading level0 row16">16</th>
+                        <td id="T_9c748_row16_col0" class="data row16 col0">German Grand Prix</td>
+                        <td id="T_9c748_row16_col1" class="data row16 col1">Kimi Räikkönen</td>
+                        <td id="T_9c748_row16_col2" class="data row16 col2">2</td>
+                        <td id="T_9c748_row16_col3" class="data row16 col3">73780</td>
+                        <td id="T_9c748_row16_col4" class="data row16 col4">0 days 00:01:13.780000</td>
+            </tr>
+            <tr>
+                        <th id="T_9c748_level0_row17" class="row_heading level0 row17">17</th>
+                        <td id="T_9c748_row17_col0" class="data row17 col0">Hungarian Grand Prix</td>
+                        <td id="T_9c748_row17_col1" class="data row17 col1">Michael Schumacher</td>
+                        <td id="T_9c748_row17_col2" class="data row17 col2">6</td>
+                        <td id="T_9c748_row17_col3" class="data row17 col3">76207</td>
+                        <td id="T_9c748_row17_col4" class="data row17 col4">0 days 00:01:16.207000</td>
+            </tr>
+            <tr>
+                        <th id="T_9c748_level0_row18" class="row_heading level0 row18">18</th>
+                        <td id="T_9c748_row18_col0" class="data row18 col0">Indian Grand Prix</td>
+                        <td id="T_9c748_row18_col1" class="data row18 col1">Sebastian Vettel</td>
+                        <td id="T_9c748_row18_col2" class="data row18 col2">3</td>
+                        <td id="T_9c748_row18_col3" class="data row18 col3">87249</td>
+                        <td id="T_9c748_row18_col4" class="data row18 col4">0 days 00:01:27.249000</td>
+            </tr>
+            <tr>
+                        <th id="T_9c748_level0_row19" class="row_heading level0 row19">19</th>
+                        <td id="T_9c748_row19_col0" class="data row19 col0">Italian Grand Prix</td>
+                        <td id="T_9c748_row19_col1" class="data row19 col1">Rubens Barrichello</td>
+                        <td id="T_9c748_row19_col2" class="data row19 col2">2</td>
+                        <td id="T_9c748_row19_col3" class="data row19 col3">81046</td>
+                        <td id="T_9c748_row19_col4" class="data row19 col4">0 days 00:01:21.046000</td>
+            </tr>
+            <tr>
+                        <th id="T_9c748_level0_row20" class="row_heading level0 row20">20</th>
+                        <td id="T_9c748_row20_col0" class="data row20 col0">Japanese Grand Prix</td>
+                        <td id="T_9c748_row20_col1" class="data row20 col1">Felipe Massa</td>
+                        <td id="T_9c748_row20_col2" class="data row20 col2">1</td>
+                        <td id="T_9c748_row20_col3" class="data row20 col3">78426</td>
+                        <td id="T_9c748_row20_col4" class="data row20 col4">0 days 00:01:18.426000</td>
+            </tr>
+            <tr>
+                        <th id="T_9c748_level0_row21" class="row_heading level0 row21">21</th>
+                        <td id="T_9c748_row21_col0" class="data row21 col0">Korean Grand Prix</td>
+                        <td id="T_9c748_row21_col1" class="data row21 col1">Sebastian Vettel</td>
+                        <td id="T_9c748_row21_col2" class="data row21 col2">3</td>
+                        <td id="T_9c748_row21_col3" class="data row21 col3">99605</td>
+                        <td id="T_9c748_row21_col4" class="data row21 col4">0 days 00:01:39.605000</td>
+            </tr>
+            <tr>
+                        <th id="T_9c748_level0_row22" class="row_heading level0 row22">22</th>
+                        <td id="T_9c748_row22_col0" class="data row22 col0">Luxembourg Grand Prix</td>
+                        <td id="T_9c748_row22_col1" class="data row22 col1">Heinz-Harald Frentzen</td>
+                        <td id="T_9c748_row22_col2" class="data row22 col2">1</td>
+                        <td id="T_9c748_row22_col3" class="data row22 col3">78805</td>
+                        <td id="T_9c748_row22_col4" class="data row22 col4">0 days 00:01:18.805000</td>
+            </tr>
+            <tr>
+                        <th id="T_9c748_level0_row23" class="row_heading level0 row23">23</th>
+                        <td id="T_9c748_row23_col0" class="data row23 col0">Malaysian Grand Prix</td>
+                        <td id="T_9c748_row23_col1" class="data row23 col1">Sebastian Vettel</td>
+                        <td id="T_9c748_row23_col2" class="data row23 col2">3</td>
+                        <td id="T_9c748_row23_col3" class="data row23 col3">94080</td>
+                        <td id="T_9c748_row23_col4" class="data row23 col4">0 days 00:01:34.080000</td>
+            </tr>
+            <tr>
+                        <th id="T_9c748_level0_row24" class="row_heading level0 row24">24</th>
+                        <td id="T_9c748_row24_col0" class="data row24 col0">Mexican Grand Prix</td>
+                        <td id="T_9c748_row24_col1" class="data row24 col1">Valtteri Bottas</td>
+                        <td id="T_9c748_row24_col2" class="data row24 col2">2</td>
+                        <td id="T_9c748_row24_col3" class="data row24 col3">78741</td>
+                        <td id="T_9c748_row24_col4" class="data row24 col4">0 days 00:01:18.741000</td>
+            </tr>
+            <tr>
+                        <th id="T_9c748_level0_row25" class="row_heading level0 row25">25</th>
+                        <td id="T_9c748_row25_col0" class="data row25 col0">Monaco Grand Prix</td>
+                        <td id="T_9c748_row25_col1" class="data row25 col1">Lewis Hamilton</td>
+                        <td id="T_9c748_row25_col2" class="data row25 col2">8</td>
+                        <td id="T_9c748_row25_col3" class="data row25 col3">72909</td>
+                        <td id="T_9c748_row25_col4" class="data row25 col4">0 days 00:01:12.909000</td>
+            </tr>
+            <tr>
+                        <th id="T_9c748_level0_row26" class="row_heading level0 row26">26</th>
+                        <td id="T_9c748_row26_col0" class="data row26 col0">Portuguese Grand Prix</td>
+                        <td id="T_9c748_row26_col1" class="data row26 col1">Lewis Hamilton</td>
+                        <td id="T_9c748_row26_col2" class="data row26 col2">8</td>
+                        <td id="T_9c748_row26_col3" class="data row26 col3">78750</td>
+                        <td id="T_9c748_row26_col4" class="data row26 col4">0 days 00:01:18.750000</td>
+            </tr>
+            <tr>
+                        <th id="T_9c748_level0_row27" class="row_heading level0 row27">27</th>
+                        <td id="T_9c748_row27_col0" class="data row27 col0">Russian Grand Prix</td>
+                        <td id="T_9c748_row27_col1" class="data row27 col1">Lewis Hamilton</td>
+                        <td id="T_9c748_row27_col2" class="data row27 col2">8</td>
+                        <td id="T_9c748_row27_col3" class="data row27 col3">95761</td>
+                        <td id="T_9c748_row27_col4" class="data row27 col4">0 days 00:01:35.761000</td>
+            </tr>
+            <tr>
+                        <th id="T_9c748_level0_row28" class="row_heading level0 row28">28</th>
+                        <td id="T_9c748_row28_col0" class="data row28 col0">Sakhir Grand Prix</td>
+                        <td id="T_9c748_row28_col1" class="data row28 col1">George Russell</td>
+                        <td id="T_9c748_row28_col2" class="data row28 col2">1</td>
+                        <td id="T_9c748_row28_col3" class="data row28 col3">55404</td>
+                        <td id="T_9c748_row28_col4" class="data row28 col4">0 days 00:00:55.404000</td>
+            </tr>
+            <tr>
+                        <th id="T_9c748_level0_row29" class="row_heading level0 row29">29</th>
+                        <td id="T_9c748_row29_col0" class="data row29 col0">San Marino Grand Prix</td>
+                        <td id="T_9c748_row29_col1" class="data row29 col1">Michael Schumacher</td>
+                        <td id="T_9c748_row29_col2" class="data row29 col2">6</td>
+                        <td id="T_9c748_row29_col3" class="data row29 col3">80411</td>
+                        <td id="T_9c748_row29_col4" class="data row29 col4">0 days 00:01:20.411000</td>
+            </tr>
+            <tr>
+                        <th id="T_9c748_level0_row30" class="row_heading level0 row30">30</th>
+                        <td id="T_9c748_row30_col0" class="data row30 col0">Singapore Grand Prix</td>
+                        <td id="T_9c748_row30_col1" class="data row30 col1">Kevin Magnussen</td>
+                        <td id="T_9c748_row30_col2" class="data row30 col2">1</td>
+                        <td id="T_9c748_row30_col3" class="data row30 col3">101905</td>
+                        <td id="T_9c748_row30_col4" class="data row30 col4">0 days 00:01:41.905000</td>
+            </tr>
+            <tr>
+                        <th id="T_9c748_level0_row31" class="row_heading level0 row31">31</th>
+                        <td id="T_9c748_row31_col0" class="data row31 col0">Spanish Grand Prix</td>
+                        <td id="T_9c748_row31_col1" class="data row31 col1">Giancarlo Fisichella</td>
+                        <td id="T_9c748_row31_col2" class="data row31 col2">1</td>
+                        <td id="T_9c748_row31_col3" class="data row31 col3">75641</td>
+                        <td id="T_9c748_row31_col4" class="data row31 col4">0 days 00:01:15.641000</td>
+            </tr>
+            <tr>
+                        <th id="T_9c748_level0_row32" class="row_heading level0 row32">32</th>
+                        <td id="T_9c748_row32_col0" class="data row32 col0">Styrian Grand Prix</td>
+                        <td id="T_9c748_row32_col1" class="data row32 col1">Carlos Sainz</td>
+                        <td id="T_9c748_row32_col2" class="data row32 col2">1</td>
+                        <td id="T_9c748_row32_col3" class="data row32 col3">65619</td>
+                        <td id="T_9c748_row32_col4" class="data row32 col4">0 days 00:01:05.619000</td>
+            </tr>
+            <tr>
+                        <th id="T_9c748_level0_row33" class="row_heading level0 row33">33</th>
+                        <td id="T_9c748_row33_col0" class="data row33 col0">Turkish Grand Prix</td>
+                        <td id="T_9c748_row33_col1" class="data row33 col1">Juan Pablo Montoya</td>
+                        <td id="T_9c748_row33_col2" class="data row33 col2">2</td>
+                        <td id="T_9c748_row33_col3" class="data row33 col3">84770</td>
+                        <td id="T_9c748_row33_col4" class="data row33 col4">0 days 00:01:24.770000</td>
+            </tr>
+            <tr>
+                        <th id="T_9c748_level0_row34" class="row_heading level0 row34">34</th>
+                        <td id="T_9c748_row34_col0" class="data row34 col0">Tuscan Grand Prix</td>
+                        <td id="T_9c748_row34_col1" class="data row34 col1">Lewis Hamilton</td>
+                        <td id="T_9c748_row34_col2" class="data row34 col2">8</td>
+                        <td id="T_9c748_row34_col3" class="data row34 col3">78833</td>
+                        <td id="T_9c748_row34_col4" class="data row34 col4">0 days 00:01:18.833000</td>
+            </tr>
+            <tr>
+                        <th id="T_9c748_level0_row35" class="row_heading level0 row35">35</th>
+                        <td id="T_9c748_row35_col0" class="data row35 col0">United States Grand Prix</td>
+                        <td id="T_9c748_row35_col1" class="data row35 col1">Rubens Barrichello</td>
+                        <td id="T_9c748_row35_col2" class="data row35 col2">2</td>
+                        <td id="T_9c748_row35_col3" class="data row35 col3">70399</td>
+                        <td id="T_9c748_row35_col4" class="data row35 col4">0 days 00:01:10.399000</td>
+            </tr>
+    </tbody></table>
+
+<p><strong>Description:</strong> There are a total of 35 F1 tracks throughout history. We can also see that most of the fastest lap time is done by Lewis Hamilton where the fastest lap ever done by him is is the Canadian Grand Prix with a time of 1 minute and 07.058000 seconds.</p>
+
+<p>One more thing that intrigue me is that despite being a driver to one of the slower car for the season, we can see that George Russell did the fastest lap in Sakhir GP. From <a href="https://en.wikipedia.org/wiki/2020_Sakhir_Grand_Prix">Wikipedia</a>, we can see that at that time George Russell is temporarily driving for Mercedes in Lewis Hamilton’s car as a replacement driver due to Lewis having tested positive for Covid-19.</p>
+
+<p><a id="season_race_count"></a></p>
+<h3 id="3-how-many-f1-races-are-there-for-each-season">3. How many F1 races are there for each season?</h3>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">%%</span><span class="k">sql</span> <span class="n">org_race</span> <span class="o">&lt;&lt;</span>
+
+<span class="k">SELECT</span> <span class="nb">year</span><span class="p">,</span><span class="k">COUNT</span><span class="p">(</span><span class="n">race_name</span><span class="p">)</span> <span class="k">AS</span> <span class="k">count</span>
+<span class="k">FROM</span>
+    <span class="n">races</span> <span class="k">AS</span> <span class="n">rc</span>
+    
+    <span class="k">INNER</span> <span class="k">JOIN</span> <span class="n">circuits</span> <span class="k">AS</span> <span class="k">c</span>
+    <span class="k">ON</span> <span class="n">rc</span><span class="p">.</span><span class="n">circuitId</span> <span class="o">=</span> <span class="k">c</span><span class="p">.</span><span class="n">circuitId</span>
+
+<span class="k">GROUP</span> <span class="k">BY</span> <span class="nb">year</span>
+<span class="k">ORDER</span> <span class="k">BY</span> <span class="nb">year</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> * mssql+pyodbc://@DESKTOP-8RI327A\SQLEXPRESS/F1?driver=SQL+Server
+Done.
+Returning data to local variable org_race
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_org_race</span> <span class="o">=</span> <span class="n">org_race</span><span class="p">.</span><span class="n">DataFrame</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_org_race</span><span class="p">[</span><span class="s">'year'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_org_race</span><span class="p">[</span><span class="s">'year'</span><span class="p">].</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_org_race</span><span class="p">.</span><span class="n">head</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>year</th>
+      <th>count</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1950</td>
+      <td>7</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1951</td>
+      <td>8</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1952</td>
+      <td>8</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1953</td>
+      <td>9</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1954</td>
+      <td>9</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span> <span class="o">=</span> <span class="n">b_figsize</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">title</span><span class="p">(</span><span class="s">'Number F1 races organized for each season'</span><span class="p">)</span>
+<span class="n">sns</span><span class="p">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">df_org_race</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s">'year'</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s">'count'</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="n">palette</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">'Season'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">'Count of races'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">rotation</span><span class="o">=</span><span class="mi">90</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><img src="output_88_0.png" alt="png" /></p>
+
+<p><strong>Description:</strong> Here we can see that the 2021 season had the most races which is 23. Initally in 1950, there were less than 10 races held. One key feature is that there is a consistent amount of races between 1984 and 1994 which is 16 races. It seems that the 16-race calendar was favoured by the FIA during that period.</p>
+
+<p>From the previous analysis of the driver points, we can see that the drivers that obtained the most overall points are the drivers that are from the later season of F1 (from 2010 and onwards). This somehow makes sense since during the later seasons, there are more races per season in comparison to the earlier seasons. This means that the drivers are able to obtain more points since there are more races.</p>
+
+</div>
+  </main>
+
+  <footer class="mt-auto py-3 text-center">
+
+  <small class="text-muted mb-2">
+    <i class="fas fa-code"></i> with <i class="fas fa-heart"></i>
+    by <strong>Ameer Haziq Basharuddin</strong>
+  </small>
+
+  <div class="container-fluid justify-content-center"><a class="social mx-1"  href="mailto:ameerhaziq.work@gmail.com"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#db4437'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fas fa-envelope fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.github.com/ameerhaziq20"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#333333'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-github fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.instagram.com/emyrbreezy"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#405de6'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-instagram fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.linkedin.com/in/ameer-haziq-basharuddin-89593520a/"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#007bb5'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-linkedin-in fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.twitter.com/frisk__y"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#1da1f2'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-twitter fa-1x"></i>
+    </a>
+
+</div><small id="attribution">
+    theme <a href="https://github.com/YoussefRaafatNasry/portfolYOU">portfolYOU</a>
+  </small>
+  
+</footer>
+
+  
+  <!-- GitHub Buttons -->
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+
+<!-- jQuery CDN -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<!-- Popper.js CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"></script>
+
+<!-- Bootstrap JS CDN -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<!-- wow.js CDN & Activation -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.js"></script>
+<script> new WOW().init(); </script>
+
+<!-- Initialize all tooltips -->
+<script>
+$(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+})
+</script>
+
+
+</body>
+
+</html>
