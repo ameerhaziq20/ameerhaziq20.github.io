@@ -114,31 +114,32 @@
 <hr />
 <p><strong>Notebook contents:</strong></p>
 
-<p><a href="#import_data">Importing the data</a></p>
+<p><a href="#import_data"><strong>Importing the data</strong></a></p>
 
-<p><a href="#eda">EDA</a></p>
+<p><a href="#eda"><strong>EDA</strong></a></p>
 <ol>
-  <li><a href="#factor_corr">Factors that correlates to the number of new cases</a>
+  <li><a href="#factor_corr"><strong>Factors that correlates to the number of new cases</strong></a>
     <ul>
       <li><a href="#factor_corr_c">Data cleaning</a></li>
       <li><a href="#corr_var">Correlation between variables</a></li>
       <li><a href="#var_time_data">Dataset variables value over time</a></li>
     </ul>
   </li>
-  <li><a href="#herd_immunity">Herd immunity</a>
+  <li><a href="#herd_immunity"><strong>Vaccination</strong></a>
     <ul>
       <li><a href="#herd_immunity_c">Data cleaning</a></li>
       <li><a href="#vac_prog">Plot of vaccination progress in Malaysia</a></li>
-      <li><a href="#herd_prec">Plot of Malaysia’s Herd Immunity percentage</a></li>
+      <li><a href="#full_vac">Percentage of fully vaccinated count against population</a></li>
+      <li><a href="#vac_time">Percentage of fully vaccinated count across time</a></li>
     </ul>
   </li>
-  <li><a href="#state_case">State Covid cases</a>
+  <li><a href="#state_case"><strong>Count of new cases by state</strong></a>
     <ul>
       <li><a href="#state_case_c">Data cleaning</a></li>
       <li><a href="#state_case_plot">Plot of new cases for each state over time</a></li>
     </ul>
   </li>
-  <li><a href="#test_state">State Covid tests</a>
+  <li><a href="#test_state"><strong>Count of Covid tests by state</strong></a>
     <ul>
       <li><a href="#test_state_c">Data cleaning</a></li>
       <li><a href="#test_state_plot">Plot of total Covid tests by state</a></li>
@@ -146,14 +147,14 @@
   </li>
 </ol>
 
-<p><a href="#new_case_proph">Covid-19 new cases forecast</a></p>
+<p><a href="#new_case_proph"><strong>Covid-19 new cases forecast</strong></a></p>
 <ul>
   <li><a href="#proph_prep">Data preparation</a></li>
   <li><a href="#hyperparameter">Hyperparameter tuning</a></li>
   <li><a href="#forc_new">Forecast new cases</a></li>
 </ul>
 
-<p><a href="#pred_model">Prediction model</a></p>
+<p><a href="#pred_model"><strong>Prediction model</strong></a></p>
 <ul>
   <li><a href="#pred_proc">Data preprocessing</a></li>
   <li><a href="#train_eval">Training and evaluation</a></li>
@@ -283,20 +284,6 @@
   </thead>
   <tbody>
     <tr>
-      <th>603</th>
-      <td>2021-09-19</td>
-      <td>14954</td>
-      <td>11</td>
-      <td>23469</td>
-      <td>0.0</td>
-      <td>8.0</td>
-      <td>196.0</td>
-      <td>39.0</td>
-      <td>3.0</td>
-      <td>72.0</td>
-      <td>720.0</td>
-    </tr>
-    <tr>
       <th>604</th>
       <td>2021-09-20</td>
       <td>14345</td>
@@ -351,6 +338,20 @@
       <td>7.0</td>
       <td>6.0</td>
       <td>658.0</td>
+    </tr>
+    <tr>
+      <th>608</th>
+      <td>2021-09-24</td>
+      <td>14554</td>
+      <td>9</td>
+      <td>16751</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>405.0</td>
+      <td>45.0</td>
+      <td>34.0</td>
+      <td>4.0</td>
+      <td>582.0</td>
     </tr>
   </tbody>
 </table>
@@ -497,15 +498,6 @@ dtype: object
   </thead>
   <tbody>
     <tr>
-      <th>602</th>
-      <td>2021-09-17</td>
-      <td>17577.0</td>
-      <td>66469</td>
-      <td>40675</td>
-      <td>43936.0</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
       <th>603</th>
       <td>2021-09-18</td>
       <td>15549.0</td>
@@ -539,6 +531,15 @@ dtype: object
       <td>110875</td>
       <td>52789</td>
       <td>41393.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>607</th>
+      <td>2021-09-22</td>
+      <td>14990.0</td>
+      <td>127625</td>
+      <td>48687</td>
+      <td>44965.0</td>
       <td>NaN</td>
     </tr>
   </tbody>
@@ -608,7 +609,7 @@ dtype: int64
     <tr>
       <th>0</th>
       <td>0.0</td>
-      <td>571.084765</td>
+      <td>708.061210</td>
       <td>2.0</td>
       <td>0.0</td>
       <td>0.000000</td>
@@ -617,7 +618,7 @@ dtype: int64
     <tr>
       <th>1</th>
       <td>4.0</td>
-      <td>576.000003</td>
+      <td>713.251588</td>
       <td>5.0</td>
       <td>0.0</td>
       <td>2.000000</td>
@@ -626,7 +627,7 @@ dtype: int64
     <tr>
       <th>2</th>
       <td>0.0</td>
-      <td>573.771209</td>
+      <td>710.942841</td>
       <td>14.0</td>
       <td>0.0</td>
       <td>0.000000</td>
@@ -635,7 +636,7 @@ dtype: int64
     <tr>
       <th>3</th>
       <td>0.0</td>
-      <td>576.009913</td>
+      <td>713.344200</td>
       <td>24.0</td>
       <td>0.0</td>
       <td>0.000000</td>
@@ -644,7 +645,7 @@ dtype: int64
     <tr>
       <th>4</th>
       <td>0.0</td>
-      <td>582.426380</td>
+      <td>720.222053</td>
       <td>53.0</td>
       <td>0.0</td>
       <td>1.000000</td>
@@ -660,21 +661,12 @@ dtype: int64
       <td>...</td>
     </tr>
     <tr>
-      <th>602</th>
-      <td>17577.0</td>
-      <td>43936.000000</td>
-      <td>40675.0</td>
-      <td>66469.0</td>
-      <td>464.590335</td>
-      <td>2021-09-17</td>
-    </tr>
-    <tr>
       <th>603</th>
       <td>15549.0</td>
       <td>35972.000000</td>
       <td>51101.0</td>
       <td>53716.0</td>
-      <td>416.319642</td>
+      <td>408.310762</td>
       <td>2021-09-18</td>
     </tr>
     <tr>
@@ -683,7 +675,7 @@ dtype: int64
       <td>35812.000000</td>
       <td>38498.0</td>
       <td>70816.0</td>
-      <td>392.152734</td>
+      <td>383.149210</td>
       <td>2021-09-19</td>
     </tr>
     <tr>
@@ -692,7 +684,7 @@ dtype: int64
       <td>44788.000000</td>
       <td>45337.0</td>
       <td>120160.0</td>
-      <td>346.279841</td>
+      <td>336.497232</td>
       <td>2021-09-20</td>
     </tr>
     <tr>
@@ -701,12 +693,21 @@ dtype: int64
       <td>41393.000000</td>
       <td>52789.0</td>
       <td>110875.0</td>
-      <td>396.614426</td>
+      <td>386.767446</td>
       <td>2021-09-21</td>
+    </tr>
+    <tr>
+      <th>607</th>
+      <td>14990.0</td>
+      <td>44965.000000</td>
+      <td>48687.0</td>
+      <td>127625.0</td>
+      <td>353.002695</td>
+      <td>2021-09-22</td>
     </tr>
   </tbody>
 </table>
-<p>607 rows × 6 columns</p>
+<p>608 rows × 6 columns</p>
 </div>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#convert numerical values to integer
@@ -747,7 +748,7 @@ dtype: int64
     <tr>
       <th>0</th>
       <td>0</td>
-      <td>571</td>
+      <td>708</td>
       <td>2</td>
       <td>0</td>
       <td>0</td>
@@ -756,7 +757,7 @@ dtype: int64
     <tr>
       <th>1</th>
       <td>4</td>
-      <td>576</td>
+      <td>713</td>
       <td>5</td>
       <td>0</td>
       <td>2</td>
@@ -765,7 +766,7 @@ dtype: int64
     <tr>
       <th>2</th>
       <td>0</td>
-      <td>573</td>
+      <td>710</td>
       <td>14</td>
       <td>0</td>
       <td>0</td>
@@ -774,7 +775,7 @@ dtype: int64
     <tr>
       <th>3</th>
       <td>0</td>
-      <td>576</td>
+      <td>713</td>
       <td>24</td>
       <td>0</td>
       <td>0</td>
@@ -783,7 +784,7 @@ dtype: int64
     <tr>
       <th>4</th>
       <td>0</td>
-      <td>582</td>
+      <td>720</td>
       <td>53</td>
       <td>0</td>
       <td>1</td>
@@ -799,21 +800,12 @@ dtype: int64
       <td>...</td>
     </tr>
     <tr>
-      <th>602</th>
-      <td>17577</td>
-      <td>43936</td>
-      <td>40675</td>
-      <td>66469</td>
-      <td>464</td>
-      <td>2021-09-17</td>
-    </tr>
-    <tr>
       <th>603</th>
       <td>15549</td>
       <td>35972</td>
       <td>51101</td>
       <td>53716</td>
-      <td>416</td>
+      <td>408</td>
       <td>2021-09-18</td>
     </tr>
     <tr>
@@ -822,7 +814,7 @@ dtype: int64
       <td>35812</td>
       <td>38498</td>
       <td>70816</td>
-      <td>392</td>
+      <td>383</td>
       <td>2021-09-19</td>
     </tr>
     <tr>
@@ -831,7 +823,7 @@ dtype: int64
       <td>44788</td>
       <td>45337</td>
       <td>120160</td>
-      <td>346</td>
+      <td>336</td>
       <td>2021-09-20</td>
     </tr>
     <tr>
@@ -840,12 +832,21 @@ dtype: int64
       <td>41393</td>
       <td>52789</td>
       <td>110875</td>
-      <td>396</td>
+      <td>386</td>
       <td>2021-09-21</td>
+    </tr>
+    <tr>
+      <th>607</th>
+      <td>14990</td>
+      <td>44965</td>
+      <td>48687</td>
+      <td>127625</td>
+      <td>353</td>
+      <td>2021-09-22</td>
     </tr>
   </tbody>
 </table>
-<p>607 rows × 6 columns</p>
+<p>608 rows × 6 columns</p>
 </div>
 
 <h3 id="visualization">Visualization</h3>
@@ -918,7 +919,7 @@ dtype: int64
 <p><strong>Description:</strong> Here we can have a clearer view on the occasional dips in the number of casual contacts everytime cases hits an all new time high as mentioned from the previous description.</p>
 
 <p><a id="herd_immunity"></a></p>
-<h2 id="2-herd-immunity">2. Herd immunity</h2>
+<h2 id="2-vaccination">2. Vaccination</h2>
 
 <p>Based on the government’s target, we need to have 80% of the population fully vaccinated against Covid-19 in order to achieve herd immunity.</p>
 
@@ -1213,7 +1214,7 @@ See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stab
   </thead>
   <tbody>
     <tr>
-      <th>27533</th>
+      <th>27655</th>
       <td>2021-09-19</td>
       <td>40375056.0</td>
       <td>22003333.0</td>
@@ -1221,7 +1222,7 @@ See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stab
       <td>230267.0</td>
     </tr>
     <tr>
-      <th>27534</th>
+      <th>27656</th>
       <td>2021-09-20</td>
       <td>40664674.0</td>
       <td>22099719.0</td>
@@ -1229,7 +1230,7 @@ See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stab
       <td>239191.0</td>
     </tr>
     <tr>
-      <th>27535</th>
+      <th>27657</th>
       <td>2021-09-21</td>
       <td>40925929.0</td>
       <td>22226325.0</td>
@@ -1237,7 +1238,7 @@ See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stab
       <td>241660.0</td>
     </tr>
     <tr>
-      <th>27536</th>
+      <th>27658</th>
       <td>2021-09-22</td>
       <td>41247271.0</td>
       <td>22351561.0</td>
@@ -1245,7 +1246,7 @@ See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stab
       <td>252022.0</td>
     </tr>
     <tr>
-      <th>27537</th>
+      <th>27659</th>
       <td>2021-09-23</td>
       <td>41573883.0</td>
       <td>22482988.0</td>
@@ -1297,7 +1298,7 @@ See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stab
   </thead>
   <tbody>
     <tr>
-      <th>27533</th>
+      <th>27655</th>
       <td>2021-09-19</td>
       <td>40375056.0</td>
       <td>22003333.0</td>
@@ -1305,7 +1306,7 @@ See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stab
       <td>230267.0</td>
     </tr>
     <tr>
-      <th>27534</th>
+      <th>27656</th>
       <td>2021-09-20</td>
       <td>40664674.0</td>
       <td>22099719.0</td>
@@ -1313,7 +1314,7 @@ See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stab
       <td>239191.0</td>
     </tr>
     <tr>
-      <th>27535</th>
+      <th>27657</th>
       <td>2021-09-21</td>
       <td>40925929.0</td>
       <td>22226325.0</td>
@@ -1321,7 +1322,7 @@ See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stab
       <td>241660.0</td>
     </tr>
     <tr>
-      <th>27536</th>
+      <th>27658</th>
       <td>2021-09-22</td>
       <td>41247271.0</td>
       <td>22351561.0</td>
@@ -1329,7 +1330,7 @@ See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stab
       <td>252022.0</td>
     </tr>
     <tr>
-      <th>27537</th>
+      <th>27659</th>
       <td>2021-09-23</td>
       <td>41573883.0</td>
       <td>22482988.0</td>
@@ -1361,43 +1362,56 @@ See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stab
 
 <p><img src="output_54_0.png" alt="png" /></p>
 
-<p><a id="herd_perc"></a></p>
-<h4 id="plot-of-malaysias-herd-immunity-percentage">Plot of Malaysia’s Herd Immunity percentage</h4>
+<p><a id="full_vac"></a></p>
+<h4 id="percentage-of-fully-vaccinated-count-against-population">Percentage of fully vaccinated count against population</h4>
 
-<p>Equation Herd Immunity is as follows:</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Herd% = (Sum of Fully Vaccinated/Total Popuation) * 100
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#calculate current herd immunity percentage
+</span><span class="n">vax_pop</span> <span class="o">=</span> <span class="p">(</span><span class="n">df_vax_herd</span><span class="p">[</span><span class="s">'people_fully_vaccinated'</span><span class="p">].</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">:,]</span> <span class="o">/</span> <span class="n">df_vax_herd</span><span class="p">[</span><span class="s">'pop'</span><span class="p">].</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">:,])</span> <span class="o">*</span> <span class="mi">100</span>
 </code></pre></div></div>
 
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#plot pie chart
+</span><span class="kn">import</span> <span class="nn">matplotlib.ticker</span> <span class="k">as</span> <span class="n">mtick</span>
+
+<span class="n">np_vax</span><span class="o">=</span><span class="p">(</span><span class="mi">100</span><span class="o">-</span><span class="n">vax_pop</span><span class="p">)</span>
+<span class="n">a</span> <span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">vax_pop</span><span class="p">)</span>
+<span class="n">b</span> <span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">np_vax</span><span class="p">)</span>
+<span class="n">explode</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.05</span><span class="p">]</span>
+<span class="n">labels</span> <span class="o">=</span> <span class="s">'Fully vaccinated'</span><span class="p">,</span> <span class="s">'Not-fully vaccinated'</span>
+<span class="n">sizes</span> <span class="o">=</span> <span class="p">[</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">]</span>
+
+<span class="n">fig1</span><span class="p">,</span> <span class="n">ax1</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">ax1</span><span class="p">.</span><span class="n">pie</span><span class="p">(</span><span class="n">sizes</span><span class="p">,</span> <span class="n">explode</span><span class="o">=</span><span class="n">explode</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">autopct</span><span class="o">=</span><span class="s">'%1.1f%%'</span><span class="p">,</span>
+        <span class="n">shadow</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">startangle</span><span class="o">=</span><span class="mi">90</span><span class="p">)</span>
+<span class="n">ax1</span><span class="p">.</span><span class="n">yaxis</span><span class="p">.</span><span class="n">set_major_formatter</span><span class="p">(</span><span class="n">mtick</span><span class="p">.</span><span class="n">PercentFormatter</span><span class="p">())</span>
+<span class="n">ax1</span><span class="p">.</span><span class="n">axis</span><span class="p">(</span><span class="s">'equal'</span><span class="p">)</span>
+
+<span class="n">ax1</span><span class="p">.</span><span class="n">set_title</span><span class="p">(</span><span class="s">'% Vaccination progress'</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><img src="output_57_0.png" alt="png" /></p>
+
+<p><a id="vac_time"></a></p>
+<h4 id="percentage-of-fully-vaccinated-count-across-time">Percentage of fully vaccinated count across time</h4>
+
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#calculate herd immunity percentage
-</span><span class="n">df_vax_herd</span><span class="p">[</span><span class="s">'herd_immunity'</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">df_vax_herd</span><span class="p">[</span><span class="s">'people_fully_vaccinated'</span><span class="p">]</span> <span class="o">/</span> <span class="n">df_vax_herd</span><span class="p">[</span><span class="s">'pop'</span><span class="p">])</span> <span class="o">*</span> <span class="mi">100</span>
+</span><span class="n">df_vax_herd</span><span class="p">[</span><span class="s">'vax_percentage'</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">df_vax_herd</span><span class="p">[</span><span class="s">'people_fully_vaccinated'</span><span class="p">]</span> <span class="o">/</span> <span class="n">df_vax_herd</span><span class="p">[</span><span class="s">'pop'</span><span class="p">])</span> <span class="o">*</span> <span class="mi">100</span>
 </code></pre></div></div>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#plot line graph
 </span><span class="n">fig</span><span class="o">=</span><span class="n">plt</span><span class="p">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span><span class="mi">8</span><span class="p">))</span>
 
-<span class="n">sns</span><span class="p">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">df_vax_herd</span><span class="p">,</span><span class="n">x</span><span class="o">=</span><span class="n">df_vax_herd</span><span class="p">[</span><span class="s">'date'</span><span class="p">],</span><span class="n">y</span><span class="o">=</span><span class="n">df_vax_herd</span><span class="p">[</span><span class="s">'herd_immunity'</span><span class="p">])</span>
+<span class="n">sns</span><span class="p">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">df_vax_herd</span><span class="p">,</span><span class="n">x</span><span class="o">=</span><span class="n">df_vax_herd</span><span class="p">[</span><span class="s">'date'</span><span class="p">],</span><span class="n">y</span><span class="o">=</span><span class="n">df_vax_herd</span><span class="p">[</span><span class="s">'vax_percentage'</span><span class="p">])</span>
 <span class="n">plt</span><span class="p">.</span><span class="n">title</span><span class="p">(</span><span class="s">"Covid-19 Herd Immunity Progress in Malaysia"</span><span class="p">)</span>
 <span class="n">plt</span><span class="p">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">"Date"</span><span class="p">)</span>
 <span class="n">plt</span><span class="p">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">"Percentage"</span><span class="p">)</span>
 <span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
 </code></pre></div></div>
 
-<p><img src="output_58_0.png" alt="png" /></p>
+<p><img src="output_60_0.png" alt="png" /></p>
 
 <p><strong>Description:</strong> The vaccine admnistration had exponentially increased with a slight decreased rate aproaching September 2021.</p>
-
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#calculate current herd immunity percentage
-</span><span class="n">herd_immunity</span> <span class="o">=</span> <span class="p">(</span><span class="n">df_vax_herd</span><span class="p">[</span><span class="s">'people_fully_vaccinated'</span><span class="p">].</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">:,]</span> <span class="o">/</span> <span class="n">df_vax_herd</span><span class="p">[</span><span class="s">'pop'</span><span class="p">].</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">:,])</span> <span class="o">*</span> <span class="mi">100</span>
-</code></pre></div></div>
-
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#display herd immunity percentage
-</span><span class="k">print</span><span class="p">(</span><span class="s">"Malaysia's Herd Immunity Percentage: "</span> <span class="o">+</span> <span class="p">(</span><span class="n">herd_immunity</span><span class="p">.</span><span class="nb">round</span><span class="p">(</span><span class="mi">2</span><span class="p">).</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span> <span class="o">+</span> <span class="s">" %"</span><span class="p">))</span>
-</code></pre></div></div>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>209    Malaysia's Herd Immunity Percentage: 58.73 %
-dtype: object
-</code></pre></div></div>
 
 <p><a id="state_case"></a></p>
 <h2 id="3-count-of-new-cases-by-state">3. Count of new cases by state</h2>
@@ -1548,7 +1562,7 @@ dtype: int64
 
 <h3 id="visualization-3">Visualization</h3>
 
-<p>id=’test_state_plot’&gt;&lt;/a&gt;</p>
+<p><a id="test_state_plot"></a></p>
 <h4 id="plot-of-total-covid-tests-by-state">Plot of total Covid tests by state</h4>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#plot bar chart
@@ -1625,20 +1639,6 @@ dtype: int64
   </thead>
   <tbody>
     <tr>
-      <th>603</th>
-      <td>2021-09-19</td>
-      <td>14954</td>
-      <td>11</td>
-      <td>23469</td>
-      <td>0.0</td>
-      <td>8.0</td>
-      <td>196.0</td>
-      <td>39.0</td>
-      <td>3.0</td>
-      <td>72.0</td>
-      <td>720.0</td>
-    </tr>
-    <tr>
       <th>604</th>
       <td>2021-09-20</td>
       <td>14345</td>
@@ -1693,6 +1693,20 @@ dtype: int64
       <td>7.0</td>
       <td>6.0</td>
       <td>658.0</td>
+    </tr>
+    <tr>
+      <th>608</th>
+      <td>2021-09-24</td>
+      <td>14554</td>
+      <td>9</td>
+      <td>16751</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>405.0</td>
+      <td>45.0</td>
+      <td>34.0</td>
+      <td>4.0</td>
+      <td>582.0</td>
     </tr>
   </tbody>
 </table>
@@ -1749,11 +1763,6 @@ dtype: object
   </thead>
   <tbody>
     <tr>
-      <th>603</th>
-      <td>14954</td>
-      <td>2021-09-19</td>
-    </tr>
-    <tr>
       <th>604</th>
       <td>14345</td>
       <td>2021-09-20</td>
@@ -1772,6 +1781,11 @@ dtype: object
       <th>607</th>
       <td>13754</td>
       <td>2021-09-23</td>
+    </tr>
+    <tr>
+      <th>608</th>
+      <td>14554</td>
+      <td>2021-09-24</td>
     </tr>
   </tbody>
 </table>
@@ -1813,87 +1827,91 @@ dtype: object
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>INFO:prophet:Disabling yearly seasonality. Run prophet with yearly_seasonality=True to override this.
 INFO:prophet:Disabling daily seasonality. Run prophet with daily_seasonality=True to override this.
-INFO:prophet:Making 2 forecasts with cutoffs between 2021-05-11 00:00:00 and 2021-06-25 00:00:00
-INFO:prophet:Applying in parallel with &lt;concurrent.futures.process.ProcessPoolExecutor object at 0x0000029203F9BD90&gt;
+WARNING:prophet.models:Optimization terminated abnormally. Falling back to Newton.
+INFO:prophet:Making 2 forecasts with cutoffs between 2021-05-12 00:00:00 and 2021-06-26 00:00:00
+INFO:prophet:Applying in parallel with &lt;concurrent.futures.process.ProcessPoolExecutor object at 0x000002CAF3C275B0&gt;
 INFO:prophet:Disabling yearly seasonality. Run prophet with yearly_seasonality=True to override this.
 INFO:prophet:Disabling daily seasonality. Run prophet with daily_seasonality=True to override this.
-INFO:prophet:Making 2 forecasts with cutoffs between 2021-05-11 00:00:00 and 2021-06-25 00:00:00
-INFO:prophet:Applying in parallel with &lt;concurrent.futures.process.ProcessPoolExecutor object at 0x000002920120D0D0&gt;
+WARNING:prophet.models:Optimization terminated abnormally. Falling back to Newton.
+INFO:prophet:Making 2 forecasts with cutoffs between 2021-05-12 00:00:00 and 2021-06-26 00:00:00
+INFO:prophet:Applying in parallel with &lt;concurrent.futures.process.ProcessPoolExecutor object at 0x000002CAF3B36820&gt;
 INFO:prophet:Disabling yearly seasonality. Run prophet with yearly_seasonality=True to override this.
 INFO:prophet:Disabling daily seasonality. Run prophet with daily_seasonality=True to override this.
-INFO:prophet:Making 2 forecasts with cutoffs between 2021-05-11 00:00:00 and 2021-06-25 00:00:00
-INFO:prophet:Applying in parallel with &lt;concurrent.futures.process.ProcessPoolExecutor object at 0x00000292065D74C0&gt;
+WARNING:prophet.models:Optimization terminated abnormally. Falling back to Newton.
+INFO:prophet:Making 2 forecasts with cutoffs between 2021-05-12 00:00:00 and 2021-06-26 00:00:00
+INFO:prophet:Applying in parallel with &lt;concurrent.futures.process.ProcessPoolExecutor object at 0x000002CAF3AD8C40&gt;
 INFO:prophet:Disabling yearly seasonality. Run prophet with yearly_seasonality=True to override this.
 INFO:prophet:Disabling daily seasonality. Run prophet with daily_seasonality=True to override this.
-INFO:prophet:Making 2 forecasts with cutoffs between 2021-05-11 00:00:00 and 2021-06-25 00:00:00
-INFO:prophet:Applying in parallel with &lt;concurrent.futures.process.ProcessPoolExecutor object at 0x0000029203F40610&gt;
+WARNING:prophet.models:Optimization terminated abnormally. Falling back to Newton.
+INFO:prophet:Making 2 forecasts with cutoffs between 2021-05-12 00:00:00 and 2021-06-26 00:00:00
+INFO:prophet:Applying in parallel with &lt;concurrent.futures.process.ProcessPoolExecutor object at 0x000002CAF3AD8C40&gt;
 INFO:prophet:Disabling yearly seasonality. Run prophet with yearly_seasonality=True to override this.
 INFO:prophet:Disabling daily seasonality. Run prophet with daily_seasonality=True to override this.
-INFO:prophet:Making 2 forecasts with cutoffs between 2021-05-11 00:00:00 and 2021-06-25 00:00:00
-INFO:prophet:Applying in parallel with &lt;concurrent.futures.process.ProcessPoolExecutor object at 0x0000029204E59D90&gt;
+INFO:prophet:Making 2 forecasts with cutoffs between 2021-05-12 00:00:00 and 2021-06-26 00:00:00
+INFO:prophet:Applying in parallel with &lt;concurrent.futures.process.ProcessPoolExecutor object at 0x000002CAF3AE6280&gt;
 INFO:prophet:Disabling yearly seasonality. Run prophet with yearly_seasonality=True to override this.
 INFO:prophet:Disabling daily seasonality. Run prophet with daily_seasonality=True to override this.
-INFO:prophet:Making 2 forecasts with cutoffs between 2021-05-11 00:00:00 and 2021-06-25 00:00:00
-INFO:prophet:Applying in parallel with &lt;concurrent.futures.process.ProcessPoolExecutor object at 0x000002920455E160&gt;
+INFO:prophet:Making 2 forecasts with cutoffs between 2021-05-12 00:00:00 and 2021-06-26 00:00:00
+INFO:prophet:Applying in parallel with &lt;concurrent.futures.process.ProcessPoolExecutor object at 0x000002CAED51DE50&gt;
 INFO:prophet:Disabling yearly seasonality. Run prophet with yearly_seasonality=True to override this.
 INFO:prophet:Disabling daily seasonality. Run prophet with daily_seasonality=True to override this.
-INFO:prophet:Making 2 forecasts with cutoffs between 2021-05-11 00:00:00 and 2021-06-25 00:00:00
-INFO:prophet:Applying in parallel with &lt;concurrent.futures.process.ProcessPoolExecutor object at 0x00000292065E6D90&gt;
+INFO:prophet:Making 2 forecasts with cutoffs between 2021-05-12 00:00:00 and 2021-06-26 00:00:00
+INFO:prophet:Applying in parallel with &lt;concurrent.futures.process.ProcessPoolExecutor object at 0x000002CAF3AD8B50&gt;
 INFO:prophet:Disabling yearly seasonality. Run prophet with yearly_seasonality=True to override this.
 INFO:prophet:Disabling daily seasonality. Run prophet with daily_seasonality=True to override this.
-INFO:prophet:Making 2 forecasts with cutoffs between 2021-05-11 00:00:00 and 2021-06-25 00:00:00
-INFO:prophet:Applying in parallel with &lt;concurrent.futures.process.ProcessPoolExecutor object at 0x000002920120D0D0&gt;
+INFO:prophet:Making 2 forecasts with cutoffs between 2021-05-12 00:00:00 and 2021-06-26 00:00:00
+INFO:prophet:Applying in parallel with &lt;concurrent.futures.process.ProcessPoolExecutor object at 0x000002CAF3AE6850&gt;
 INFO:prophet:Disabling yearly seasonality. Run prophet with yearly_seasonality=True to override this.
 INFO:prophet:Disabling daily seasonality. Run prophet with daily_seasonality=True to override this.
-INFO:prophet:Making 2 forecasts with cutoffs between 2021-05-11 00:00:00 and 2021-06-25 00:00:00
-INFO:prophet:Applying in parallel with &lt;concurrent.futures.process.ProcessPoolExecutor object at 0x0000029203F40340&gt;
+INFO:prophet:Making 2 forecasts with cutoffs between 2021-05-12 00:00:00 and 2021-06-26 00:00:00
+INFO:prophet:Applying in parallel with &lt;concurrent.futures.process.ProcessPoolExecutor object at 0x000002CAF6274280&gt;
 INFO:prophet:Disabling yearly seasonality. Run prophet with yearly_seasonality=True to override this.
 INFO:prophet:Disabling daily seasonality. Run prophet with daily_seasonality=True to override this.
-INFO:prophet:Making 2 forecasts with cutoffs between 2021-05-11 00:00:00 and 2021-06-25 00:00:00
-INFO:prophet:Applying in parallel with &lt;concurrent.futures.process.ProcessPoolExecutor object at 0x00000292065C2CD0&gt;
+INFO:prophet:Making 2 forecasts with cutoffs between 2021-05-12 00:00:00 and 2021-06-26 00:00:00
+INFO:prophet:Applying in parallel with &lt;concurrent.futures.process.ProcessPoolExecutor object at 0x000002CAF3AB12E0&gt;
 INFO:prophet:Disabling yearly seasonality. Run prophet with yearly_seasonality=True to override this.
 INFO:prophet:Disabling daily seasonality. Run prophet with daily_seasonality=True to override this.
-INFO:prophet:Making 2 forecasts with cutoffs between 2021-05-11 00:00:00 and 2021-06-25 00:00:00
-INFO:prophet:Applying in parallel with &lt;concurrent.futures.process.ProcessPoolExecutor object at 0x00000292065E6DF0&gt;
+INFO:prophet:Making 2 forecasts with cutoffs between 2021-05-12 00:00:00 and 2021-06-26 00:00:00
+INFO:prophet:Applying in parallel with &lt;concurrent.futures.process.ProcessPoolExecutor object at 0x000002CAF3AD89D0&gt;
 INFO:prophet:Disabling yearly seasonality. Run prophet with yearly_seasonality=True to override this.
 INFO:prophet:Disabling daily seasonality. Run prophet with daily_seasonality=True to override this.
-INFO:prophet:Making 2 forecasts with cutoffs between 2021-05-11 00:00:00 and 2021-06-25 00:00:00
-INFO:prophet:Applying in parallel with &lt;concurrent.futures.process.ProcessPoolExecutor object at 0x0000029204519D90&gt;
+INFO:prophet:Making 2 forecasts with cutoffs between 2021-05-12 00:00:00 and 2021-06-26 00:00:00
+INFO:prophet:Applying in parallel with &lt;concurrent.futures.process.ProcessPoolExecutor object at 0x000002CAF3C5E2B0&gt;
 INFO:prophet:Disabling yearly seasonality. Run prophet with yearly_seasonality=True to override this.
 INFO:prophet:Disabling daily seasonality. Run prophet with daily_seasonality=True to override this.
-INFO:prophet:Making 2 forecasts with cutoffs between 2021-05-11 00:00:00 and 2021-06-25 00:00:00
-INFO:prophet:Applying in parallel with &lt;concurrent.futures.process.ProcessPoolExecutor object at 0x000002927D65AB80&gt;
+INFO:prophet:Making 2 forecasts with cutoffs between 2021-05-12 00:00:00 and 2021-06-26 00:00:00
+INFO:prophet:Applying in parallel with &lt;concurrent.futures.process.ProcessPoolExecutor object at 0x000002CAF3AD89A0&gt;
 INFO:prophet:Disabling yearly seasonality. Run prophet with yearly_seasonality=True to override this.
 INFO:prophet:Disabling daily seasonality. Run prophet with daily_seasonality=True to override this.
-INFO:prophet:Making 2 forecasts with cutoffs between 2021-05-11 00:00:00 and 2021-06-25 00:00:00
-INFO:prophet:Applying in parallel with &lt;concurrent.futures.process.ProcessPoolExecutor object at 0x000002920120D0D0&gt;
+INFO:prophet:Making 2 forecasts with cutoffs between 2021-05-12 00:00:00 and 2021-06-26 00:00:00
+INFO:prophet:Applying in parallel with &lt;concurrent.futures.process.ProcessPoolExecutor object at 0x000002CAF3B1CEE0&gt;
 INFO:prophet:Disabling yearly seasonality. Run prophet with yearly_seasonality=True to override this.
 INFO:prophet:Disabling daily seasonality. Run prophet with daily_seasonality=True to override this.
-INFO:prophet:Making 2 forecasts with cutoffs between 2021-05-11 00:00:00 and 2021-06-25 00:00:00
-INFO:prophet:Applying in parallel with &lt;concurrent.futures.process.ProcessPoolExecutor object at 0x00000292065E6DF0&gt;
+INFO:prophet:Making 2 forecasts with cutoffs between 2021-05-12 00:00:00 and 2021-06-26 00:00:00
+INFO:prophet:Applying in parallel with &lt;concurrent.futures.process.ProcessPoolExecutor object at 0x000002CAEF9CEDF0&gt;
 INFO:prophet:Disabling yearly seasonality. Run prophet with yearly_seasonality=True to override this.
 INFO:prophet:Disabling daily seasonality. Run prophet with daily_seasonality=True to override this.
-INFO:prophet:Making 2 forecasts with cutoffs between 2021-05-11 00:00:00 and 2021-06-25 00:00:00
-INFO:prophet:Applying in parallel with &lt;concurrent.futures.process.ProcessPoolExecutor object at 0x0000029204034430&gt;
+INFO:prophet:Making 2 forecasts with cutoffs between 2021-05-12 00:00:00 and 2021-06-26 00:00:00
+INFO:prophet:Applying in parallel with &lt;concurrent.futures.process.ProcessPoolExecutor object at 0x000002CAF3AD89D0&gt;
 
 
     changepoint_prior_scale  seasonality_prior_scale          rmse
-0                     0.001                     0.01  10428.751136
-1                     0.001                     0.10  10418.800669
-2                     0.001                     1.00  10430.607617
-3                     0.001                    10.00  10452.840347
-4                     0.010                     0.01   9900.567587
-5                     0.010                     0.10   9906.286158
-6                     0.010                     1.00   9923.815539
-7                     0.010                    10.00   9911.731775
-8                     0.100                     0.01   8467.618551
-9                     0.100                     0.10   8382.283216
-10                    0.100                     1.00   8365.253883
-11                    0.100                    10.00   8336.454739
-12                    0.500                     0.01   8258.078523
-13                    0.500                     0.10   8260.200026
-14                    0.500                     1.00   8255.442575
-15                    0.500                    10.00   8262.853127
+0                     0.001                     0.01  10509.584196
+1                     0.001                     0.10  10521.955572
+2                     0.001                     1.00  10487.059482
+3                     0.001                    10.00  10488.864141
+4                     0.010                     0.01   9975.077664
+5                     0.010                     0.10   9954.562702
+6                     0.010                     1.00   9957.597011
+7                     0.010                    10.00   9969.145111
+8                     0.100                     0.01   8347.351167
+9                     0.100                     0.10   8378.579068
+10                    0.100                     1.00   8404.641119
+11                    0.100                    10.00   8439.874761
+12                    0.500                     0.01   8253.356831
+13                    0.500                     0.10   8240.275750
+14                    0.500                     1.00   8279.865321
+15                    0.500                    10.00   8255.842907
 </code></pre></div></div>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#show best parameters for the model
@@ -1901,7 +1919,7 @@ INFO:prophet:Applying in parallel with &lt;concurrent.futures.process.ProcessPoo
 <span class="k">print</span><span class="p">(</span><span class="n">best_params</span><span class="p">)</span>
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{'changepoint_prior_scale': 0.5, 'seasonality_prior_scale': 1.0}
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{'changepoint_prior_scale': 0.5, 'seasonality_prior_scale': 0.1}
 </code></pre></div></div>
 
 <p><a id="forc_new"></a></p>
@@ -1913,7 +1931,7 @@ INFO:prophet:Applying in parallel with &lt;concurrent.futures.process.ProcessPoo
         <span class="n">yearly_seasonality</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
         <span class="n">seasonality_mode</span><span class="o">=</span><span class="s">'additive'</span><span class="p">,</span>
         <span class="n">changepoint_prior_scale</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
-        <span class="n">seasonality_prior_scale</span><span class="o">=</span><span class="mf">1.0</span>
+        <span class="n">seasonality_prior_scale</span><span class="o">=</span><span class="mf">0.1</span>
            <span class="p">)</span>
 
 <span class="n">model</span> <span class="o">=</span> <span class="n">m</span><span class="p">.</span><span class="n">fit</span><span class="p">(</span><span class="n">pdf</span><span class="p">)</span>
@@ -1969,114 +1987,114 @@ INFO:prophet:Applying in parallel with &lt;concurrent.futures.process.ProcessPoo
   </thead>
   <tbody>
     <tr>
-      <th>633</th>
-      <td>2021-10-19</td>
-      <td>1403.461091</td>
-      <td>6968.492023</td>
-      <td>12876.485030</td>
-      <td>-1247.636466</td>
-      <td>4135.503277</td>
-      <td>8404.598019</td>
-      <td>8404.598019</td>
-      <td>8404.598019</td>
-      <td>-106.751260</td>
-      <td>-106.751260</td>
-      <td>-106.751260</td>
-      <td>8511.349279</td>
-      <td>8511.349279</td>
-      <td>8511.349279</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>9808.059110</td>
-    </tr>
-    <tr>
       <th>634</th>
       <td>2021-10-20</td>
-      <td>1303.622074</td>
-      <td>6751.202561</td>
-      <td>12717.137232</td>
-      <td>-1533.769518</td>
-      <td>4213.037804</td>
-      <td>8446.871074</td>
-      <td>8446.871074</td>
-      <td>8446.871074</td>
-      <td>46.806328</td>
-      <td>46.806328</td>
-      <td>46.806328</td>
-      <td>8400.064746</td>
-      <td>8400.064746</td>
-      <td>8400.064746</td>
+      <td>5611.351674</td>
+      <td>7353.892521</td>
+      <td>13286.924934</td>
+      <td>2395.438961</td>
+      <td>8285.669366</td>
+      <td>4911.917531</td>
+      <td>4911.917531</td>
+      <td>4911.917531</td>
+      <td>48.355733</td>
+      <td>48.355733</td>
+      <td>48.355733</td>
+      <td>4863.561797</td>
+      <td>4863.561797</td>
+      <td>4863.561797</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
-      <td>9750.493149</td>
+      <td>10523.269204</td>
     </tr>
     <tr>
       <th>635</th>
       <td>2021-10-21</td>
-      <td>1203.783058</td>
-      <td>6489.662018</td>
-      <td>13344.756475</td>
-      <td>-1778.041413</td>
-      <td>4361.647403</td>
-      <td>8478.053838</td>
-      <td>8478.053838</td>
-      <td>8478.053838</td>
-      <td>190.675359</td>
-      <td>190.675359</td>
-      <td>190.675359</td>
-      <td>8287.378479</td>
-      <td>8287.378479</td>
-      <td>8287.378479</td>
+      <td>5555.250374</td>
+      <td>7181.261022</td>
+      <td>13309.922767</td>
+      <td>2217.641999</td>
+      <td>8437.315873</td>
+      <td>4964.928067</td>
+      <td>4964.928067</td>
+      <td>4964.928067</td>
+      <td>192.799745</td>
+      <td>192.799745</td>
+      <td>192.799745</td>
+      <td>4772.128322</td>
+      <td>4772.128322</td>
+      <td>4772.128322</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
-      <td>9681.836896</td>
+      <td>10520.178441</td>
     </tr>
     <tr>
       <th>636</th>
       <td>2021-10-22</td>
-      <td>1103.944041</td>
-      <td>6150.021220</td>
-      <td>12962.111912</td>
-      <td>-2029.850009</td>
-      <td>4481.939197</td>
-      <td>8399.993334</td>
-      <td>8399.993334</td>
-      <td>8399.993334</td>
-      <td>226.628366</td>
-      <td>226.628366</td>
-      <td>226.628366</td>
-      <td>8173.364969</td>
-      <td>8173.364969</td>
-      <td>8173.364969</td>
+      <td>5499.149074</td>
+      <td>6686.256518</td>
+      <td>13644.236939</td>
+      <td>2038.771335</td>
+      <td>8606.513410</td>
+      <td>4902.319216</td>
+      <td>4902.319216</td>
+      <td>4902.319216</td>
+      <td>221.824781</td>
+      <td>221.824781</td>
+      <td>221.824781</td>
+      <td>4680.494434</td>
+      <td>4680.494434</td>
+      <td>4680.494434</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
-      <td>9503.937375</td>
+      <td>10401.468290</td>
     </tr>
     <tr>
       <th>637</th>
       <td>2021-10-23</td>
-      <td>1004.105024</td>
-      <td>5826.671097</td>
-      <td>12744.813026</td>
-      <td>-2302.620787</td>
-      <td>4589.927337</td>
-      <td>8177.517495</td>
-      <td>8177.517495</td>
-      <td>8177.517495</td>
-      <td>119.416190</td>
-      <td>119.416190</td>
-      <td>119.416190</td>
-      <td>8058.101305</td>
-      <td>8058.101305</td>
-      <td>8058.101305</td>
+      <td>5443.047774</td>
+      <td>6500.725451</td>
+      <td>13524.667446</td>
+      <td>1703.786879</td>
+      <td>8767.015970</td>
+      <td>4710.491372</td>
+      <td>4710.491372</td>
+      <td>4710.491372</td>
+      <td>121.839013</td>
+      <td>121.839013</td>
+      <td>121.839013</td>
+      <td>4588.652358</td>
+      <td>4588.652358</td>
+      <td>4588.652358</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
-      <td>9181.622519</td>
+      <td>10153.539146</td>
+    </tr>
+    <tr>
+      <th>638</th>
+      <td>2021-10-24</td>
+      <td>5386.946475</td>
+      <td>5972.191747</td>
+      <td>13106.366017</td>
+      <td>1397.371264</td>
+      <td>8862.420933</td>
+      <td>4403.461618</td>
+      <td>4403.461618</td>
+      <td>4403.461618</td>
+      <td>-93.149827</td>
+      <td>-93.149827</td>
+      <td>-93.149827</td>
+      <td>4496.611445</td>
+      <td>4496.611445</td>
+      <td>4496.611445</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>9790.408093</td>
     </tr>
   </tbody>
 </table>
@@ -2129,24 +2147,24 @@ INFO:prophet:Applying in parallel with &lt;concurrent.futures.process.ProcessPoo
     <tr>
       <th>613</th>
       <td>2021-09-29</td>
-      <td>3400.24143</td>
-      <td>12831.961009</td>
-      <td>15048.728948</td>
-      <td>3157.467002</td>
-      <td>3621.190871</td>
-      <td>10545.699919</td>
-      <td>10545.699919</td>
-      <td>10545.699919</td>
-      <td>46.806328</td>
-      <td>46.806328</td>
-      <td>46.806328</td>
-      <td>10498.893591</td>
-      <td>10498.893591</td>
-      <td>10498.893591</td>
+      <td>6789.478968</td>
+      <td>12806.58505</td>
+      <td>14988.722248</td>
+      <td>6540.48628</td>
+      <td>7007.24081</td>
+      <td>7077.09217</td>
+      <td>7077.09217</td>
+      <td>7077.09217</td>
+      <td>48.355733</td>
+      <td>48.355733</td>
+      <td>48.355733</td>
+      <td>7028.736436</td>
+      <td>7028.736436</td>
+      <td>7028.736436</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
-      <td>13945.941348</td>
+      <td>13866.571138</td>
     </tr>
   </tbody>
 </table>
@@ -2158,7 +2176,7 @@ INFO:prophet:Applying in parallel with &lt;concurrent.futures.process.ProcessPoo
 
 <p><img src="output_98_0.png" alt="png" /></p>
 
-<p><strong>Description:</strong> From the component plot, we can see that there is currently an upward trend in the number of new Covid-19 cases in Malaysia. As for the next 30 days, it is expcted cases to be around 9181 cases with a 5826 lower bound of the uncertainty interval, and 12744 upper bound of the uncertainty interval</p>
+<p><strong>Description:</strong> From the component plot, we can see that there is currently an upward trend in the number of new Covid-19 cases in Malaysia. As for the next 30 days, it is expcted cases to be around 9790 cases with a 5972 lower bound of the uncertainty interval, and 13106 upper bound of the uncertainty interval.</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#plot the components
 </span><span class="n">plt2</span> <span class="o">=</span> <span class="n">m</span><span class="p">.</span><span class="n">plot_components</span><span class="p">(</span><span class="n">forecast</span><span class="p">)</span>
@@ -2224,35 +2242,35 @@ INFO:prophet:Applying in parallel with &lt;concurrent.futures.process.ProcessPoo
   <tbody>
     <tr>
       <th>0</th>
-      <td>571</td>
+      <td>708</td>
       <td>2</td>
       <td>0</td>
       <td>0</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>576</td>
+      <td>713</td>
       <td>5</td>
       <td>0</td>
       <td>2</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>573</td>
+      <td>710</td>
       <td>14</td>
       <td>0</td>
       <td>0</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>576</td>
+      <td>713</td>
       <td>24</td>
       <td>0</td>
       <td>0</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>582</td>
+      <td>720</td>
       <td>53</td>
       <td>0</td>
       <td>1</td>
@@ -2283,7 +2301,7 @@ INFO:prophet:Applying in parallel with &lt;concurrent.futures.process.ProcessPoo
 <span class="c1">#define models
 </span><span class="n">rid_model</span> <span class="o">=</span> <span class="n">Ridge</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">2.5</span><span class="p">)</span>
 <span class="n">lin_model</span> <span class="o">=</span> <span class="n">LinearRegression</span><span class="p">()</span>
-<span class="n">las_model</span> <span class="o">=</span> <span class="n">Lasso</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mi">25</span><span class="p">)</span>
+<span class="n">las_model</span> <span class="o">=</span> <span class="n">Lasso</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mi">18</span><span class="p">)</span>
 
 <span class="c1">#fit model to data
 </span><span class="n">rid_model</span><span class="p">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
@@ -2291,7 +2309,7 @@ INFO:prophet:Applying in parallel with &lt;concurrent.futures.process.ProcessPoo
 <span class="n">las_model</span><span class="p">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Lasso(alpha=25)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Lasso(alpha=18)
 </code></pre></div></div>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#model score
@@ -2300,25 +2318,25 @@ INFO:prophet:Applying in parallel with &lt;concurrent.futures.process.ProcessPoo
 <span class="k">print</span><span class="p">(</span><span class="n">las_model</span><span class="p">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">))</span>
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>0.9590416783141121
-0.9590675668329337
-0.9590294496609231
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>0.9555444130813269
+0.9555740069562761
+0.9555138155753014
 </code></pre></div></div>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#find best alpha value for lasso
 </span><span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LassoCV</span>
-<span class="n">lass_cv</span> <span class="o">=</span> <span class="n">LassoCV</span><span class="p">(</span><span class="n">alphas</span><span class="o">=</span><span class="p">[</span><span class="mi">26</span><span class="p">,</span> <span class="mi">24</span><span class="p">,</span> <span class="mi">25</span><span class="p">])</span>
+<span class="n">lass_cv</span> <span class="o">=</span> <span class="n">LassoCV</span><span class="p">(</span><span class="n">alphas</span><span class="o">=</span><span class="p">[</span><span class="mi">17</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">18</span><span class="p">])</span>
 
 <span class="n">model_cv</span> <span class="o">=</span> <span class="n">lass_cv</span><span class="p">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
 <span class="n">model_cv</span><span class="p">.</span><span class="n">alpha_</span>
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>25
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>18
 </code></pre></div></div>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#find best alpha value for ridge
 </span><span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">RidgeCV</span>
-<span class="n">regr_cv</span> <span class="o">=</span> <span class="n">RidgeCV</span><span class="p">(</span><span class="n">alphas</span><span class="o">=</span><span class="p">[</span><span class="mf">2.6</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">,</span> <span class="mf">2.4</span><span class="p">])</span>
+<span class="n">regr_cv</span> <span class="o">=</span> <span class="n">RidgeCV</span><span class="p">(</span><span class="n">alphas</span><span class="o">=</span><span class="p">[</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">,</span> <span class="mf">2.9</span><span class="p">])</span>
 
 <span class="n">model_cv</span> <span class="o">=</span> <span class="n">regr_cv</span><span class="p">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
 <span class="n">model_cv</span><span class="p">.</span><span class="n">alpha_</span>
@@ -2339,9 +2357,9 @@ INFO:prophet:Applying in parallel with &lt;concurrent.futures.process.ProcessPoo
 <span class="k">print</span><span class="p">(</span><span class="n">r2</span><span class="p">(</span><span class="n">las_pred</span><span class="p">,</span> <span class="n">y_test</span><span class="p">))</span>
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>0.9576876101879478
-0.9576899372861319
-0.9575746475971051
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>0.9622378384917039
+0.9622989469948486
+0.9622047617781965
 </code></pre></div></div>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#plot prediction results
@@ -2401,10 +2419,10 @@ INFO:prophet:Applying in parallel with &lt;concurrent.futures.process.ProcessPoo
 <span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Feature: 0, Score: 941.64680
-Feature: 1, Score: -63.38715
-Feature: 2, Score: 1221.95213
-Feature: 3, Score: 3855.68925
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Feature: 0, Score: 1073.27347
+Feature: 1, Score: -98.14277
+Feature: 2, Score: 1192.67976
+Feature: 3, Score: 3814.90664
 
 
 C:\Users\Haziq\Anaconda3\envs\prophet\lib\site-packages\seaborn\_decorators.py:36: FutureWarning: Pass the following variables as keyword args: x, y. From version 0.12, the only valid positional argument will be `data`, and passing other arguments without an explicit keyword will result in an error or misinterpretation.
