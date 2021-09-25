@@ -850,7 +850,7 @@ plt.show()
 
 
     
-![png](output_30_0.png)
+![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/Covid-19%20Malaysia%20Analysis%20And%20Prediction/output_30_0.png)
     
 
 
@@ -876,7 +876,7 @@ plt.show()
 
 
     
-![png](output_33_0.png)
+![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/Covid-19%20Malaysia%20Analysis%20And%20Prediction/output_33_0.png)
     
 
 
@@ -907,7 +907,7 @@ plt.show()
 
 
     
-![png](output_35_0.png)
+![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/Covid-19%20Malaysia%20Analysis%20And%20Prediction/output_35_0.png)
     
 
 
@@ -1403,7 +1403,7 @@ plt.show()
 
 
     
-![png](output_54_0.png)
+![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/Covid-19%20Malaysia%20Analysis%20And%20Prediction/output_54_0.png)
     
 
 
@@ -1441,7 +1441,7 @@ plt.show()
 
 
     
-![png](output_57_0.png)
+![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/Covid-19%20Malaysia%20Analysis%20And%20Prediction/output_57_0.png)
     
 
 
@@ -1468,7 +1468,7 @@ plt.show()
 
 
     
-![png](output_60_0.png)
+![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/Covid-19%20Malaysia%20Analysis%20And%20Prediction/output_60_0.png)
     
 
 
@@ -1616,7 +1616,7 @@ plt.show()
 
 
     
-![png](output_70_0.png)
+![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/Covid-19%20Malaysia%20Analysis%20And%20Prediction/output_70_0.png)
     
 
 
@@ -1671,7 +1671,7 @@ plt.show()
 
 
     
-![png](output_80_0.png)
+![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/Covid-19%20Malaysia%20Analysis%20And%20Prediction/output_80_0.png)
     
 
 
@@ -1952,76 +1952,6 @@ tuning_results = pd.DataFrame(all_params)
 tuning_results['rmse'] = rmses
 print(tuning_results)
 ```
-
-    INFO:prophet:Disabling yearly seasonality. Run prophet with yearly_seasonality=True to override this.
-    INFO:prophet:Disabling daily seasonality. Run prophet with daily_seasonality=True to override this.
-    WARNING:prophet.models:Optimization terminated abnormally. Falling back to Newton.
-    INFO:prophet:Making 2 forecasts with cutoffs between 2021-05-12 00:00:00 and 2021-06-26 00:00:00
-    INFO:prophet:Applying in parallel with <concurrent.futures.process.ProcessPoolExecutor object at 0x000002CAF3C275B0>
-    INFO:prophet:Disabling yearly seasonality. Run prophet with yearly_seasonality=True to override this.
-    INFO:prophet:Disabling daily seasonality. Run prophet with daily_seasonality=True to override this.
-    WARNING:prophet.models:Optimization terminated abnormally. Falling back to Newton.
-    INFO:prophet:Making 2 forecasts with cutoffs between 2021-05-12 00:00:00 and 2021-06-26 00:00:00
-    INFO:prophet:Applying in parallel with <concurrent.futures.process.ProcessPoolExecutor object at 0x000002CAF3B36820>
-    INFO:prophet:Disabling yearly seasonality. Run prophet with yearly_seasonality=True to override this.
-    INFO:prophet:Disabling daily seasonality. Run prophet with daily_seasonality=True to override this.
-    WARNING:prophet.models:Optimization terminated abnormally. Falling back to Newton.
-    INFO:prophet:Making 2 forecasts with cutoffs between 2021-05-12 00:00:00 and 2021-06-26 00:00:00
-    INFO:prophet:Applying in parallel with <concurrent.futures.process.ProcessPoolExecutor object at 0x000002CAF3AD8C40>
-    INFO:prophet:Disabling yearly seasonality. Run prophet with yearly_seasonality=True to override this.
-    INFO:prophet:Disabling daily seasonality. Run prophet with daily_seasonality=True to override this.
-    WARNING:prophet.models:Optimization terminated abnormally. Falling back to Newton.
-    INFO:prophet:Making 2 forecasts with cutoffs between 2021-05-12 00:00:00 and 2021-06-26 00:00:00
-    INFO:prophet:Applying in parallel with <concurrent.futures.process.ProcessPoolExecutor object at 0x000002CAF3AD8C40>
-    INFO:prophet:Disabling yearly seasonality. Run prophet with yearly_seasonality=True to override this.
-    INFO:prophet:Disabling daily seasonality. Run prophet with daily_seasonality=True to override this.
-    INFO:prophet:Making 2 forecasts with cutoffs between 2021-05-12 00:00:00 and 2021-06-26 00:00:00
-    INFO:prophet:Applying in parallel with <concurrent.futures.process.ProcessPoolExecutor object at 0x000002CAF3AE6280>
-    INFO:prophet:Disabling yearly seasonality. Run prophet with yearly_seasonality=True to override this.
-    INFO:prophet:Disabling daily seasonality. Run prophet with daily_seasonality=True to override this.
-    INFO:prophet:Making 2 forecasts with cutoffs between 2021-05-12 00:00:00 and 2021-06-26 00:00:00
-    INFO:prophet:Applying in parallel with <concurrent.futures.process.ProcessPoolExecutor object at 0x000002CAED51DE50>
-    INFO:prophet:Disabling yearly seasonality. Run prophet with yearly_seasonality=True to override this.
-    INFO:prophet:Disabling daily seasonality. Run prophet with daily_seasonality=True to override this.
-    INFO:prophet:Making 2 forecasts with cutoffs between 2021-05-12 00:00:00 and 2021-06-26 00:00:00
-    INFO:prophet:Applying in parallel with <concurrent.futures.process.ProcessPoolExecutor object at 0x000002CAF3AD8B50>
-    INFO:prophet:Disabling yearly seasonality. Run prophet with yearly_seasonality=True to override this.
-    INFO:prophet:Disabling daily seasonality. Run prophet with daily_seasonality=True to override this.
-    INFO:prophet:Making 2 forecasts with cutoffs between 2021-05-12 00:00:00 and 2021-06-26 00:00:00
-    INFO:prophet:Applying in parallel with <concurrent.futures.process.ProcessPoolExecutor object at 0x000002CAF3AE6850>
-    INFO:prophet:Disabling yearly seasonality. Run prophet with yearly_seasonality=True to override this.
-    INFO:prophet:Disabling daily seasonality. Run prophet with daily_seasonality=True to override this.
-    INFO:prophet:Making 2 forecasts with cutoffs between 2021-05-12 00:00:00 and 2021-06-26 00:00:00
-    INFO:prophet:Applying in parallel with <concurrent.futures.process.ProcessPoolExecutor object at 0x000002CAF6274280>
-    INFO:prophet:Disabling yearly seasonality. Run prophet with yearly_seasonality=True to override this.
-    INFO:prophet:Disabling daily seasonality. Run prophet with daily_seasonality=True to override this.
-    INFO:prophet:Making 2 forecasts with cutoffs between 2021-05-12 00:00:00 and 2021-06-26 00:00:00
-    INFO:prophet:Applying in parallel with <concurrent.futures.process.ProcessPoolExecutor object at 0x000002CAF3AB12E0>
-    INFO:prophet:Disabling yearly seasonality. Run prophet with yearly_seasonality=True to override this.
-    INFO:prophet:Disabling daily seasonality. Run prophet with daily_seasonality=True to override this.
-    INFO:prophet:Making 2 forecasts with cutoffs between 2021-05-12 00:00:00 and 2021-06-26 00:00:00
-    INFO:prophet:Applying in parallel with <concurrent.futures.process.ProcessPoolExecutor object at 0x000002CAF3AD89D0>
-    INFO:prophet:Disabling yearly seasonality. Run prophet with yearly_seasonality=True to override this.
-    INFO:prophet:Disabling daily seasonality. Run prophet with daily_seasonality=True to override this.
-    INFO:prophet:Making 2 forecasts with cutoffs between 2021-05-12 00:00:00 and 2021-06-26 00:00:00
-    INFO:prophet:Applying in parallel with <concurrent.futures.process.ProcessPoolExecutor object at 0x000002CAF3C5E2B0>
-    INFO:prophet:Disabling yearly seasonality. Run prophet with yearly_seasonality=True to override this.
-    INFO:prophet:Disabling daily seasonality. Run prophet with daily_seasonality=True to override this.
-    INFO:prophet:Making 2 forecasts with cutoffs between 2021-05-12 00:00:00 and 2021-06-26 00:00:00
-    INFO:prophet:Applying in parallel with <concurrent.futures.process.ProcessPoolExecutor object at 0x000002CAF3AD89A0>
-    INFO:prophet:Disabling yearly seasonality. Run prophet with yearly_seasonality=True to override this.
-    INFO:prophet:Disabling daily seasonality. Run prophet with daily_seasonality=True to override this.
-    INFO:prophet:Making 2 forecasts with cutoffs between 2021-05-12 00:00:00 and 2021-06-26 00:00:00
-    INFO:prophet:Applying in parallel with <concurrent.futures.process.ProcessPoolExecutor object at 0x000002CAF3B1CEE0>
-    INFO:prophet:Disabling yearly seasonality. Run prophet with yearly_seasonality=True to override this.
-    INFO:prophet:Disabling daily seasonality. Run prophet with daily_seasonality=True to override this.
-    INFO:prophet:Making 2 forecasts with cutoffs between 2021-05-12 00:00:00 and 2021-06-26 00:00:00
-    INFO:prophet:Applying in parallel with <concurrent.futures.process.ProcessPoolExecutor object at 0x000002CAEF9CEDF0>
-    INFO:prophet:Disabling yearly seasonality. Run prophet with yearly_seasonality=True to override this.
-    INFO:prophet:Disabling daily seasonality. Run prophet with daily_seasonality=True to override this.
-    INFO:prophet:Making 2 forecasts with cutoffs between 2021-05-12 00:00:00 and 2021-06-26 00:00:00
-    INFO:prophet:Applying in parallel with <concurrent.futures.process.ProcessPoolExecutor object at 0x000002CAF3AD89D0>
-    
 
         changepoint_prior_scale  seasonality_prior_scale          rmse
     0                     0.001                     0.01  10509.584196
@@ -2324,7 +2254,7 @@ plot1 = m.plot(forecast)
 
 
     
-![png](output_98_0.png)
+![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/Covid-19%20Malaysia%20Analysis%20And%20Prediction/output_98_0.png)
     
 
 
@@ -2338,7 +2268,7 @@ plt2 = m.plot_components(forecast)
 
 
     
-![png](output_100_0.png)
+![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/Covid-19%20Malaysia%20Analysis%20And%20Prediction/output_100_0.png)
     
 
 
@@ -2596,7 +2526,7 @@ plt.show()
 
 
     
-![png](output_116_0.png)
+![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/Covid-19%20Malaysia%20Analysis%20And%20Prediction/output_116_0.png)
     
 
 
@@ -2637,7 +2567,7 @@ plt.show()
 
 
     
-![png](output_118_2.png)
+![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/Covid-19%20Malaysia%20Analysis%20And%20Prediction/output_118_2.png)
     
 
 
