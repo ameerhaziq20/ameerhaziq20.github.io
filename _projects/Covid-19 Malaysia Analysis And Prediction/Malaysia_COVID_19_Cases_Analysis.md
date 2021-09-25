@@ -1,18 +1,54 @@
+**Notebook contents:**
+
+[Importing the data](#import_data)
+
+[EDA](#eda)
+1. [Factors that correlates to the number of new cases](#factor_corr)
+* [Data cleaning](#factor_corr_c)
+* [Correlation between variables](#corr_var)
+* [Dataset variables value over time](#var_time_data)
+2. [Herd immunity](#herd_immunity)
+* [Data cleaning](#herd_immunity_c)
+* [Plot of vaccination progress in Malaysia](#vac_prog)
+* [Plot of Malaysia's Herd Immunity percentage](#herd_prec)
+3. [State Covid cases](#state_case)
+* [Data cleaning](#state_case_c)
+* [Plot of new cases for each state over time](#state_case_plot)
+4. [State Covid tests](#test_state)
+* [Data cleaning](#test_state_c)
+* [Plot of total Covid tests by state](#test_state_plot)
+
+[Covid-19 new cases forecast](#new_case_proph)
+* [Data preparation](#proph_prep)
+* [Hyperparameter tuning](#hyperparameter)
+* [Forecast new cases](#forc_new)
+
+[Prediction model](#pred_model)
+* [Data preprocessing](#pred_proc)
+* [Training and evaluation](#train_eval)
+
+
+
+
+<a id='import_data'></a>
+# Importing the data
+Since the data is frequently updated, we will grab the data directly from the site instead of having to download the csv files manually to perform the analysis. The other good part about this is that the analysis done in on the latest data provided.
+
 Datasets are obtained from:
 
-https://github.com/MoH-Malaysia/covid19-public/
-
-https://github.com/owid/covid-19-data/tree/master/public/data/vaccinations
-
-
-# Importing the data
-Since the data is frequently updated, we will grab the data directly from the site instead of having to download the csv files manually to perform the analysis. The other good part about this is that the analysis done in on the latest data provided. 
+* [Ministry of Health Malaysia Github](https://github.com/MoH-Malaysia/covid19-public/)
+* [Our World In Data](https://github.com/owid/covid-19-data/tree/master/public/data/vaccinations)
 
 
 ```python
 import pandas as pd
+import numpy as np
 import io
 import requests
+```
+
+
+```python
 url="https://raw.githubusercontent.com/MoH-Malaysia/covid19-public/main/epidemic/tests_malaysia.csv"
 s=requests.get(url).content
 tests=pd.read_csv(io.StringIO(s.decode('utf-8')))
@@ -83,28 +119,18 @@ population=pd.read_csv(io.StringIO(s.decode('utf-8')))
 population.to_csv('dataset/population.csv')
 ```
 
+<a id='eda'></a>
 # EDA
 
-## Factors that correlates to the number of new cases
-In this section we will see the correlation between the variables which may be related to the rise of new cases.
+<a id='factor_corr'></a>
+## 1. Factors that correlates to the number of new cases
+
+<a id='factor_corr_c'></a>
+### Data cleaning
 
 
 ```python
-import numpy as np
-```
-
-
-
-```
-# This is formatted as code
-```
-
-### Data Cleaning
-
-#### Making a backup of the DataFrame
-
-
-```python
+#make backup of the original dataframe
 df_tests=tests.copy()
 df_cases=cases.copy()
 df_death_public=deaths_public.copy()
@@ -113,6 +139,7 @@ df_casual_contacts=casual_contacts.copy()
 
 
 ```python
+#preview data
 df_cases.tail()
 ```
 
@@ -152,74 +179,74 @@ df_cases.tail()
   </thead>
   <tbody>
     <tr>
-      <th>579</th>
-      <td>2021-08-26</td>
-      <td>24599</td>
-      <td>8</td>
-      <td>22655</td>
+      <th>603</th>
+      <td>2021-09-19</td>
+      <td>14954</td>
+      <td>11</td>
+      <td>23469</td>
       <td>0.0</td>
-      <td>24.0</td>
-      <td>542.0</td>
-      <td>93.0</td>
-      <td>35.0</td>
-      <td>73.0</td>
-      <td>1944.0</td>
-    </tr>
-    <tr>
-      <th>580</th>
-      <td>2021-08-27</td>
-      <td>22070</td>
-      <td>15</td>
-      <td>21877</td>
-      <td>0.0</td>
-      <td>2.0</td>
-      <td>474.0</td>
-      <td>17.0</td>
+      <td>8.0</td>
+      <td>196.0</td>
+      <td>39.0</td>
       <td>3.0</td>
-      <td>150.0</td>
-      <td>1022.0</td>
-    </tr>
-    <tr>
-      <th>581</th>
-      <td>2021-08-28</td>
-      <td>22597</td>
-      <td>12</td>
-      <td>19492</td>
-      <td>0.0</td>
-      <td>6.0</td>
-      <td>467.0</td>
-      <td>84.0</td>
-      <td>7.0</td>
-      <td>92.0</td>
-      <td>1505.0</td>
-    </tr>
-    <tr>
-      <th>582</th>
-      <td>2021-08-29</td>
-      <td>20579</td>
-      <td>7</td>
-      <td>20845</td>
-      <td>0.0</td>
-      <td>12.0</td>
-      <td>392.0</td>
-      <td>16.0</td>
-      <td>4.0</td>
-      <td>81.0</td>
-      <td>1458.0</td>
-    </tr>
-    <tr>
-      <th>583</th>
-      <td>2021-08-30</td>
-      <td>19268</td>
-      <td>16</td>
-      <td>21257</td>
-      <td>0.0</td>
-      <td>4.0</td>
-      <td>460.0</td>
-      <td>37.0</td>
       <td>72.0</td>
-      <td>89.0</td>
-      <td>1034.0</td>
+      <td>720.0</td>
+    </tr>
+    <tr>
+      <th>604</th>
+      <td>2021-09-20</td>
+      <td>14345</td>
+      <td>43</td>
+      <td>16814</td>
+      <td>24.0</td>
+      <td>4.0</td>
+      <td>447.0</td>
+      <td>7.0</td>
+      <td>1.0</td>
+      <td>10.0</td>
+      <td>523.0</td>
+    </tr>
+    <tr>
+      <th>605</th>
+      <td>2021-09-21</td>
+      <td>15759</td>
+      <td>27</td>
+      <td>16650</td>
+      <td>0.0</td>
+      <td>3.0</td>
+      <td>301.0</td>
+      <td>45.0</td>
+      <td>15.0</td>
+      <td>2.0</td>
+      <td>622.0</td>
+    </tr>
+    <tr>
+      <th>606</th>
+      <td>2021-09-22</td>
+      <td>14990</td>
+      <td>5</td>
+      <td>19702</td>
+      <td>0.0</td>
+      <td>8.0</td>
+      <td>210.0</td>
+      <td>35.0</td>
+      <td>49.0</td>
+      <td>17.0</td>
+      <td>595.0</td>
+    </tr>
+    <tr>
+      <th>607</th>
+      <td>2021-09-23</td>
+      <td>13754</td>
+      <td>4</td>
+      <td>16628</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>303.0</td>
+      <td>20.0</td>
+      <td>7.0</td>
+      <td>6.0</td>
+      <td>658.0</td>
     </tr>
   </tbody>
 </table>
@@ -227,10 +254,9 @@ df_cases.tail()
 
 
 
-#### Check for null values for all DataFrames
-
 
 ```python
+#check for null values
 print(df_tests.isna().sum())
 print('\n')
 print(df_cases.isna().sum())
@@ -267,16 +293,17 @@ print(df_death_public.isna().sum())
     dtype: int64
     
     
-    date            0
-    deaths_new      0
-    deaths_bid    234
+    date              0
+    deaths_new        0
+    deaths_new_dod    0
+    deaths_bid        0
+    deaths_bid_dod    0
     dtype: int64
     
 
-#### Check the data types
-
 
 ```python
+#check data types
 print(df_tests.dtypes)
 print('\n')
 print(df_cases.dtypes)
@@ -313,26 +340,26 @@ print(df_death_public.dtypes)
     dtype: object
     
     
-    date           object
-    deaths_new      int64
-    deaths_bid    float64
+    date              object
+    deaths_new         int64
+    deaths_new_dod     int64
+    deaths_bid         int64
+    deaths_bid_dod     int64
     dtype: object
     
 
-#### Covert Date column into Datetime
-
 
 ```python
+#convert date column into datetime
 df_tests['date'] = pd.to_datetime(df_tests['date'])
 df_cases['date'] = pd.to_datetime(df_cases['date'])
 df_casual_contacts['date'] = pd.to_datetime(df_casual_contacts['date'])
 df_death_public['date'] = pd.to_datetime(df_cases['date'])
 ```
 
-#### Create DataFrame with selected columns
-
 
 ```python
+#create dataframe with selected columns
 df_cases_new=df_cases[['date','cases_new']]
 df_casual_contacts=df_casual_contacts[['date','casual_contacts']]
 df_death_total=df_death_public[['date','deaths_new']]
@@ -340,6 +367,7 @@ df_death_total=df_death_public[['date','deaths_new']]
 
 
 ```python
+#merge dataframes
 new_cases_and_tests =pd.merge(df_cases_new,df_tests,on="date", how='right')
 test_cases_contacts =pd.merge(new_cases_and_tests,df_casual_contacts,on="date",how='left')
 df_merged =pd.merge(test_cases_contacts,df_death_total,on="date",how='left')
@@ -347,6 +375,7 @@ df_merged =pd.merge(test_cases_contacts,df_death_total,on="date",how='left')
 
 
 ```python
+#preview merged dataframe
 df_merged.tail()
 ```
 
@@ -381,48 +410,48 @@ df_merged.tail()
   </thead>
   <tbody>
     <tr>
-      <th>579</th>
-      <td>2021-08-25</td>
-      <td>22642.0</td>
-      <td>90167</td>
-      <td>78146</td>
-      <td>69220.0</td>
+      <th>602</th>
+      <td>2021-09-17</td>
+      <td>17577.0</td>
+      <td>66469</td>
+      <td>40675</td>
+      <td>43936.0</td>
       <td>NaN</td>
     </tr>
     <tr>
-      <th>580</th>
-      <td>2021-08-26</td>
-      <td>24599.0</td>
-      <td>79606</td>
-      <td>72735</td>
-      <td>75321.0</td>
+      <th>603</th>
+      <td>2021-09-18</td>
+      <td>15549.0</td>
+      <td>53716</td>
+      <td>51101</td>
+      <td>35972.0</td>
       <td>NaN</td>
     </tr>
     <tr>
-      <th>581</th>
-      <td>2021-08-27</td>
-      <td>22070.0</td>
-      <td>79606</td>
-      <td>74976</td>
-      <td>66642.0</td>
+      <th>604</th>
+      <td>2021-09-19</td>
+      <td>14954.0</td>
+      <td>70816</td>
+      <td>38498</td>
+      <td>35812.0</td>
       <td>NaN</td>
     </tr>
     <tr>
-      <th>582</th>
-      <td>2021-08-28</td>
-      <td>22597.0</td>
-      <td>63708</td>
-      <td>71096</td>
-      <td>58375.0</td>
+      <th>605</th>
+      <td>2021-09-20</td>
+      <td>14345.0</td>
+      <td>120160</td>
+      <td>45337</td>
+      <td>44788.0</td>
       <td>NaN</td>
     </tr>
     <tr>
-      <th>583</th>
-      <td>2021-08-29</td>
-      <td>20579.0</td>
-      <td>54462</td>
-      <td>54230</td>
-      <td>43888.0</td>
+      <th>606</th>
+      <td>2021-09-21</td>
+      <td>15759.0</td>
+      <td>110875</td>
+      <td>52789</td>
+      <td>41393.0</td>
       <td>NaN</td>
     </tr>
   </tbody>
@@ -433,6 +462,7 @@ df_merged.tail()
 
 
 ```python
+#check for null values
 df_merged.isna().sum()
 ```
 
@@ -444,16 +474,17 @@ df_merged.isna().sum()
     rtk-ag               0
     pcr                  0
     casual_contacts    402
-    deaths_new          52
+    deaths_new          51
     dtype: int64
 
 
 
-#### Handling null values
-Since theres a substantial amount of missing values, we will use iterative imputer. It will estimate the values according to the featues.
-
 
 ```python
+#handling null values
+#Since theres a substantial amount of missing values,
+#we will use iterative imputer. It will estimate the values according to the featues.
+
 from sklearn.experimental import enable_iterative_imputer
 from sklearn.impute import IterativeImputer
 from sklearn.linear_model import LinearRegression
@@ -503,16 +534,16 @@ pd.DataFrame(cleaned_df)
     <tr>
       <th>0</th>
       <td>0.0</td>
-      <td>3396.759427</td>
+      <td>571.084765</td>
       <td>2.0</td>
       <td>0.0</td>
-      <td>1.009825</td>
+      <td>0.000000</td>
       <td>2020-01-24</td>
     </tr>
     <tr>
       <th>1</th>
       <td>4.0</td>
-      <td>3402.271668</td>
+      <td>576.000003</td>
       <td>5.0</td>
       <td>0.0</td>
       <td>2.000000</td>
@@ -521,7 +552,7 @@ pd.DataFrame(cleaned_df)
     <tr>
       <th>2</th>
       <td>0.0</td>
-      <td>3397.749226</td>
+      <td>573.771209</td>
       <td>14.0</td>
       <td>0.0</td>
       <td>0.000000</td>
@@ -530,7 +561,7 @@ pd.DataFrame(cleaned_df)
     <tr>
       <th>3</th>
       <td>0.0</td>
-      <td>3398.514204</td>
+      <td>576.009913</td>
       <td>24.0</td>
       <td>0.0</td>
       <td>0.000000</td>
@@ -539,7 +570,7 @@ pd.DataFrame(cleaned_df)
     <tr>
       <th>4</th>
       <td>0.0</td>
-      <td>3400.661511</td>
+      <td>582.426380</td>
       <td>53.0</td>
       <td>0.0</td>
       <td>1.000000</td>
@@ -555,68 +586,66 @@ pd.DataFrame(cleaned_df)
       <td>...</td>
     </tr>
     <tr>
-      <th>579</th>
-      <td>22642.0</td>
-      <td>69220.000000</td>
-      <td>78146.0</td>
-      <td>90167.0</td>
-      <td>624.783182</td>
-      <td>2021-08-25</td>
+      <th>602</th>
+      <td>17577.0</td>
+      <td>43936.000000</td>
+      <td>40675.0</td>
+      <td>66469.0</td>
+      <td>464.590335</td>
+      <td>2021-09-17</td>
     </tr>
     <tr>
-      <th>580</th>
-      <td>24599.0</td>
-      <td>75321.000000</td>
-      <td>72735.0</td>
-      <td>79606.0</td>
-      <td>692.018053</td>
-      <td>2021-08-26</td>
+      <th>603</th>
+      <td>15549.0</td>
+      <td>35972.000000</td>
+      <td>51101.0</td>
+      <td>53716.0</td>
+      <td>416.319642</td>
+      <td>2021-09-18</td>
     </tr>
     <tr>
-      <th>581</th>
-      <td>22070.0</td>
-      <td>66642.000000</td>
-      <td>74976.0</td>
-      <td>79606.0</td>
-      <td>614.659292</td>
-      <td>2021-08-27</td>
+      <th>604</th>
+      <td>14954.0</td>
+      <td>35812.000000</td>
+      <td>38498.0</td>
+      <td>70816.0</td>
+      <td>392.152734</td>
+      <td>2021-09-19</td>
     </tr>
     <tr>
-      <th>582</th>
-      <td>22597.0</td>
-      <td>58375.000000</td>
-      <td>71096.0</td>
-      <td>63708.0</td>
-      <td>649.646922</td>
-      <td>2021-08-28</td>
+      <th>605</th>
+      <td>14345.0</td>
+      <td>44788.000000</td>
+      <td>45337.0</td>
+      <td>120160.0</td>
+      <td>346.279841</td>
+      <td>2021-09-20</td>
     </tr>
     <tr>
-      <th>583</th>
-      <td>20579.0</td>
-      <td>43888.000000</td>
-      <td>54230.0</td>
-      <td>54462.0</td>
-      <td>605.879692</td>
-      <td>2021-08-29</td>
+      <th>606</th>
+      <td>15759.0</td>
+      <td>41393.000000</td>
+      <td>52789.0</td>
+      <td>110875.0</td>
+      <td>396.614426</td>
+      <td>2021-09-21</td>
     </tr>
   </tbody>
 </table>
-<p>584 rows × 6 columns</p>
+<p>607 rows × 6 columns</p>
 </div>
 
 
 
-#### Convert numerical values to integer
-
 
 ```python
+#convert numerical values to integer
 cleaned_df[['cases_new','casual_contacts','pcr', 'rtk-ag','deaths_new']]=cleaned_df[['cases_new','casual_contacts','pcr', 'rtk-ag','deaths_new']].astype(int)
 ```
 
-#### Sort values by date
-
 
 ```python
+#sort values by date
 cleaned_df.sort_values(by='date',ascending=True)
 ```
 
@@ -653,16 +682,16 @@ cleaned_df.sort_values(by='date',ascending=True)
     <tr>
       <th>0</th>
       <td>0</td>
-      <td>3396</td>
+      <td>571</td>
       <td>2</td>
       <td>0</td>
-      <td>1</td>
+      <td>0</td>
       <td>2020-01-24</td>
     </tr>
     <tr>
       <th>1</th>
       <td>4</td>
-      <td>3402</td>
+      <td>576</td>
       <td>5</td>
       <td>0</td>
       <td>2</td>
@@ -671,7 +700,7 @@ cleaned_df.sort_values(by='date',ascending=True)
     <tr>
       <th>2</th>
       <td>0</td>
-      <td>3397</td>
+      <td>573</td>
       <td>14</td>
       <td>0</td>
       <td>0</td>
@@ -680,7 +709,7 @@ cleaned_df.sort_values(by='date',ascending=True)
     <tr>
       <th>3</th>
       <td>0</td>
-      <td>3398</td>
+      <td>576</td>
       <td>24</td>
       <td>0</td>
       <td>0</td>
@@ -689,7 +718,7 @@ cleaned_df.sort_values(by='date',ascending=True)
     <tr>
       <th>4</th>
       <td>0</td>
-      <td>3400</td>
+      <td>582</td>
       <td>53</td>
       <td>0</td>
       <td>1</td>
@@ -705,66 +734,73 @@ cleaned_df.sort_values(by='date',ascending=True)
       <td>...</td>
     </tr>
     <tr>
-      <th>579</th>
-      <td>22642</td>
-      <td>69220</td>
-      <td>78146</td>
-      <td>90167</td>
-      <td>624</td>
-      <td>2021-08-25</td>
+      <th>602</th>
+      <td>17577</td>
+      <td>43936</td>
+      <td>40675</td>
+      <td>66469</td>
+      <td>464</td>
+      <td>2021-09-17</td>
     </tr>
     <tr>
-      <th>580</th>
-      <td>24599</td>
-      <td>75321</td>
-      <td>72735</td>
-      <td>79606</td>
-      <td>692</td>
-      <td>2021-08-26</td>
+      <th>603</th>
+      <td>15549</td>
+      <td>35972</td>
+      <td>51101</td>
+      <td>53716</td>
+      <td>416</td>
+      <td>2021-09-18</td>
     </tr>
     <tr>
-      <th>581</th>
-      <td>22070</td>
-      <td>66642</td>
-      <td>74976</td>
-      <td>79606</td>
-      <td>614</td>
-      <td>2021-08-27</td>
+      <th>604</th>
+      <td>14954</td>
+      <td>35812</td>
+      <td>38498</td>
+      <td>70816</td>
+      <td>392</td>
+      <td>2021-09-19</td>
     </tr>
     <tr>
-      <th>582</th>
-      <td>22597</td>
-      <td>58375</td>
-      <td>71096</td>
-      <td>63708</td>
-      <td>649</td>
-      <td>2021-08-28</td>
+      <th>605</th>
+      <td>14345</td>
+      <td>44788</td>
+      <td>45337</td>
+      <td>120160</td>
+      <td>346</td>
+      <td>2021-09-20</td>
     </tr>
     <tr>
-      <th>583</th>
-      <td>20579</td>
-      <td>43888</td>
-      <td>54230</td>
-      <td>54462</td>
-      <td>605</td>
-      <td>2021-08-29</td>
+      <th>606</th>
+      <td>15759</td>
+      <td>41393</td>
+      <td>52789</td>
+      <td>110875</td>
+      <td>396</td>
+      <td>2021-09-21</td>
     </tr>
   </tbody>
 </table>
-<p>584 rows × 6 columns</p>
+<p>607 rows × 6 columns</p>
 </div>
 
 
 
 ### Visualization
 
-#### Correlation matrix
-
 
 ```python
 import seaborn as sns
 import matplotlib.pyplot as plt
 
+sns.set_style("darkgrid")
+```
+
+<a id='corr_var'></a>
+#### Correlation between variables
+
+
+```python
+#plot correlation heatmap
 corr=cleaned_df.corr()
 plt.figure(figsize=(8,8))
 
@@ -775,51 +811,44 @@ plt.show()
 
 
     
-![png](output_37_0.png)
+![png](output_30_0.png)
     
 
 
-#### Description
-From the correlation matrix, we can see that there is a high positive correlation between death and new cases. This shows that as the count of new cases increase, the reported new death cases also increases. The amount of new cases is also have a high correlation with the amount of testing done. Among the two tests, rtk-ag test have a higher correlation coefficient than pcr. This may show that there are more positive cases reported by rtk-ag in comparison with pcr. Casual contacts also have a high correlation to the amount of new cases. This shows that casual contacts contributes to the amount of new covid cases.
+**Description:** From the correlation matrix, we can see that there is a high positive correlation between death and new cases. This shows that as the count of new cases increase, the reported new death cases also increases. The amount of new cases is also have a high correlation with the amount of testing done. Among the two tests, rtk-ag test have a higher correlation coefficient than pcr. This may show that there are more positive cases reported by rtk-ag in comparison with pcr. Casual contacts also have a high correlation to the amount of new cases. This shows that casual contacts contributes to the amount of new covid cases.
 
-#### Dataset variables over time
+<a id='var_time_data'></a>
+#### Dataset variables value over time
 
 
 ```python
-import seaborn as sns
-import matplotlib.pyplot as plt
-
-fig=plt.figure(figsize=(20,10))
-plt.title('Dataset variables over time',fontsize=20)
-plt.xticks(rotation=45,fontsize=13)
-#sns.scatterplot(data=pd.melt(new_cases_and_tests, 'date'), x="date", y='value',hue='variable')
+#plot multiple line graph
+fig=plt.figure(figsize=(14,8))
+plt.title('Dataset variables value over time')
+plt.xticks(rotation=0)
 sns.lineplot(data=pd.melt(cleaned_df, 'date'), x="date", y='value',hue='variable',palette='husl')
-plt.legend(fontsize='x-large', title_fontsize=20)
+plt.legend()
 
 plt.xlabel('Date')
 plt.ylabel('Count')
 
-plt.grid()
 plt.show()
 ```
 
 
     
-![png](output_40_0.png)
+![png](output_33_0.png)
     
 
 
-##### Description
-From the plot, we can see that the variables are having an upward trend as time progress. Notice the presence some occasional dips in the number of casual contacts everytime cases hits an all new time high which possibly due to the implementation of stricter Movement Control Order where people are refrained from travelling and even going out. This can be further seen on the filtered linegraph below.
+**Description:** From the plot, we can see that the variables are having an upward trend as time progress. Notice the presence some occasional dips in the number of casual contacts everytime cases hits an all new time high which possibly due to the implementation of stricter Movement Control Order where people are refrained from travelling and even going out. This can be further seen on the filtered linegraph below.
 
 
 ```python
-import seaborn as sns
-import matplotlib.pyplot as plt
-
-fig=plt.figure(figsize=(20,15))
-plt.title('Casual contacts and new cases ',fontsize=20)
-plt.xticks(rotation=45,fontsize=13)
+#plot multiple line graph
+fig=plt.figure(figsize=(14,8))
+plt.title('Casual contacts and new cases ')
+plt.xticks(rotation=0)
 
 colors = ["#FF0B04", "#4374B3"]
 
@@ -831,38 +860,38 @@ sns.lineplot(data=pd.melt(cleaned_df[['cases_new','casual_contacts','date']], 'd
              palette=colors
             )
 
-plt.legend(fontsize='x-large', title_fontsize=10)
+plt.xlabel('Date')
+plt.ylabel('Count')
 
-plt.xlabel('Date',fontsize=15)
-plt.ylabel('Count',fontsize=15)
-
-plt.grid()
 plt.show()
 ```
 
 
     
-![png](output_42_0.png)
+![png](output_35_0.png)
     
 
 
-## Herd immunity
-The first part that we want to analyze is the herd immunity achieved in Malaysia. Based on the government's target, we need to have 80% of the population fully vaccinated against Covid-19 in order to achieve herd immunity.
+**Description:** Here we can have a clearer view on the occasional dips in the number of casual contacts everytime cases hits an all new time high as mentioned from the previous description.
 
-### Data Cleaning
+<a id='herd_immunity'></a>
+## 2. Herd immunity
 
-#### Making a backup of the DataFrame
+Based on the government's target, we need to have 80% of the population fully vaccinated against Covid-19 in order to achieve herd immunity.
 
-Just in case something happen, we can revert to its original values without updating from the dataset link.
+<a id='herd_immunity_c'></a>
+### Data cleaning
 
 
 ```python
+#make a backup of the dataframe
 df_vaccination = vaccination_who.copy()
 df_population = population.copy()
 ```
 
 
 ```python
+#preview the dataframe
 df_vaccination.head()
 ```
 
@@ -997,6 +1026,7 @@ df_vaccination.head()
 
 
 ```python
+#preview the dataframe
 df_population.head()
 ```
 
@@ -1026,6 +1056,7 @@ df_population.head()
       <th>pop</th>
       <th>pop_18</th>
       <th>pop_60</th>
+      <th>pop_12</th>
     </tr>
   </thead>
   <tbody>
@@ -1036,6 +1067,7 @@ df_population.head()
       <td>32657400</td>
       <td>23409600</td>
       <td>3502000</td>
+      <td>3147500</td>
     </tr>
     <tr>
       <th>1</th>
@@ -1044,6 +1076,7 @@ df_population.head()
       <td>3781000</td>
       <td>2711900</td>
       <td>428700</td>
+      <td>359900</td>
     </tr>
     <tr>
       <th>2</th>
@@ -1052,6 +1085,7 @@ df_population.head()
       <td>2185100</td>
       <td>1540600</td>
       <td>272500</td>
+      <td>211400</td>
     </tr>
     <tr>
       <th>3</th>
@@ -1060,6 +1094,7 @@ df_population.head()
       <td>1906700</td>
       <td>1236200</td>
       <td>194100</td>
+      <td>210600</td>
     </tr>
     <tr>
       <th>4</th>
@@ -1068,6 +1103,7 @@ df_population.head()
       <td>932700</td>
       <td>677400</td>
       <td>118500</td>
+      <td>86500</td>
     </tr>
   </tbody>
 </table>
@@ -1075,27 +1111,26 @@ df_population.head()
 
 
 
-#### Filter columns and rows
-
 
 ```python
+#filter column and rows with data for Malaysia
 df_population = df_population[df_population['state']=='Malaysia']
 df_vaccination = df_vaccination[df_vaccination['iso_code'] =='MYS']
 ```
 
 
 ```python
+#create new dataframe with selected columns
 df_vax_col = df_vaccination[['date', 'total_vaccinations', 'people_vaccinated' , 'people_fully_vaccinated','daily_vaccinations']]
 ```
 
-#### Covert Date column into Datetime
-
 
 ```python
+#convert date column to datetime
 df_vax_col['date'] = pd.to_datetime(df_vax_col['date'])
 ```
 
-    <ipython-input-162-eef09d30cdd7>:1: SettingWithCopyWarning: 
+    <ipython-input-32-087e617b6292>:2: SettingWithCopyWarning: 
     A value is trying to be set on a copy of a slice from a DataFrame.
     Try using .loc[row_indexer,col_indexer] = value instead
     
@@ -1103,28 +1138,27 @@ df_vax_col['date'] = pd.to_datetime(df_vax_col['date'])
       df_vax_col['date'] = pd.to_datetime(df_vax_col['date'])
     
 
-#### Check for null values
-If the rows with null values isn't that abundant, we can drop these rows
-
 
 ```python
+#check for null values
 print(df_vax_col.isna().sum())
 ```
 
     date                       0
     total_vaccinations         0
     people_vaccinated          0
-    people_fully_vaccinated    4
+    people_fully_vaccinated    2
     daily_vaccinations         1
     dtype: int64
     
 
 
 ```python
+#drop null rows
 df_vax_col.dropna(inplace=True)
 ```
 
-    <ipython-input-164-c9825b337e79>:1: SettingWithCopyWarning: 
+    <ipython-input-34-ef025bb1d682>:2: SettingWithCopyWarning: 
     A value is trying to be set on a copy of a slice from a DataFrame
     
     See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
@@ -1133,7 +1167,8 @@ df_vax_col.dropna(inplace=True)
 
 
 ```python
-df_vax_col
+#preview dataframe
+df_vax_col.tail()
 ```
 
 
@@ -1166,117 +1201,69 @@ df_vax_col
   </thead>
   <tbody>
     <tr>
-      <th>24008</th>
-      <td>2021-02-28</td>
-      <td>18721.0</td>
-      <td>18718.0</td>
-      <td>3.0</td>
-      <td>4665.0</td>
+      <th>27533</th>
+      <td>2021-09-19</td>
+      <td>40375056.0</td>
+      <td>22003333.0</td>
+      <td>18453322.0</td>
+      <td>230267.0</td>
     </tr>
     <tr>
-      <th>24009</th>
-      <td>2021-03-01</td>
-      <td>34093.0</td>
-      <td>34086.0</td>
-      <td>7.0</td>
-      <td>6807.0</td>
+      <th>27534</th>
+      <td>2021-09-20</td>
+      <td>40664674.0</td>
+      <td>22099719.0</td>
+      <td>18648795.0</td>
+      <td>239191.0</td>
     </tr>
     <tr>
-      <th>24010</th>
-      <td>2021-03-02</td>
-      <td>55749.0</td>
-      <td>55739.0</td>
-      <td>10.0</td>
-      <td>9282.0</td>
+      <th>27535</th>
+      <td>2021-09-21</td>
+      <td>40925929.0</td>
+      <td>22226325.0</td>
+      <td>18786636.0</td>
+      <td>241660.0</td>
     </tr>
     <tr>
-      <th>24011</th>
-      <td>2021-03-03</td>
-      <td>78413.0</td>
-      <td>78398.0</td>
-      <td>15.0</td>
-      <td>11193.0</td>
+      <th>27536</th>
+      <td>2021-09-22</td>
+      <td>41247271.0</td>
+      <td>22351561.0</td>
+      <td>18986347.0</td>
+      <td>252022.0</td>
     </tr>
     <tr>
-      <th>24012</th>
-      <td>2021-03-04</td>
-      <td>97954.0</td>
-      <td>97925.0</td>
-      <td>29.0</td>
-      <td>13821.0</td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-    </tr>
-    <tr>
-      <th>24186</th>
-      <td>2021-08-25</td>
-      <td>32635907.0</td>
-      <td>18792979.0</td>
-      <td>13842928.0</td>
-      <td>450794.0</td>
-    </tr>
-    <tr>
-      <th>24187</th>
-      <td>2021-08-26</td>
-      <td>33044202.0</td>
-      <td>18948648.0</td>
-      <td>14095554.0</td>
-      <td>434903.0</td>
-    </tr>
-    <tr>
-      <th>24188</th>
-      <td>2021-08-27</td>
-      <td>33388102.0</td>
-      <td>19090519.0</td>
-      <td>14297962.0</td>
-      <td>414730.0</td>
-    </tr>
-    <tr>
-      <th>24189</th>
-      <td>2021-08-28</td>
-      <td>33724744.0</td>
-      <td>19241567.0</td>
-      <td>14487972.0</td>
-      <td>395723.0</td>
-    </tr>
-    <tr>
-      <th>24190</th>
-      <td>2021-08-29</td>
-      <td>34027548.0</td>
-      <td>19384218.0</td>
-      <td>14648590.0</td>
-      <td>375966.0</td>
+      <th>27537</th>
+      <td>2021-09-23</td>
+      <td>41573883.0</td>
+      <td>22482988.0</td>
+      <td>19180397.0</td>
+      <td>269781.0</td>
     </tr>
   </tbody>
 </table>
-<p>183 rows × 5 columns</p>
 </div>
 
 
 
 ### Visualization
 
-#### Merging datasets
-
 
 ```python
+#create pandas series from column
 df_pop = df_population['pop']
 ```
 
 
 ```python
+#merge dataframes
 df_vax_herd = df_vax_col.merge(df_pop, how='cross')
 ```
 
 
 ```python
-df_vax_col
+#preview dataframes
+df_vax_col.tail()
 ```
 
 
@@ -1309,191 +1296,136 @@ df_vax_col
   </thead>
   <tbody>
     <tr>
-      <th>24008</th>
-      <td>2021-02-28</td>
-      <td>18721.0</td>
-      <td>18718.0</td>
-      <td>3.0</td>
-      <td>4665.0</td>
+      <th>27533</th>
+      <td>2021-09-19</td>
+      <td>40375056.0</td>
+      <td>22003333.0</td>
+      <td>18453322.0</td>
+      <td>230267.0</td>
     </tr>
     <tr>
-      <th>24009</th>
-      <td>2021-03-01</td>
-      <td>34093.0</td>
-      <td>34086.0</td>
-      <td>7.0</td>
-      <td>6807.0</td>
+      <th>27534</th>
+      <td>2021-09-20</td>
+      <td>40664674.0</td>
+      <td>22099719.0</td>
+      <td>18648795.0</td>
+      <td>239191.0</td>
     </tr>
     <tr>
-      <th>24010</th>
-      <td>2021-03-02</td>
-      <td>55749.0</td>
-      <td>55739.0</td>
-      <td>10.0</td>
-      <td>9282.0</td>
+      <th>27535</th>
+      <td>2021-09-21</td>
+      <td>40925929.0</td>
+      <td>22226325.0</td>
+      <td>18786636.0</td>
+      <td>241660.0</td>
     </tr>
     <tr>
-      <th>24011</th>
-      <td>2021-03-03</td>
-      <td>78413.0</td>
-      <td>78398.0</td>
-      <td>15.0</td>
-      <td>11193.0</td>
+      <th>27536</th>
+      <td>2021-09-22</td>
+      <td>41247271.0</td>
+      <td>22351561.0</td>
+      <td>18986347.0</td>
+      <td>252022.0</td>
     </tr>
     <tr>
-      <th>24012</th>
-      <td>2021-03-04</td>
-      <td>97954.0</td>
-      <td>97925.0</td>
-      <td>29.0</td>
-      <td>13821.0</td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-    </tr>
-    <tr>
-      <th>24186</th>
-      <td>2021-08-25</td>
-      <td>32635907.0</td>
-      <td>18792979.0</td>
-      <td>13842928.0</td>
-      <td>450794.0</td>
-    </tr>
-    <tr>
-      <th>24187</th>
-      <td>2021-08-26</td>
-      <td>33044202.0</td>
-      <td>18948648.0</td>
-      <td>14095554.0</td>
-      <td>434903.0</td>
-    </tr>
-    <tr>
-      <th>24188</th>
-      <td>2021-08-27</td>
-      <td>33388102.0</td>
-      <td>19090519.0</td>
-      <td>14297962.0</td>
-      <td>414730.0</td>
-    </tr>
-    <tr>
-      <th>24189</th>
-      <td>2021-08-28</td>
-      <td>33724744.0</td>
-      <td>19241567.0</td>
-      <td>14487972.0</td>
-      <td>395723.0</td>
-    </tr>
-    <tr>
-      <th>24190</th>
-      <td>2021-08-29</td>
-      <td>34027548.0</td>
-      <td>19384218.0</td>
-      <td>14648590.0</td>
-      <td>375966.0</td>
+      <th>27537</th>
+      <td>2021-09-23</td>
+      <td>41573883.0</td>
+      <td>22482988.0</td>
+      <td>19180397.0</td>
+      <td>269781.0</td>
     </tr>
   </tbody>
 </table>
-<p>183 rows × 5 columns</p>
 </div>
 
 
 
-#### Plot of Vaccination Progress in Malaysia
+<a id='vac_prog'></a>
+#### Plot of vaccination progress in Malaysia
 
 
 ```python
-import seaborn as sns
-import matplotlib.pyplot as plt
-
-fig=plt.figure(figsize=(20,10))
+#plot multiple line graph
+fig=plt.figure(figsize=(14,8))
 
 date = df_vax_herd['date']
 sns.lineplot(x=date, y=df_vax_herd['total_vaccinations'], label = "Total vaccinations")
 sns.lineplot(x=date, y=df_vax_herd['people_vaccinated'], label = "People with 1st Dose")
 sns.lineplot(x=date, y=df_vax_herd['people_fully_vaccinated'], label = "People with 2nd Dose")
-#sns.lineplot(x=date, y=df_vax_herd['daily_vaccinations'], label = "Daily Vaccinations rate")
 
-plt.title('Vaccination Progress in Malaysia', fontsize = 20)
+plt.title('Vaccination Progress in Malaysia')
 
-plt.grid()
-plt.xticks(rotation=45, fontsize = 10)
 plt.xlabel('Date')
-
-plt.yticks(fontsize = 10)
 plt.ylabel('Count')
 
-plt.legend(fontsize = 15)
 plt.show()
 ```
 
 
     
-![png](output_64_0.png)
+![png](output_54_0.png)
     
 
 
+<a id='herd_perc'></a>
 #### Plot of Malaysia's Herd Immunity percentage
+
 Equation Herd Immunity is as follows:
 
     Herd% = (Sum of Fully Vaccinated/Total Popuation) * 100
 
 
 ```python
+#calculate herd immunity percentage
 df_vax_herd['herd_immunity'] = (df_vax_herd['people_fully_vaccinated'] / df_vax_herd['pop']) * 100
 ```
 
 
 ```python
-import seaborn as sns
-import matplotlib.pyplot as plt
+#plot line graph
+fig=plt.figure(figsize=(14,8))
 
-fig=plt.figure(figsize=(20,10))
-
-sns.lineplot(data=df_vax_herd,x=df_vax_herd['date'],y=df_vax_herd['herd_immunity'],linewidth = 2.5,color='red')
-plt.title("Covid-19 Herd Immunity Progress in Malaysia", fontsize=20)
+sns.lineplot(data=df_vax_herd,x=df_vax_herd['date'],y=df_vax_herd['herd_immunity'])
+plt.title("Covid-19 Herd Immunity Progress in Malaysia")
 plt.xlabel("Date")
 plt.ylabel("Percentage")
-plt.grid()
 plt.show()
 ```
 
 
     
-![png](output_67_0.png)
+![png](output_58_0.png)
     
 
 
-##### Description:
-The vaccine admnistration had exponentially increased with a slight decreased rate aproaching September 2021.
+**Description:** The vaccine admnistration had exponentially increased with a slight decreased rate aproaching September 2021.
 
 
 ```python
+#calculate current herd immunity percentage
 herd_immunity = (df_vax_herd['people_fully_vaccinated'].iloc[-1:,] / df_vax_herd['pop'].iloc[-1:,]) * 100
 ```
 
 
 ```python
+#display herd immunity percentage
 print("Malaysia's Herd Immunity Percentage: " + (herd_immunity.round(2).astype(str) + " %"))
 ```
 
-    182    Malaysia's Herd Immunity Percentage: 44.86 %
+    209    Malaysia's Herd Immunity Percentage: 58.73 %
     dtype: object
     
 
-## Covid-19 cases by state
-This section will narrow down the analysis into each state. 
+<a id='state_case'></a>
+## 3. Count of new cases by state
 
-### Count of new cases by state
-
-#### Data Cleaning
+<a id='state_case_c'></a>
+### Data Cleaning
 
 
 ```python
+#create a copy of the original datafarme
 df_state_cases=state_cases.copy()
 df_death_public=deaths_public.copy()
 df_death_state=deaths_state.copy()
@@ -1501,9 +1433,8 @@ df_death_state=deaths_state.copy()
 
 
 ```python
+#preview dataframe
 df_state_cases.head()
-#df_death_public.head()
-#df_death_state.head()
 ```
 
 
@@ -1529,8 +1460,8 @@ df_state_cases.head()
       <th></th>
       <th>date</th>
       <th>state</th>
-      <th>cases_new</th>
       <th>cases_import</th>
+      <th>cases_new</th>
       <th>cases_recovered</th>
     </tr>
   </thead>
@@ -1541,7 +1472,7 @@ df_state_cases.head()
       <td>Johor</td>
       <td>4</td>
       <td>4</td>
-      <td>0.0</td>
+      <td>0</td>
     </tr>
     <tr>
       <th>1</th>
@@ -1549,7 +1480,7 @@ df_state_cases.head()
       <td>Kedah</td>
       <td>0</td>
       <td>0</td>
-      <td>0.0</td>
+      <td>0</td>
     </tr>
     <tr>
       <th>2</th>
@@ -1557,7 +1488,7 @@ df_state_cases.head()
       <td>Kelantan</td>
       <td>0</td>
       <td>0</td>
-      <td>0.0</td>
+      <td>0</td>
     </tr>
     <tr>
       <th>3</th>
@@ -1565,7 +1496,7 @@ df_state_cases.head()
       <td>Melaka</td>
       <td>0</td>
       <td>0</td>
-      <td>0.0</td>
+      <td>0</td>
     </tr>
     <tr>
       <th>4</th>
@@ -1573,7 +1504,7 @@ df_state_cases.head()
       <td>Negeri Sembilan</td>
       <td>0</td>
       <td>0</td>
-      <td>0.0</td>
+      <td>0</td>
     </tr>
   </tbody>
 </table>
@@ -1583,6 +1514,7 @@ df_state_cases.head()
 
 
 ```python
+#convert date to datetime
 df_state_cases['date'] = pd.to_datetime(df_state_cases['date'])
 df_death_public['date'] = pd.to_datetime(df_death_public['date'])
 df_death_state['date'] = pd.to_datetime(df_death_state['date'])
@@ -1590,40 +1522,92 @@ df_death_state['date'] = pd.to_datetime(df_death_state['date'])
 
 
 ```python
+#check for null values
 df_state_cases.isna().sum()
 ```
 
 
 
 
-    date                0
-    state               0
-    cases_new           0
-    cases_import        0
-    cases_recovered    48
+    date               0
+    state              0
+    cases_import       0
+    cases_new          0
+    cases_recovered    0
     dtype: int64
 
 
 
-#### Visualization
+### Visualization
 
-##### Plot of New Cases from each State 
+<a id='state_case_plot'></a>
+#### Plot of new cases for each state over time
 
 
 ```python
-import seaborn as sns
-import matplotlib.pyplot as plt
+#scatter plot values over time
+fig=plt.figure(figsize=(14,8))
+plt.title("Covid cases according to state")
 
-fig=plt.figure(figsize=(20,10))
-plt.title("Covid cases according to state", fontsize=20)
-
-sns.set_theme(style="ticks")
 sns.scatterplot(y='cases_new', x='date',hue='state',size="state",data=df_state_cases)
 
 plt.xlabel('Date')
 plt.ylabel('Count of new cases')
 
-plt.grid()
+plt.show()
+```
+
+
+    
+![png](output_70_0.png)
+    
+
+
+**Description:** The plot shows that Selangor had significatly more cases throughout the time.Around April 2021, there is a low dip after the second ATH that occured around February 2021, and continued to increase exponantially going forward until August before droping to lower count of new cases.
+
+<a id='test_state'></a>
+## 4. Count of Covid tests by state
+
+<a id='test_state_c'></a>
+### Data cleaning
+
+
+```python
+#make a copy of the dataframe
+df_tests_state = tests_state.copy()
+```
+
+
+```python
+#create sum of tests by state
+df_ts = df_tests_state.groupby(['state']).sum()
+```
+
+
+```python
+#reset index
+df_ts.reset_index(inplace=True)
+```
+
+
+```python
+#create new column with sum of both testing values
+df_ts['total_test'] = (df_ts['rtk-ag'] + df_ts['pcr'])
+```
+
+### Visualization
+
+id='test_state_plot'></a>
+#### Plot of total Covid tests by state
+
+
+```python
+#plot bar chart
+fig=plt.figure(figsize=(14,8))
+plt.title("Covid Tests by State")
+sns.barplot(x="state", y="total_test", data=df_ts)
+plt.xlabel('State')
+plt.ylabel('Sum of Covid Tests')
 plt.xticks(rotation=45)
 plt.show()
 ```
@@ -1634,70 +1618,13 @@ plt.show()
     
 
 
-###### Description: 
-The plot shows that Selangor had significatly more cases throughout the time.Around April 2021, there is a low dip after the second ATH that occured around February 2021, and continued to increase exponantially going forward.
+**Description:** From the Covid Tests by State plot, we can see the top 3 states that have run the most test are Selangor, Johor, and, Sarawak. Despite being near to the Selangor state, W.P Putrajaya had significatly fewer tests done in the area.
 
-### Tests by state
+<a id='new_case_proph'></a>
+# Covid-19 new cases forecast
 
-#### Preparing Data
-
-
-```python
-df_tests_state = tests_state.copy()
-```
-
-##### Sum of tests by state
-
-
-```python
-df_ts = df_tests_state.groupby(['state']).sum()
-```
-
-
-```python
-df_ts.reset_index(inplace=True)
-```
-
-##### Sum values both testing types
-
-
-```python
-df_ts['total_test'] = (df_ts['rtk-ag'] + df_ts['pcr'])
-```
-
-#### Visualization
-
-##### Plot of Total Covid Tests By State
-
-
-```python
-import seaborn as sns
-import matplotlib.pyplot as plt
-fig=plt.figure(figsize=(20,10))
-plt.title("Covid Tests by State")
-sns.barplot(x="state", y="total_test", data=df_ts)
-plt.grid()
-plt.xlabel('State')
-plt.ylabel('Sum of Covid Tests')
-plt.xticks(rotation=45)
-plt.show()
-```
-
-
-    
-![png](output_92_0.png)
-    
-
-
-###### Description:
-From the Covid Tests by State plot, we can see the top 3 states that have run the most test are Selangor, Johor, and, Sarawak. Despite being near to the Selangor state, W.P Putrajaya had significatly fewer tests done in the area.
-
-# Covid-19 cases forecast
-For the forecast, we wil make use of two procedures of forecasting which is first by using Prophet and then by using NeuralProphet. 
-
-## Forecasting with Prophet
-
-### Install dependecies
+<a id='proph_prep'></a>
+### Data preparation
 
 
 ```python
@@ -1712,18 +1639,18 @@ For the forecast, we wil make use of two procedures of forecasting which is firs
 #conda install --override-channels -c main -c conda-forge boost
 ```
 
-### Import Prophet
-
 
 ```python
+#import prophet
 from prophet import Prophet
 ```
 
-### Create y and ds DataFrame
+    Importing plotly failed. Interactive plots will not work.
+    
 
 
 ```python
-#pdf=cleaned_df.copy()
+#make a copy of the original dataframe
 pdf = df_cases.copy()
 pdf.tail()
 ```
@@ -1764,74 +1691,74 @@ pdf.tail()
   </thead>
   <tbody>
     <tr>
-      <th>579</th>
-      <td>2021-08-26</td>
-      <td>24599</td>
-      <td>8</td>
-      <td>22655</td>
+      <th>603</th>
+      <td>2021-09-19</td>
+      <td>14954</td>
+      <td>11</td>
+      <td>23469</td>
       <td>0.0</td>
-      <td>24.0</td>
-      <td>542.0</td>
-      <td>93.0</td>
-      <td>35.0</td>
-      <td>73.0</td>
-      <td>1944.0</td>
-    </tr>
-    <tr>
-      <th>580</th>
-      <td>2021-08-27</td>
-      <td>22070</td>
-      <td>15</td>
-      <td>21877</td>
-      <td>0.0</td>
-      <td>2.0</td>
-      <td>474.0</td>
-      <td>17.0</td>
+      <td>8.0</td>
+      <td>196.0</td>
+      <td>39.0</td>
       <td>3.0</td>
-      <td>150.0</td>
-      <td>1022.0</td>
-    </tr>
-    <tr>
-      <th>581</th>
-      <td>2021-08-28</td>
-      <td>22597</td>
-      <td>12</td>
-      <td>19492</td>
-      <td>0.0</td>
-      <td>6.0</td>
-      <td>467.0</td>
-      <td>84.0</td>
-      <td>7.0</td>
-      <td>92.0</td>
-      <td>1505.0</td>
-    </tr>
-    <tr>
-      <th>582</th>
-      <td>2021-08-29</td>
-      <td>20579</td>
-      <td>7</td>
-      <td>20845</td>
-      <td>0.0</td>
-      <td>12.0</td>
-      <td>392.0</td>
-      <td>16.0</td>
-      <td>4.0</td>
-      <td>81.0</td>
-      <td>1458.0</td>
-    </tr>
-    <tr>
-      <th>583</th>
-      <td>2021-08-30</td>
-      <td>19268</td>
-      <td>16</td>
-      <td>21257</td>
-      <td>0.0</td>
-      <td>4.0</td>
-      <td>460.0</td>
-      <td>37.0</td>
       <td>72.0</td>
-      <td>89.0</td>
-      <td>1034.0</td>
+      <td>720.0</td>
+    </tr>
+    <tr>
+      <th>604</th>
+      <td>2021-09-20</td>
+      <td>14345</td>
+      <td>43</td>
+      <td>16814</td>
+      <td>24.0</td>
+      <td>4.0</td>
+      <td>447.0</td>
+      <td>7.0</td>
+      <td>1.0</td>
+      <td>10.0</td>
+      <td>523.0</td>
+    </tr>
+    <tr>
+      <th>605</th>
+      <td>2021-09-21</td>
+      <td>15759</td>
+      <td>27</td>
+      <td>16650</td>
+      <td>0.0</td>
+      <td>3.0</td>
+      <td>301.0</td>
+      <td>45.0</td>
+      <td>15.0</td>
+      <td>2.0</td>
+      <td>622.0</td>
+    </tr>
+    <tr>
+      <th>606</th>
+      <td>2021-09-22</td>
+      <td>14990</td>
+      <td>5</td>
+      <td>19702</td>
+      <td>0.0</td>
+      <td>8.0</td>
+      <td>210.0</td>
+      <td>35.0</td>
+      <td>49.0</td>
+      <td>17.0</td>
+      <td>595.0</td>
+    </tr>
+    <tr>
+      <th>607</th>
+      <td>2021-09-23</td>
+      <td>13754</td>
+      <td>4</td>
+      <td>16628</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>303.0</td>
+      <td>20.0</td>
+      <td>7.0</td>
+      <td>6.0</td>
+      <td>658.0</td>
     </tr>
   </tbody>
 </table>
@@ -1841,6 +1768,7 @@ pdf.tail()
 
 
 ```python
+#check data types of the dataframe columns
 pdf.dtypes
 ```
 
@@ -1864,12 +1792,14 @@ pdf.dtypes
 
 
 ```python
+#create y and ds dataframe
 pdf=pdf[['cases_new','date']]
 pdf.columns = ['y', 'ds']
 ```
 
 
 ```python
+#preview the dataframe
 pdf.tail()
 ```
 
@@ -1900,29 +1830,29 @@ pdf.tail()
   </thead>
   <tbody>
     <tr>
-      <th>579</th>
-      <td>24599</td>
-      <td>2021-08-26</td>
+      <th>603</th>
+      <td>14954</td>
+      <td>2021-09-19</td>
     </tr>
     <tr>
-      <th>580</th>
-      <td>22070</td>
-      <td>2021-08-27</td>
+      <th>604</th>
+      <td>14345</td>
+      <td>2021-09-20</td>
     </tr>
     <tr>
-      <th>581</th>
-      <td>22597</td>
-      <td>2021-08-28</td>
+      <th>605</th>
+      <td>15759</td>
+      <td>2021-09-21</td>
     </tr>
     <tr>
-      <th>582</th>
-      <td>20579</td>
-      <td>2021-08-29</td>
+      <th>606</th>
+      <td>14990</td>
+      <td>2021-09-22</td>
     </tr>
     <tr>
-      <th>583</th>
-      <td>19268</td>
-      <td>2021-08-30</td>
+      <th>607</th>
+      <td>13754</td>
+      <td>2021-09-23</td>
     </tr>
   </tbody>
 </table>
@@ -1930,10 +1860,13 @@ pdf.tail()
 
 
 
+<a id='hyperparameter'></a>
 ### Hyperparameter tuning
 
 
 ```python
+#hyperparameter tuning
+
 import itertools    
 from prophet.diagnostics import cross_validation
 from prophet.diagnostics import performance_metrics
@@ -1965,119 +1898,112 @@ print(tuning_results)
 
     INFO:prophet:Disabling yearly seasonality. Run prophet with yearly_seasonality=True to override this.
     INFO:prophet:Disabling daily seasonality. Run prophet with daily_seasonality=True to override this.
-    WARNING:prophet.models:Optimization terminated abnormally. Falling back to Newton.
-    INFO:prophet:Making 1 forecasts with cutoffs between 2021-06-01 00:00:00 and 2021-06-01 00:00:00
-    INFO:prophet:Applying in parallel with <concurrent.futures.process.ProcessPoolExecutor object at 0x00000206310261C0>
+    INFO:prophet:Making 2 forecasts with cutoffs between 2021-05-11 00:00:00 and 2021-06-25 00:00:00
+    INFO:prophet:Applying in parallel with <concurrent.futures.process.ProcessPoolExecutor object at 0x0000029203F9BD90>
     INFO:prophet:Disabling yearly seasonality. Run prophet with yearly_seasonality=True to override this.
     INFO:prophet:Disabling daily seasonality. Run prophet with daily_seasonality=True to override this.
-    WARNING:prophet.models:Optimization terminated abnormally. Falling back to Newton.
-    INFO:prophet:Making 1 forecasts with cutoffs between 2021-06-01 00:00:00 and 2021-06-01 00:00:00
-    INFO:prophet:Applying in parallel with <concurrent.futures.process.ProcessPoolExecutor object at 0x0000020630F727F0>
+    INFO:prophet:Making 2 forecasts with cutoffs between 2021-05-11 00:00:00 and 2021-06-25 00:00:00
+    INFO:prophet:Applying in parallel with <concurrent.futures.process.ProcessPoolExecutor object at 0x000002920120D0D0>
     INFO:prophet:Disabling yearly seasonality. Run prophet with yearly_seasonality=True to override this.
     INFO:prophet:Disabling daily seasonality. Run prophet with daily_seasonality=True to override this.
-    WARNING:prophet.models:Optimization terminated abnormally. Falling back to Newton.
-    INFO:prophet:Making 1 forecasts with cutoffs between 2021-06-01 00:00:00 and 2021-06-01 00:00:00
-    INFO:prophet:Applying in parallel with <concurrent.futures.process.ProcessPoolExecutor object at 0x000002062CF19FD0>
+    INFO:prophet:Making 2 forecasts with cutoffs between 2021-05-11 00:00:00 and 2021-06-25 00:00:00
+    INFO:prophet:Applying in parallel with <concurrent.futures.process.ProcessPoolExecutor object at 0x00000292065D74C0>
     INFO:prophet:Disabling yearly seasonality. Run prophet with yearly_seasonality=True to override this.
     INFO:prophet:Disabling daily seasonality. Run prophet with daily_seasonality=True to override this.
-    WARNING:prophet.models:Optimization terminated abnormally. Falling back to Newton.
-    INFO:prophet:Making 1 forecasts with cutoffs between 2021-06-01 00:00:00 and 2021-06-01 00:00:00
-    INFO:prophet:Applying in parallel with <concurrent.futures.process.ProcessPoolExecutor object at 0x0000020630F72820>
+    INFO:prophet:Making 2 forecasts with cutoffs between 2021-05-11 00:00:00 and 2021-06-25 00:00:00
+    INFO:prophet:Applying in parallel with <concurrent.futures.process.ProcessPoolExecutor object at 0x0000029203F40610>
     INFO:prophet:Disabling yearly seasonality. Run prophet with yearly_seasonality=True to override this.
     INFO:prophet:Disabling daily seasonality. Run prophet with daily_seasonality=True to override this.
-    INFO:prophet:Making 1 forecasts with cutoffs between 2021-06-01 00:00:00 and 2021-06-01 00:00:00
-    INFO:prophet:Applying in parallel with <concurrent.futures.process.ProcessPoolExecutor object at 0x0000020630F287F0>
+    INFO:prophet:Making 2 forecasts with cutoffs between 2021-05-11 00:00:00 and 2021-06-25 00:00:00
+    INFO:prophet:Applying in parallel with <concurrent.futures.process.ProcessPoolExecutor object at 0x0000029204E59D90>
     INFO:prophet:Disabling yearly seasonality. Run prophet with yearly_seasonality=True to override this.
     INFO:prophet:Disabling daily seasonality. Run prophet with daily_seasonality=True to override this.
-    INFO:prophet:Making 1 forecasts with cutoffs between 2021-06-01 00:00:00 and 2021-06-01 00:00:00
-    INFO:prophet:Applying in parallel with <concurrent.futures.process.ProcessPoolExecutor object at 0x000002063161ED00>
+    INFO:prophet:Making 2 forecasts with cutoffs between 2021-05-11 00:00:00 and 2021-06-25 00:00:00
+    INFO:prophet:Applying in parallel with <concurrent.futures.process.ProcessPoolExecutor object at 0x000002920455E160>
     INFO:prophet:Disabling yearly seasonality. Run prophet with yearly_seasonality=True to override this.
     INFO:prophet:Disabling daily seasonality. Run prophet with daily_seasonality=True to override this.
-    INFO:prophet:Making 1 forecasts with cutoffs between 2021-06-01 00:00:00 and 2021-06-01 00:00:00
-    INFO:prophet:Applying in parallel with <concurrent.futures.process.ProcessPoolExecutor object at 0x000002063162A880>
+    INFO:prophet:Making 2 forecasts with cutoffs between 2021-05-11 00:00:00 and 2021-06-25 00:00:00
+    INFO:prophet:Applying in parallel with <concurrent.futures.process.ProcessPoolExecutor object at 0x00000292065E6D90>
     INFO:prophet:Disabling yearly seasonality. Run prophet with yearly_seasonality=True to override this.
     INFO:prophet:Disabling daily seasonality. Run prophet with daily_seasonality=True to override this.
-    INFO:prophet:Making 1 forecasts with cutoffs between 2021-06-01 00:00:00 and 2021-06-01 00:00:00
-    INFO:prophet:Applying in parallel with <concurrent.futures.process.ProcessPoolExecutor object at 0x00000206310267C0>
+    INFO:prophet:Making 2 forecasts with cutoffs between 2021-05-11 00:00:00 and 2021-06-25 00:00:00
+    INFO:prophet:Applying in parallel with <concurrent.futures.process.ProcessPoolExecutor object at 0x000002920120D0D0>
     INFO:prophet:Disabling yearly seasonality. Run prophet with yearly_seasonality=True to override this.
     INFO:prophet:Disabling daily seasonality. Run prophet with daily_seasonality=True to override this.
-    INFO:prophet:Making 1 forecasts with cutoffs between 2021-06-01 00:00:00 and 2021-06-01 00:00:00
-    INFO:prophet:Applying in parallel with <concurrent.futures.process.ProcessPoolExecutor object at 0x00000206311BA7C0>
+    INFO:prophet:Making 2 forecasts with cutoffs between 2021-05-11 00:00:00 and 2021-06-25 00:00:00
+    INFO:prophet:Applying in parallel with <concurrent.futures.process.ProcessPoolExecutor object at 0x0000029203F40340>
     INFO:prophet:Disabling yearly seasonality. Run prophet with yearly_seasonality=True to override this.
     INFO:prophet:Disabling daily seasonality. Run prophet with daily_seasonality=True to override this.
-    INFO:prophet:Making 1 forecasts with cutoffs between 2021-06-01 00:00:00 and 2021-06-01 00:00:00
-    INFO:prophet:Applying in parallel with <concurrent.futures.process.ProcessPoolExecutor object at 0x0000020630FA0520>
+    INFO:prophet:Making 2 forecasts with cutoffs between 2021-05-11 00:00:00 and 2021-06-25 00:00:00
+    INFO:prophet:Applying in parallel with <concurrent.futures.process.ProcessPoolExecutor object at 0x00000292065C2CD0>
     INFO:prophet:Disabling yearly seasonality. Run prophet with yearly_seasonality=True to override this.
     INFO:prophet:Disabling daily seasonality. Run prophet with daily_seasonality=True to override this.
-    INFO:prophet:Making 1 forecasts with cutoffs between 2021-06-01 00:00:00 and 2021-06-01 00:00:00
-    INFO:prophet:Applying in parallel with <concurrent.futures.process.ProcessPoolExecutor object at 0x0000020631183430>
+    INFO:prophet:Making 2 forecasts with cutoffs between 2021-05-11 00:00:00 and 2021-06-25 00:00:00
+    INFO:prophet:Applying in parallel with <concurrent.futures.process.ProcessPoolExecutor object at 0x00000292065E6DF0>
     INFO:prophet:Disabling yearly seasonality. Run prophet with yearly_seasonality=True to override this.
     INFO:prophet:Disabling daily seasonality. Run prophet with daily_seasonality=True to override this.
-    INFO:prophet:Making 1 forecasts with cutoffs between 2021-06-01 00:00:00 and 2021-06-01 00:00:00
-    INFO:prophet:Applying in parallel with <concurrent.futures.process.ProcessPoolExecutor object at 0x00000206310261C0>
+    INFO:prophet:Making 2 forecasts with cutoffs between 2021-05-11 00:00:00 and 2021-06-25 00:00:00
+    INFO:prophet:Applying in parallel with <concurrent.futures.process.ProcessPoolExecutor object at 0x0000029204519D90>
     INFO:prophet:Disabling yearly seasonality. Run prophet with yearly_seasonality=True to override this.
     INFO:prophet:Disabling daily seasonality. Run prophet with daily_seasonality=True to override this.
-    INFO:prophet:Making 1 forecasts with cutoffs between 2021-06-01 00:00:00 and 2021-06-01 00:00:00
-    INFO:prophet:Applying in parallel with <concurrent.futures.process.ProcessPoolExecutor object at 0x00000206310261C0>
+    INFO:prophet:Making 2 forecasts with cutoffs between 2021-05-11 00:00:00 and 2021-06-25 00:00:00
+    INFO:prophet:Applying in parallel with <concurrent.futures.process.ProcessPoolExecutor object at 0x000002927D65AB80>
     INFO:prophet:Disabling yearly seasonality. Run prophet with yearly_seasonality=True to override this.
     INFO:prophet:Disabling daily seasonality. Run prophet with daily_seasonality=True to override this.
-    INFO:prophet:Making 1 forecasts with cutoffs between 2021-06-01 00:00:00 and 2021-06-01 00:00:00
-    INFO:prophet:Applying in parallel with <concurrent.futures.process.ProcessPoolExecutor object at 0x00000206311BA220>
+    INFO:prophet:Making 2 forecasts with cutoffs between 2021-05-11 00:00:00 and 2021-06-25 00:00:00
+    INFO:prophet:Applying in parallel with <concurrent.futures.process.ProcessPoolExecutor object at 0x000002920120D0D0>
     INFO:prophet:Disabling yearly seasonality. Run prophet with yearly_seasonality=True to override this.
     INFO:prophet:Disabling daily seasonality. Run prophet with daily_seasonality=True to override this.
-    INFO:prophet:Making 1 forecasts with cutoffs between 2021-06-01 00:00:00 and 2021-06-01 00:00:00
-    INFO:prophet:Applying in parallel with <concurrent.futures.process.ProcessPoolExecutor object at 0x0000020630F8A3D0>
+    INFO:prophet:Making 2 forecasts with cutoffs between 2021-05-11 00:00:00 and 2021-06-25 00:00:00
+    INFO:prophet:Applying in parallel with <concurrent.futures.process.ProcessPoolExecutor object at 0x00000292065E6DF0>
     INFO:prophet:Disabling yearly seasonality. Run prophet with yearly_seasonality=True to override this.
     INFO:prophet:Disabling daily seasonality. Run prophet with daily_seasonality=True to override this.
-    INFO:prophet:Making 1 forecasts with cutoffs between 2021-06-01 00:00:00 and 2021-06-01 00:00:00
-    INFO:prophet:Applying in parallel with <concurrent.futures.process.ProcessPoolExecutor object at 0x00000206316853D0>
+    INFO:prophet:Making 2 forecasts with cutoffs between 2021-05-11 00:00:00 and 2021-06-25 00:00:00
+    INFO:prophet:Applying in parallel with <concurrent.futures.process.ProcessPoolExecutor object at 0x0000029204034430>
     
 
         changepoint_prior_scale  seasonality_prior_scale          rmse
-    0                     0.001                     0.01  10921.661903
-    1                     0.001                     0.10  10919.509611
-    2                     0.001                     1.00  10922.932525
-    3                     0.001                    10.00  10922.933597
-    4                     0.010                     0.01  10436.432092
-    5                     0.010                     0.10  10454.540248
-    6                     0.010                     1.00  10416.027803
-    7                     0.010                    10.00  10388.626258
-    8                     0.100                     0.01   9407.677955
-    9                     0.100                     0.10   9493.458346
-    10                    0.100                     1.00   9520.645030
-    11                    0.100                    10.00   9485.789007
-    12                    0.500                     0.01   7509.463922
-    13                    0.500                     0.10   7498.125305
-    14                    0.500                     1.00   7505.931754
-    15                    0.500                    10.00   7440.287934
+    0                     0.001                     0.01  10428.751136
+    1                     0.001                     0.10  10418.800669
+    2                     0.001                     1.00  10430.607617
+    3                     0.001                    10.00  10452.840347
+    4                     0.010                     0.01   9900.567587
+    5                     0.010                     0.10   9906.286158
+    6                     0.010                     1.00   9923.815539
+    7                     0.010                    10.00   9911.731775
+    8                     0.100                     0.01   8467.618551
+    9                     0.100                     0.10   8382.283216
+    10                    0.100                     1.00   8365.253883
+    11                    0.100                    10.00   8336.454739
+    12                    0.500                     0.01   8258.078523
+    13                    0.500                     0.10   8260.200026
+    14                    0.500                     1.00   8255.442575
+    15                    0.500                    10.00   8262.853127
     
 
 
 ```python
-import numpy as np
+#show best parameters for the model
 best_params = all_params[np.argmin(rmses)]
 print(best_params)
 ```
 
-    {'changepoint_prior_scale': 0.5, 'seasonality_prior_scale': 10.0}
+    {'changepoint_prior_scale': 0.5, 'seasonality_prior_scale': 1.0}
     
 
-### Fit Prophet model
+<a id='forc_new'></a>
+### Forecast new cases
 
 
 ```python
+#fit prophet model
+
 m = Prophet(interval_width=0.95,
         yearly_seasonality=True,
-        #weekly_seasonality=True,
         seasonality_mode='additive',
         changepoint_prior_scale=0.5,
-        seasonality_prior_scale=10
+        seasonality_prior_scale=1.0
            )
-
-#m.add_country_holidays(country_name='MY')
-
-
-#m.add_seasonality(name='monthly', period=30.5, fourier_order=5, prior_scale=0.02)
 
 model = m.fit(pdf)
 ```
@@ -2087,17 +2013,10 @@ model = m.fit(pdf)
 
 
 ```python
-#print(m.train_holiday_names)
-```
-
-### Forecast Results
-
-
-```python
-#do forecasting and view results
+#forecast future values and view the results
 future = m.make_future_dataframe(periods=30,freq='D')
 forecast = m.predict(future)
-forecast.head()
+forecast.tail()
 ```
 
 
@@ -2144,114 +2063,114 @@ forecast.head()
   </thead>
   <tbody>
     <tr>
-      <th>0</th>
-      <td>2020-01-25</td>
-      <td>-1502.472873</td>
-      <td>-1203.062946</td>
-      <td>893.910368</td>
-      <td>-1502.472873</td>
-      <td>-1502.472873</td>
-      <td>1391.633483</td>
-      <td>1391.633483</td>
-      <td>1391.633483</td>
-      <td>124.582476</td>
-      <td>124.582476</td>
-      <td>124.582476</td>
-      <td>1267.051007</td>
-      <td>1267.051007</td>
-      <td>1267.051007</td>
+      <th>633</th>
+      <td>2021-10-19</td>
+      <td>1403.461091</td>
+      <td>6968.492023</td>
+      <td>12876.485030</td>
+      <td>-1247.636466</td>
+      <td>4135.503277</td>
+      <td>8404.598019</td>
+      <td>8404.598019</td>
+      <td>8404.598019</td>
+      <td>-106.751260</td>
+      <td>-106.751260</td>
+      <td>-106.751260</td>
+      <td>8511.349279</td>
+      <td>8511.349279</td>
+      <td>8511.349279</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
-      <td>-110.839390</td>
+      <td>9808.059110</td>
     </tr>
     <tr>
-      <th>1</th>
-      <td>2020-01-26</td>
-      <td>-1429.346929</td>
-      <td>-1192.930931</td>
-      <td>833.350203</td>
-      <td>-1429.346929</td>
-      <td>-1429.346929</td>
-      <td>1153.950894</td>
-      <td>1153.950894</td>
-      <td>1153.950894</td>
-      <td>-111.781693</td>
-      <td>-111.781693</td>
-      <td>-111.781693</td>
-      <td>1265.732587</td>
-      <td>1265.732587</td>
-      <td>1265.732587</td>
+      <th>634</th>
+      <td>2021-10-20</td>
+      <td>1303.622074</td>
+      <td>6751.202561</td>
+      <td>12717.137232</td>
+      <td>-1533.769518</td>
+      <td>4213.037804</td>
+      <td>8446.871074</td>
+      <td>8446.871074</td>
+      <td>8446.871074</td>
+      <td>46.806328</td>
+      <td>46.806328</td>
+      <td>46.806328</td>
+      <td>8400.064746</td>
+      <td>8400.064746</td>
+      <td>8400.064746</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
-      <td>-275.396035</td>
+      <td>9750.493149</td>
     </tr>
     <tr>
-      <th>2</th>
-      <td>2020-01-27</td>
-      <td>-1356.220985</td>
-      <td>-1477.034897</td>
-      <td>618.404889</td>
-      <td>-1356.220985</td>
-      <td>-1356.220985</td>
-      <td>917.191560</td>
-      <td>917.191560</td>
-      <td>917.191560</td>
-      <td>-340.239836</td>
-      <td>-340.239836</td>
-      <td>-340.239836</td>
-      <td>1257.431397</td>
-      <td>1257.431397</td>
-      <td>1257.431397</td>
+      <th>635</th>
+      <td>2021-10-21</td>
+      <td>1203.783058</td>
+      <td>6489.662018</td>
+      <td>13344.756475</td>
+      <td>-1778.041413</td>
+      <td>4361.647403</td>
+      <td>8478.053838</td>
+      <td>8478.053838</td>
+      <td>8478.053838</td>
+      <td>190.675359</td>
+      <td>190.675359</td>
+      <td>190.675359</td>
+      <td>8287.378479</td>
+      <td>8287.378479</td>
+      <td>8287.378479</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
-      <td>-439.029424</td>
+      <td>9681.836896</td>
     </tr>
     <tr>
-      <th>3</th>
-      <td>2020-01-28</td>
-      <td>-1283.095041</td>
-      <td>-1207.599285</td>
-      <td>882.946217</td>
-      <td>-1283.095041</td>
-      <td>-1283.095041</td>
-      <td>1155.585080</td>
-      <td>1155.585080</td>
-      <td>1155.585080</td>
-      <td>-86.379951</td>
-      <td>-86.379951</td>
-      <td>-86.379951</td>
-      <td>1241.965031</td>
-      <td>1241.965031</td>
-      <td>1241.965031</td>
+      <th>636</th>
+      <td>2021-10-22</td>
+      <td>1103.944041</td>
+      <td>6150.021220</td>
+      <td>12962.111912</td>
+      <td>-2029.850009</td>
+      <td>4481.939197</td>
+      <td>8399.993334</td>
+      <td>8399.993334</td>
+      <td>8399.993334</td>
+      <td>226.628366</td>
+      <td>226.628366</td>
+      <td>226.628366</td>
+      <td>8173.364969</td>
+      <td>8173.364969</td>
+      <td>8173.364969</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
-      <td>-127.509961</td>
+      <td>9503.937375</td>
     </tr>
     <tr>
-      <th>4</th>
-      <td>2020-01-29</td>
-      <td>-1209.969097</td>
-      <td>-1009.384752</td>
-      <td>1069.025346</td>
-      <td>-1209.969097</td>
-      <td>-1209.969097</td>
-      <td>1258.893544</td>
-      <td>1258.893544</td>
-      <td>1258.893544</td>
-      <td>39.670032</td>
-      <td>39.670032</td>
-      <td>39.670032</td>
-      <td>1219.223512</td>
-      <td>1219.223512</td>
-      <td>1219.223512</td>
+      <th>637</th>
+      <td>2021-10-23</td>
+      <td>1004.105024</td>
+      <td>5826.671097</td>
+      <td>12744.813026</td>
+      <td>-2302.620787</td>
+      <td>4589.927337</td>
+      <td>8177.517495</td>
+      <td>8177.517495</td>
+      <td>8177.517495</td>
+      <td>119.416190</td>
+      <td>119.416190</td>
+      <td>119.416190</td>
+      <td>8058.101305</td>
+      <td>8058.101305</td>
+      <td>8058.101305</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
-      <td>48.924447</td>
+      <td>9181.622519</td>
     </tr>
   </tbody>
 </table>
@@ -2261,171 +2180,7 @@ forecast.head()
 
 
 ```python
-#view tail
-forecast.tail(5)
-```
-
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>ds</th>
-      <th>trend</th>
-      <th>yhat_lower</th>
-      <th>yhat_upper</th>
-      <th>trend_lower</th>
-      <th>trend_upper</th>
-      <th>additive_terms</th>
-      <th>additive_terms_lower</th>
-      <th>additive_terms_upper</th>
-      <th>weekly</th>
-      <th>weekly_lower</th>
-      <th>weekly_upper</th>
-      <th>yearly</th>
-      <th>yearly_lower</th>
-      <th>yearly_upper</th>
-      <th>multiplicative_terms</th>
-      <th>multiplicative_terms_lower</th>
-      <th>multiplicative_terms_upper</th>
-      <th>yhat</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>609</th>
-      <td>2021-09-25</td>
-      <td>19866.414845</td>
-      <td>20634.434684</td>
-      <td>26150.146540</td>
-      <td>17321.585143</td>
-      <td>22901.588543</td>
-      <td>3380.779480</td>
-      <td>3380.779480</td>
-      <td>3380.779480</td>
-      <td>124.582476</td>
-      <td>124.582476</td>
-      <td>124.582476</td>
-      <td>3256.197004</td>
-      <td>3256.197004</td>
-      <td>3256.197004</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>23247.194325</td>
-    </tr>
-    <tr>
-      <th>610</th>
-      <td>2021-09-26</td>
-      <td>19957.572830</td>
-      <td>20130.609494</td>
-      <td>26207.417258</td>
-      <td>17253.248086</td>
-      <td>23173.709204</td>
-      <td>3112.683141</td>
-      <td>3112.683141</td>
-      <td>3112.683141</td>
-      <td>-111.781693</td>
-      <td>-111.781693</td>
-      <td>-111.781693</td>
-      <td>3224.464834</td>
-      <td>3224.464834</td>
-      <td>3224.464834</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>23070.255971</td>
-    </tr>
-    <tr>
-      <th>611</th>
-      <td>2021-09-27</td>
-      <td>20048.730815</td>
-      <td>19881.303817</td>
-      <td>26264.269832</td>
-      <td>17171.626612</td>
-      <td>23402.478726</td>
-      <td>2852.320910</td>
-      <td>2852.320910</td>
-      <td>2852.320910</td>
-      <td>-340.239836</td>
-      <td>-340.239836</td>
-      <td>-340.239836</td>
-      <td>3192.560747</td>
-      <td>3192.560747</td>
-      <td>3192.560747</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>22901.051725</td>
-    </tr>
-    <tr>
-      <th>612</th>
-      <td>2021-09-28</td>
-      <td>20139.888799</td>
-      <td>20167.106698</td>
-      <td>26689.837064</td>
-      <td>17120.444720</td>
-      <td>23734.217826</td>
-      <td>3074.241796</td>
-      <td>3074.241796</td>
-      <td>3074.241796</td>
-      <td>-86.379951</td>
-      <td>-86.379951</td>
-      <td>-86.379951</td>
-      <td>3160.621748</td>
-      <td>3160.621748</td>
-      <td>3160.621748</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>23214.130596</td>
-    </tr>
-    <tr>
-      <th>613</th>
-      <td>2021-09-29</td>
-      <td>20231.046784</td>
-      <td>20080.793640</td>
-      <td>27068.387395</td>
-      <td>17089.466718</td>
-      <td>23994.842698</td>
-      <td>3168.480850</td>
-      <td>3168.480850</td>
-      <td>3168.480850</td>
-      <td>39.670032</td>
-      <td>39.670032</td>
-      <td>39.670032</td>
-      <td>3128.810818</td>
-      <td>3128.810818</td>
-      <td>3128.810818</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>23399.527634</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-
-
-
-```python
+#view for specific date
 forecast[forecast['ds']=='2021-09-29']
 ```
 
@@ -2475,24 +2230,24 @@ forecast[forecast['ds']=='2021-09-29']
     <tr>
       <th>613</th>
       <td>2021-09-29</td>
-      <td>20231.046784</td>
-      <td>20080.79364</td>
-      <td>27068.387395</td>
-      <td>17089.466718</td>
-      <td>23994.842698</td>
-      <td>3168.48085</td>
-      <td>3168.48085</td>
-      <td>3168.48085</td>
-      <td>39.670032</td>
-      <td>39.670032</td>
-      <td>39.670032</td>
-      <td>3128.810818</td>
-      <td>3128.810818</td>
-      <td>3128.810818</td>
+      <td>3400.24143</td>
+      <td>12831.961009</td>
+      <td>15048.728948</td>
+      <td>3157.467002</td>
+      <td>3621.190871</td>
+      <td>10545.699919</td>
+      <td>10545.699919</td>
+      <td>10545.699919</td>
+      <td>46.806328</td>
+      <td>46.806328</td>
+      <td>46.806328</td>
+      <td>10498.893591</td>
+      <td>10498.893591</td>
+      <td>10498.893591</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
-      <td>23399.527634</td>
+      <td>13945.941348</td>
     </tr>
   </tbody>
 </table>
@@ -2508,12 +2263,11 @@ plot1 = m.plot(forecast)
 
 
     
-![png](output_116_0.png)
+![png](output_98_0.png)
     
 
 
-#### Description:
-From the component plot, we can see that there is currently an upward trend in the number of new Covid-19 cases in Malaysia. As for the next 30 days, it is expcted cases to be around 23399 cases with a 20080 lower bound of the uncertainty interval, and 27068 upper bound of the uncertainty interval
+**Description:** From the component plot, we can see that there is currently an upward trend in the number of new Covid-19 cases in Malaysia. As for the next 30 days, it is expcted cases to be around 9181 cases with a 5826 lower bound of the uncertainty interval, and 12744 upper bound of the uncertainty interval
 
 
 ```python
@@ -2523,19 +2277,314 @@ plt2 = m.plot_components(forecast)
 
 
     
-![png](output_118_0.png)
+![png](output_100_0.png)
     
 
 
-#### Description:
-From the componenets plot, we can see a strong uptrend from the beginning of August 2020 with a slowed rate around March 2021 before starting an increased rate afterwards. We can see that cases are mostylt lower at the start of the week and drops on Friday. There are also more cases happens around August and starts a downward trend going forward.
-
-### Save model
+**Description:** From the componenets plot, we can see a strong uptrend from the beginning of August 2020 with a slowed rate around March 2021 before starting an increased rate afterwards. We can see that cases are mostly lower at Monday, increases through the week and drops slightly after Friday. There are also more cases happens around August and starts a downward trend going forward.
 
 
 ```python
+#save and export model
 import pickle
-# save the model to disk
 prophet_model_save = 'prophet_model.sav'
 pickle.dump(m, open(prophet_model_save, 'wb'))
+```
+
+<a id='pred_model'></a>
+# Prediction Model
+
+<a id='pred_proc'></a>
+## Data preprocessing
+
+
+```python
+#make a copy of the dataframe
+df=cleaned_df.copy()
+```
+
+
+```python
+#drop date column
+df.drop('date',axis=1,inplace=True)
+```
+
+
+```python
+#seperate label and features
+y=df['cases_new']
+X=df.drop('cases_new',axis=1)
+```
+
+
+```python
+#preview the features
+X.head()
+```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>casual_contacts</th>
+      <th>pcr</th>
+      <th>rtk-ag</th>
+      <th>deaths_new</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>571</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>576</td>
+      <td>5</td>
+      <td>0</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>573</td>
+      <td>14</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>576</td>
+      <td>24</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>582</td>
+      <td>53</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+<a id='train_eval'></a>
+## Training and evaluation
+
+
+```python
+#scale the data 
+from sklearn.preprocessing import MinMaxScaler,StandardScaler,RobustScaler
+scaler = StandardScaler()
+scaler.fit(X)
+X = scaler.transform(X)
+
+#splitting the data
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=0.8)
+```
+
+
+```python
+#import the models
+from sklearn.linear_model import Ridge
+from sklearn.linear_model import LinearRegression
+from sklearn.linear_model import Lasso
+
+#define models
+rid_model = Ridge(alpha=2.5)
+lin_model = LinearRegression()
+las_model = Lasso(alpha=25)
+
+#fit model to data
+rid_model.fit(X_train, y_train)
+lin_model.fit(X_train, y_train)
+las_model.fit(X_train, y_train)
+```
+
+
+
+
+    Lasso(alpha=25)
+
+
+
+
+```python
+#model score
+print(rid_model.score(X_train, y_train))
+print(lin_model.score(X_train, y_train))
+print(las_model.score(X_train, y_train))
+```
+
+    0.9590416783141121
+    0.9590675668329337
+    0.9590294496609231
+    
+
+
+```python
+#find best alpha value for lasso
+from sklearn.linear_model import LassoCV
+lass_cv = LassoCV(alphas=[26, 24, 25])
+
+model_cv = lass_cv.fit(X_train, y_train)
+model_cv.alpha_
+```
+
+
+
+
+    25
+
+
+
+
+```python
+#find best alpha value for ridge
+from sklearn.linear_model import RidgeCV
+regr_cv = RidgeCV(alphas=[2.6, 2.5, 2.4])
+
+model_cv = regr_cv.fit(X_train, y_train)
+model_cv.alpha_
+```
+
+
+
+
+    2.5
+
+
+
+
+```python
+#make predictions
+rid_pred = rid_model.predict(X_test)
+lin_pred = lin_model.predict(X_test)
+las_pred = las_model.predict(X_test)
+
+#r2 score
+from sklearn.metrics import r2_score as r2
+print(r2(rid_pred, y_test))
+print(r2(lin_pred, y_test))
+print(r2(las_pred, y_test))
+```
+
+    0.9576876101879478
+    0.9576899372861319
+    0.9575746475971051
+    
+
+
+```python
+#plot prediction results
+fig, axs = plt.subplots(1,3)
+plt.figure(figsize=(14,8))
+fig.set_size_inches(18.5, 10.5)
+
+fig.suptitle("Regression's Prediction Results")
+
+axs[0].plot(rid_pred, y_test,'o')
+axs[0].set_title('Ridge Regression')
+axs[0].set_ylabel('Actual')
+axs[0].set_xlabel('Predicted')
+m, b = np.polyfit(rid_pred, y_test, 1)
+axs[0].plot(rid_pred, m*rid_pred + b)
+
+
+axs[1].plot(lin_pred, y_test,'o')
+axs[1].set_title('Linear Regression')
+axs[1].set_ylabel('Actual')
+axs[1].set_xlabel('Predicted')
+m, b = np.polyfit(lin_pred, y_test, 1)
+axs[1].plot(lin_pred, m*lin_pred + b)
+
+
+axs[2].plot(las_pred, y_test,'o')
+axs[2].set_title('Lasso Regression')
+axs[2].set_ylabel('Actual')
+axs[2].set_xlabel('Predicted')
+m, b = np.polyfit(las_pred, y_test, 1)
+axs[2].plot(las_pred, m*las_pred + b)
+
+plt.show()
+```
+
+
+    
+![png](output_116_0.png)
+    
+
+
+
+    <Figure size 1008x576 with 0 Axes>
+
+
+**Description:** we can see that most of the models performed well with r2 scores approximately 0.96. From the results, we can see that linear regression performed the best at predicting new cases using this dataset.
+
+
+```python
+# get importance for linear regression
+importance = lin_model.coef_
+# summarize feature importance
+for i,v in enumerate(importance):
+	print('Feature: %0d, Score: %.5f' % (i,v))
+# plot feature importance
+plt.figure(figsize=(14,8))
+
+sns.barplot([x for x in range(len(importance))], importance,palette="husl")
+feature_names = df.columns.drop('cases_new')
+
+#set feature name
+plt.xticks(ticks=[0,1,2,3],labels=feature_names)
+plt.title("Feature Importance of linear regression")
+plt.show()
+```
+
+    Feature: 0, Score: 941.64680
+    Feature: 1, Score: -63.38715
+    Feature: 2, Score: 1221.95213
+    Feature: 3, Score: 3855.68925
+    
+
+    C:\Users\Haziq\Anaconda3\envs\prophet\lib\site-packages\seaborn\_decorators.py:36: FutureWarning: Pass the following variables as keyword args: x, y. From version 0.12, the only valid positional argument will be `data`, and passing other arguments without an explicit keyword will result in an error or misinterpretation.
+      warnings.warn(
+    
+
+
+    
+![png](output_118_2.png)
+    
+
+
+**Description:** Here we can see the feature importance for the best model which is linear regression. The chart shows that the values of new death cases had the biggest impact in predicting the number of new cases followed by count rtk-ag tests, casual contacts and lastly pcr tests. The dataset had very small number of features so maybe we will include more features in the future.
+
+
+```python
+#save and export model
+best_model_save = 'lin_model.sav'
+pickle.dump(m, open(best_model_save, 'wb'))
 ```
