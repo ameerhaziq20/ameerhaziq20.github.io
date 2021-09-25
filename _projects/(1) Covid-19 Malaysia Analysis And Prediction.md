@@ -2561,8 +2561,7 @@ plt.show()
     Feature: 3, Score: 3814.90664
     
 
-    C:\Users\Haziq\Anaconda3\envs\prophet\lib\site-packages\seaborn\_decorators.py:36: FutureWarning: Pass the following variables as keyword args: x, y. From version 0.12, the only valid positional argument will be `data`, and passing other arguments without an explicit keyword will result in an error or misinterpretation.
-      warnings.warn(
+
     
 
 
