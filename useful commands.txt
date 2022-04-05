@@ -1,0 +1,5 @@
+useful commands
+gem update github-pages
+bundle install
+jekyll build
+jekyll serve
