@@ -1,6 +1,14 @@
 [
   
     {
+      "title"    : "Optimistic Nihilism",
+      "category" : "",
+      "tags"     : "life, guide, self-help",
+      "url"      : "/blog/optimistic-nihilism",
+      "date"     : "2022-04-05 00:00:00 +0800"
+    } ,
+  
+    {
       "title"    : "Data Analysis Process",
       "category" : "",
       "tags"     : "Data Anaysis, Guide, Process",
