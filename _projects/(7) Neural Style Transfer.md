@@ -2,7 +2,7 @@
 name: Neural Style Transfer Using Pre-Trained TensorFlow Model
 tools: [Python, Pandas, TensorFLow, Seaborn, Matplotlib]
 image: https://miro.medium.com/max/1029/1*xap0Mey0k_MnaSSbkRavbQ.jpeg
-description: This is just a fun little program for taking a style of an image into another image.
+description: Just a fun little program for merging a style of an image onto another image.
 ---
 
 ![png](https://www.researchgate.net/publication/340469301/figure/fig7/AS:941760561827913@1601544623756/Image-style-transfer-The-style-image-from-Van-Goghs-Starry-Nightb-was-transferred-to.png)
