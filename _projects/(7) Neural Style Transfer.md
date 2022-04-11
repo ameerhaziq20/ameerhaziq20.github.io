@@ -69,7 +69,7 @@ plt.show()
 
 
     
-![png](output_10_0.png)
+![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/Neural%20Style%20Transfer/output_10_0.png)
     
 
 
@@ -83,7 +83,7 @@ plt.show()
 
 
     
-![png](output_12_0.png)
+![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/Neural%20Style%20Transfer/output_12_0.png)
     
 
 
@@ -105,7 +105,7 @@ plt.show()
 
 
     
-![png](output_16_0.png)
+![png](https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/Neural%20Style%20Transfer/output_16_0.png)
     
 
 
@@ -113,7 +113,7 @@ Voila! here we can see my cat picture but in the style of Vincent van Gogh's Sta
 
 # Export Image
 
-Let's export this image so you can brag how artsy you are on social media!
+Let's export this image so you can post it online and show how artsy you are on social media!
 
 
 ```python

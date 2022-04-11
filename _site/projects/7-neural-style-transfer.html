@@ -118,7 +118,7 @@
 <span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
 </code></pre></div></div>
 
-<p><img src="output_10_0.png" alt="png" /></p>
+<p><img src="https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/Neural%20Style%20Transfer/output_10_0.png" alt="png" /></p>
 
 <p>This is the base picture(my lovely cat) that we want to apply our style effect</p>
 
@@ -126,7 +126,7 @@
 <span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
 </code></pre></div></div>
 
-<p><img src="output_12_0.png" alt="png" /></p>
+<p><img src="https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/Neural%20Style%20Transfer/output_12_0.png" alt="png" /></p>
 
 <p>This is the image style that we will try to apply on our base picture, which in this case we’ll use the Starry Night painting by Vincent van Gogh</p>
 
@@ -140,13 +140,13 @@
 <span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
 </code></pre></div></div>
 
-<p><img src="output_16_0.png" alt="png" /></p>
+<p><img src="https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_projects/Neural%20Style%20Transfer/output_16_0.png" alt="png" /></p>
 
 <p>Voila! here we can see my cat picture but in the style of Vincent van Gogh’s Starry Night. Pretty neat huh?</p>
 
 <h1 id="export-image">Export Image</h1>
 
-<p>Let’s export this image so you can brag how artsy you are on social media!</p>
+<p>Let’s export this image so you can post it online and show how artsy you are on social media!</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">cv2</span><span class="p">.</span><span class="n">imwrite</span><span class="p">(</span><span class="s">'generated_img.jpg'</span><span class="p">,</span> <span class="n">cv2</span><span class="p">.</span><span class="n">cvtColor</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">stylized_image</span><span class="p">)</span><span class="o">*</span><span class="mi">255</span><span class="p">,</span> <span class="n">cv2</span><span class="p">.</span><span class="n">COLOR_BGR2RGB</span><span class="p">))</span>
 </code></pre></div></div>
