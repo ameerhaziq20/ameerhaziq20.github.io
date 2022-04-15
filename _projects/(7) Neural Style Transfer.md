@@ -9,7 +9,7 @@ description: Just a fun little program for merging a style of an image onto anot
 
 Neural style transfer is a technique for blending two images—a content image and a style reference image (such as a famous painter's work)—so that the output image appears like the content image but is "painted" in the manner of the style reference image. This is accomplished by adjusting the output image's content statistics to match the content image's content statistics and the style reference image's style statistics. A convolutional network is used to extract these data from the images. We'll be using TensorFlow in this project with a pretrained Neural Style Transfer Model. Make sure to have TensorFlow installed before proceeding.
 
-##### [Github link for project](https://github.com/ameerhaziq20/Malaysia-s-Death-Cause-Analysis-2019)
+##### [Github link for project](https://github.com/ameerhaziq20/data-science-portfolio/tree/main/Neural%20Style%20Transfer)
 ---
 
 ```python

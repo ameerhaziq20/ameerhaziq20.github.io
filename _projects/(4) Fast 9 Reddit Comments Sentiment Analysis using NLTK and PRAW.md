@@ -33,7 +33,7 @@ This analysis will try to answer the following questions:
     * The cleaned comments will also be stored as both CSV file.
 
 
-##### [Github link for project](https://github.com/ameerhaziq20/Fast-9-Movie-Sentiment-Analysis-From-Reddit-Using-PRAW/)
+##### [Github link for project](https://github.com/ameerhaziq20/data-science-portfolio/tree/main/Fast%209%20Movie%20Sentiment%20Analysis%20From%20Reddit%20Using%20PRAW)
 ---
 
 # Obtain Reddit Comments

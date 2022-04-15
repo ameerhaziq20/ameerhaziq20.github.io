@@ -70,7 +70,7 @@ For F1 circuits and races:
 * Storage
     * Data is loaded into local database thorugh Microsoft SQL Database.
 
-##### [Github link for project](https://github.com/ameerhaziq20/Malaysia-s-Death-Cause-Analysis-2019)
+##### [Github link for project](https://github.com/ameerhaziq20/data-science-portfolio/tree/main/Formula%201%20Championship%20Race%20Data)
 ---
 **Notebook Contents:**
  * [Connect to database](#connect_to_database)

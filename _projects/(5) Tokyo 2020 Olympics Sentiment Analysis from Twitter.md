@@ -33,7 +33,7 @@ This analysis will try to answer the following questions:
     * The collected Tweets will be stored in a CSV and TXT file.
     * The cleaned Tweets will also be stored as both CSV and TXT file.
 
-##### [Github link for project](https://github.com/ameerhaziq20/Tokyo_2020_Olympics_Sentiment_Analysis_from_Twitter/)
+##### [Github link for project](https://github.com/ameerhaziq20/data-science-portfolio/tree/main/Tokyo_2020_Olympics_Sentiment_Analysis_from_Twitter)
 ---
 
 # Importing main libraries

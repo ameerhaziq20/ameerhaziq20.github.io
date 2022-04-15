@@ -30,7 +30,7 @@ This analysis will try to answer the following questions:
 * Storage
     * The data collected from the sites will bw stored as a CSV file in the /dataset directory.
 
-##### [Github link for project](https://github.com/ameerhaziq20/Telecom-churn-prediction)
+##### [Github link for project](https://github.com/ameerhaziq20/data-science-portfolio/tree/main/Telecom%20churn%20prediction)
 ---
 # Import churn dataset
 

@@ -34,7 +34,7 @@ This analysis will try to answer the following questions:
     * The data collected from the sites will bw stored as a CSV file in the /dataset directory.
     * This allows the data can still be analysed localy when connectivity problems persists.
 
-##### [Github link for project](https://github.com/ameerhaziq20/Malaysia_COVID_19_Cases_Analysis_and_Prediction)
+##### [Github link for project](https://github.com/ameerhaziq20/data-science-portfolio/tree/main/Malaysia_COVID_19_Cases_Analysis_and_Prediction)
 ---
 **Notebook contents:**
 

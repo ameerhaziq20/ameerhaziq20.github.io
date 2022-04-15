@@ -31,7 +31,7 @@ This analysis will try to answer the following questions:
 * Storage
     * The cleaned data will be stored in a CSV file.
 
-##### [Github link for project](https://github.com/ameerhaziq20/Malaysia-s-Death-Cause-Analysis-2019)
+##### [Github link for project](https://github.com/ameerhaziq20/data-science-portfolio/tree/main/Food%20Marketing%20Campaign%20AB%20Test)
 ---
 # Import dataset
 
