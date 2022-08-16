@@ -23,7 +23,7 @@ nav_exclude:                                            # The following paths ar
 ### Author Info ###
 author:
   name              : Ameer Haziq Basharuddin
-  image             : https://pbs.twimg.com/profile_images/1382763560019718147/ZqCfSczE_400x400.jpg
+  image             : https://raw.githubusercontent.com/ameerhaziq20/ameerhaziq20.github.io/main/_data/asset/portfolio_image.jpg
 # behance           : your_username
 # dribbble          : your_username
   email             : ameerhaziq.work@gmail.com
@@ -39,7 +39,7 @@ author:
 # stackoverflow     : your_user_id
 # tumblr            : your_username.tumblr.com
 # twitch            : your_username
-  twitter           : frisk__y
+# twitter           : your_username
 # vimeo             : your_username
 # youtube           : your_channel_name
 # keybase           : your_username
